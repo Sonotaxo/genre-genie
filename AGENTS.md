@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Project rules
+- Genre engine lives in pure TypeScript under src/engine/ (data.ts + engine.ts) with vitest tests; keep UI free of scoring logic so it stays testable.
+- Feedback traces are stored in localStorage until a backend is enabled.
