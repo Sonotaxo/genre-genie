@@ -38,6 +38,7 @@ function Wave({ className = "" }: { className?: string }) {
 
 export function AudioAkinator() {
   const engineRef = useRef<AkinatorEngine | null>(null);
+  const macroRef = useRef<AkinatorEngine | null>(null);
   const [screen, setScreen] = useState<Screen>("IDLE");
   const [, force] = useReducer((x: number) => x + 1, 0);
   const [drill, setDrill] = useState<string | null>(null);
@@ -56,18 +57,47 @@ export function AudioAkinator() {
     force();
   };
 
+  const makeDrill = (parent: string, prior: Answer[]) => {
+    const e = new AkinatorEngine({ parent, priorAnswers: prior });
+    // mark prior answers as asked so we don't repeat them
+    e.answers = prior.map((a) => ({ ...a }));
+    return e;
+  };
+
   const respond = useCallback((value: number) => {
     const e = engineRef.current;
     const q = e?.nextQuestion();
     if (!e || !q) return;
     e.answer(q.attribute.id, value);
     setHintOpen(false);
-    if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) setScreen("CONVERGED");
+    if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) {
+      const top = e.ranked()[0]!.genre;
+      if (!drill && hasSubgenres(top.id)) {
+        const prior = [...e.answers];
+        const d = makeDrill(top.id, prior);
+        if (d.isClear()) {
+          // subgenre already obvious from the answers: show it directly
+          setMacroAnswers(prior);
+          macroRef.current = e;
+          engineRef.current = d;
+          setDrill(top.id);
+        }
+      }
+      setScreen("CONVERGED");
+    }
     force();
   }, [drill, macroAnswers.length]);
 
   const undo = () => {
-    engineRef.current?.undo();
+    const e = engineRef.current;
+    if (e && drill && !e.canUndo) {
+      // stepping back out of an auto-resolved subgenre: rebuild the macro round
+      const m = macroRef.current;
+      m?.undo();
+      engineRef.current = m;
+      setDrill(null);
+      setMacroAnswers([]);
+    } else e?.undo();
     setScreen("PLAYING");
     force();
   };
@@ -75,9 +105,8 @@ export function AudioAkinator() {
   const startDrill = (parent: string) => {
     const prior = [...(engineRef.current?.answers ?? [])];
     setMacroAnswers(prior);
-    engineRef.current = new AkinatorEngine({ parent, priorAnswers: prior });
-    // mark prior answers as asked so we don't repeat them
-    engineRef.current.answers = prior.map((a) => ({ ...a }));
+    macroRef.current = engineRef.current;
+    engineRef.current = makeDrill(parent, prior);
     setDrill(parent);
     setScreen(engineRef.current.isConverged(5 + prior.length) ? "CONVERGED" : "PLAYING");
     force();
@@ -202,6 +231,20 @@ function QuestionView({
           Q{n} of ~{drill ? 4 : 10}
         </span>
       </div>
+      <div className="mb-4 rounded-2xl border border-border bg-card/60 p-4">
+        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">Top candidates</p>
+        <div className="space-y-1.5">
+          {engine.ranked().slice(0, 3).map((r) => (
+            <div key={r.genre.id} className="flex items-center gap-3 text-sm">
+              <span className="w-32 truncate font-semibold">{r.genre.name}</span>
+              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                <div className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500" style={{ width: `${r.prob * 100}%` }} />
+              </div>
+              <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
       {drillName && (
         <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
       )}
@@ -280,6 +323,7 @@ function Diagnosis({ engine, drill, onDrill, onAgain, onUndo, onWrong }: {
         <div className="mt-4 flex flex-col items-start gap-6 md:flex-row md:items-center">
           <Gauge value={top.prob} />
           <div>
+            {drill && <p className="font-mono text-xs uppercase tracking-widest text-sound">Subgenre of {GENRES.find((x) => x.id === drill)?.name}</p>}
             <h2 className="bg-gradient-to-r from-pulse to-voice bg-clip-text text-5xl font-extrabold tracking-tight text-transparent md:text-6xl">{g.name}</h2>
             <p className="mt-3 max-w-xl text-muted-foreground">{g.summary}</p>
           </div>

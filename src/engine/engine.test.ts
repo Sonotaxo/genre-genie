@@ -38,3 +38,14 @@ describe("AkinatorEngine", () => {
     expect(e.candidates.every((g) => g.parent === "house")).toBe(true);
   });
 });
+
+describe("isClear", () => {
+  it("is clear when one subgenre dominates the prior answers", () => {
+    const e = new AkinatorEngine({ parent: "house", priorAnswers: [{ attributeId: "acid", value: 1 }, { attributeId: "retro", value: 1 }, { attributeId: "hypnotic", value: 1 }, { attributeId: "voice_present", value: -1 }] });
+    expect(e.ranked()[0]!.genre.id).toBe("acid_house");
+    expect(e.isClear()).toBe(true);
+  });
+  it("is not clear with no information", () => {
+    expect(new AkinatorEngine({ parent: "house" }).isClear()).toBe(false);
+  });
+});

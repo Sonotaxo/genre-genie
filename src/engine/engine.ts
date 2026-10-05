@@ -112,6 +112,13 @@ export class AkinatorEngine {
       .sort((a, b) => b.prob - a.prob);
   }
 
+  /** True when one candidate clearly dominates (no further questions needed). */
+  isClear(): boolean {
+    if (this.candidates.length <= 1) return true;
+    const [a, b] = this.ranked();
+    return a!.prob >= 0.65 || a!.prob - (b?.prob ?? 0) > 0.35;
+  }
+
   isConverged(maxQuestions = 15): boolean {
     if (this.candidates.length <= 1) return true;
     const [a, b] = this.ranked();
