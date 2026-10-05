@@ -39,6 +39,7 @@ function Wave({ className = "" }: { className?: string }) {
 export function AudioAkinator() {
   const engineRef = useRef<AkinatorEngine | null>(null);
   const macroRef = useRef<AkinatorEngine | null>(null);
+  const autoDrillRef = useRef(false);
   const [screen, setScreen] = useState<Screen>("IDLE");
   const [, force] = useReducer((x: number) => x + 1, 0);
   const [drill, setDrill] = useState<string | null>(null);
@@ -79,6 +80,7 @@ export function AudioAkinator() {
           // subgenre already obvious from the answers: show it directly
           setMacroAnswers(prior);
           macroRef.current = e;
+          autoDrillRef.current = true;
           engineRef.current = d;
           setDrill(top.id);
         }
@@ -92,11 +94,14 @@ export function AudioAkinator() {
     const e = engineRef.current;
     if (e && drill && !e.canUndo) {
       // stepping back out of an auto-resolved subgenre: rebuild the macro round
+      // leave the subgenre round: auto-resolved goes back one macro question,
+      // a manual drill-down returns to the macro result
       const m = macroRef.current;
-      m?.undo();
       engineRef.current = m;
       setDrill(null);
       setMacroAnswers([]);
+      if (autoDrillRef.current) m?.undo();
+      else { setScreen("CONVERGED"); force(); return; }
     } else e?.undo();
     setScreen("PLAYING");
     force();
@@ -106,6 +111,7 @@ export function AudioAkinator() {
     const prior = [...(engineRef.current?.answers ?? [])];
     setMacroAnswers(prior);
     macroRef.current = engineRef.current;
+    autoDrillRef.current = false;
     engineRef.current = makeDrill(parent, prior);
     setDrill(parent);
     setScreen(engineRef.current.isConverged(5 + prior.length) ? "CONVERGED" : "PLAYING");
@@ -222,7 +228,7 @@ function QuestionView({
   return (
     <section>
       <div className="mb-6 flex items-center gap-4">
-        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo} className="active:scale-95">
+        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo && !drill} className="active:scale-95">
           <ChevronLeft /> Previous
         </Button>
         <div className="flex-1">
