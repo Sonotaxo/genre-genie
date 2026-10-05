@@ -56,18 +56,46 @@ export function AudioAkinator() {
     force();
   };
 
+  const makeDrill = (parent: string, prior: Answer[]) => {
+    const e = new AkinatorEngine({ parent, priorAnswers: prior });
+    // mark prior answers as asked so we don't repeat them
+    e.answers = prior.map((a) => ({ ...a }));
+    return e;
+  };
+
   const respond = useCallback((value: number) => {
     const e = engineRef.current;
     const q = e?.nextQuestion();
     if (!e || !q) return;
     e.answer(q.attribute.id, value);
     setHintOpen(false);
-    if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) setScreen("CONVERGED");
+    if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) {
+      const top = e.ranked()[0]!.genre;
+      if (!drill && hasSubgenres(top.id)) {
+        const prior = [...e.answers];
+        const d = makeDrill(top.id, prior);
+        if (d.isClear()) {
+          // subgenre already obvious from the answers: show it directly
+          setMacroAnswers(prior);
+          engineRef.current = d;
+          setDrill(top.id);
+        }
+      }
+      setScreen("CONVERGED");
+    }
     force();
   }, [drill, macroAnswers.length]);
 
   const undo = () => {
-    engineRef.current?.undo();
+    const e = engineRef.current;
+    if (e && drill && !e.canUndo) {
+      // stepping back out of an auto-resolved subgenre: rebuild the macro round
+      const m = new AkinatorEngine();
+      macroAnswers.slice(0, -1).forEach((a) => m.answer(a.attributeId, a.value));
+      engineRef.current = m;
+      setDrill(null);
+      setMacroAnswers([]);
+    } else e?.undo();
     setScreen("PLAYING");
     force();
   };
@@ -75,11 +103,9 @@ export function AudioAkinator() {
   const startDrill = (parent: string) => {
     const prior = [...(engineRef.current?.answers ?? [])];
     setMacroAnswers(prior);
-    engineRef.current = new AkinatorEngine({ parent, priorAnswers: prior });
-    // mark prior answers as asked so we don't repeat them
-    engineRef.current.answers = prior.map((a) => ({ ...a }));
+    engineRef.current = makeDrill(parent, prior);
     setDrill(parent);
-    setScreen(engineRef.current.isConverged(5 + prior.length) ? "CONVERGED" : "PLAYING");
+    setScreen("PLAYING");
     force();
   };
 
