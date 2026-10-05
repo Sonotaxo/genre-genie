@@ -163,6 +163,10 @@ export function AudioAkinator() {
 }
 
 function Landing({ onStart }: { onStart: (f?: Family) => void }) {
+  // Buttons only work once the page's scripts have loaded; until then show a loading state
+  // instead of silently ignoring clicks.
+  const [ready, setReady] = useState(false);
+  useEffect(() => setReady(true), []);
   return (
     <section className="animate-slide-in text-center">
       <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
@@ -177,9 +181,10 @@ function Landing({ onStart }: { onStart: (f?: Family) => void }) {
       <Button
         size="lg"
         onClick={() => onStart()}
+        disabled={!ready}
         className="mt-10 h-16 rounded-2xl px-10 text-lg font-extrabold shadow-[0_0_40px_-6px_var(--pulse)] transition-transform duration-100 active:scale-95"
       >
-        <Wave /> Start Guessing
+        <Wave /> {ready ? "Start Guessing" : "Loading…"}
       </Button>
       <div className="mt-10">
         <p className="mb-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">or fast-track a family</p>
@@ -188,7 +193,8 @@ function Landing({ onStart }: { onStart: (f?: Family) => void }) {
             <button
               key={f.id}
               onClick={() => onStart(f.id)}
-              className="rounded-full border border-border bg-card/70 px-4 py-2 text-sm font-semibold backdrop-blur transition hover:border-primary active:scale-95"
+              disabled={!ready}
+              className="rounded-full border border-border bg-card/70 px-4 py-2 text-sm font-semibold backdrop-blur transition hover:border-primary active:scale-95 disabled:opacity-50"
             >
               {f.emoji} {f.label}
             </button>
