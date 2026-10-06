@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "sdk_version": "3.0.5",
+  "path": "/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "genre-genie",
+      "version": "0.1.0",
+      "title": "Genre Genie"
+    },
+    "tools": [
+      {
+        "name": "diagnose_genre",
+        "title": "Diagnose genre",
+        "description": "Run the genre-guessing engine on a list of answers and return the most likely genres, whether it is confident, and the best next question to ask.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "answers": {
+              "default": [],
+              "description": "Answers given so far.",
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "attributeId": {
+                    "type": "string",
+                    "description": "Question id from list_questions."
+                  },
+                  "value": {
+                    "type": "number",
+                    "minimum": -1,
+                    "maximum": 1,
+                    "description": "1 yes, 0.5 probably, 0 don't know, -0.5 probably not, -1 no."
+                  }
+                },
+                "required": [
+                  "attributeId",
+                  "value"
+                ]
+              }
+            },
+            "family": {
+              "description": "Limit to one genre family.",
+              "type": "string",
+              "enum": [
+                "electronic",
+                "rock",
+                "hiphop",
+                "jazz",
+                "acoustic"
+              ]
+            },
+            "parent": {
+              "description": "Genre id to pinpoint its subgenres, e.g. 'house'.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_questions",
+        "title": "List questions",
+        "description": "List every sensory question (attribute id, category, question text and hint) the genre engine can ask.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_genre",
+        "title": "Get genre",
+        "description": "Get a genre's description, family, parent genre, subgenres and a benchmark track. Omit id to list all genres.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "Genre id, e.g. 'tech_house'. Omit to list all genres.",
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
