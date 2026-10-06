@@ -1,0 +1,370 @@
+[
+  {
+    "id": "pulse_four_on_the_floor",
+    "category": "pulse",
+    "prompt": "Is there a steady, hypnotic bass drum thump on every single beat (like a regular club heartbeat: thump-thump-thump-thump)?",
+    "hint": "The classic continuous kick drum you hear in House, Techno, Trance, and Dance music.",
+    "polarOpposite": "Broken, uneven beats or music without a steady rhythm",
+    "alternativePrompt": "Could you easily march in place '1 - 2 - 3 - 4' to a constant, thumping bass drum that never stops or changes rhythm?"
+  },
+  {
+    "id": "pulse_breakbeat_syncopated",
+    "category": "pulse",
+    "prompt": "Is the drum rhythm an uneven, rolling, energetic shuffle (like a fast live drum solo or hip-hop break) rather than a straight club thump?",
+    "hint": "Found in Drum & Bass, Jungle, Breakcore, and classic funk/breakbeat loops.",
+    "polarOpposite": "A straight, repetitive four-beat club thump",
+    "alternativePrompt": "Do the drums feel scattered and zigzagging like a live drummer showing off on a snare drum, rather than a robotic metronome?"
+  },
+  {
+    "id": "pulse_halftime_sway",
+    "category": "pulse",
+    "prompt": "Does the beat feel like a slow, heavy head-nod bounce (where the rhythm feels half-speed and sluggish with heavy bass drops)?",
+    "hint": "The signature heavy bounce of Dubstep, Trap, Hip-Hop, and Doom Metal.",
+    "polarOpposite": "Fast athletic dance beats or energetic sprints",
+    "alternativePrompt": "Does the track make you want to nod your head slowly and heavily like in slow-motion rap, where the main snare hits only once every couple seconds?"
+  },
+  {
+    "id": "pulse_tempo_fast",
+    "category": "pulse",
+    "prompt": "Is the music energetic and fast-paced (a brisk running or lively club dancing speed)?",
+    "hint": "Typical speed of House, Techno, Trance, and Pop-Punk.",
+    "polarOpposite": "A relaxed walking pace, slow-dance, or ballad speed",
+    "alternativePrompt": "Does the song feel like you are jogging at a brisk workout pace (around 125 to 135 steps per minute)?"
+  },
+  {
+    "id": "pulse_hyper_fast",
+    "category": "pulse",
+    "prompt": "Is the tempo frantic, blistering, or hyper-fast (a full-speed sprint that feels almost impossible to dance to normally)?",
+    "hint": "Heard in Drum & Bass, Breakcore, Happy Hardcore, and Thrash Metal.",
+    "polarOpposite": "Standard dancing or walking tempo",
+    "alternativePrompt": "Is the rhythm rushing by at an insane sprint speed (way too fast for a relaxed dance, feeling like a high-speed car chase)?"
+  },
+  {
+    "id": "pulse_slow_relaxed",
+    "category": "pulse",
+    "prompt": "Is the music noticeably slow, relaxed, or lazy (a leisurely walking pace or slow-dance speed)?",
+    "hint": "Heard in Downtempo, Trip-Hop, Lo-Fi study beats, slow Blues, and Doom Metal.",
+    "polarOpposite": "High-energy, fast, or athletic dance tempo",
+    "alternativePrompt": "Would this music fit a slow, lazy stroll through a park or sitting on a couch, without any urge to hurry?"
+  },
+  {
+    "id": "pulse_swung_groove",
+    "category": "pulse",
+    "prompt": "Does the rhythm have a bouncy, swinging groove with an off-beat skip (making you want to snap your fingers or bob your head side-to-side)?",
+    "hint": "The bouncy swing heard in Jazz, Funk, UK Garage, Deep House, and Bossa Nova.",
+    "polarOpposite": "A rigid, robotic machine-grid or stiff military march",
+    "alternativePrompt": "Does the groove have a playful 'skip in its step' that makes you want to snap your fingers or sway side to side?"
+  },
+  {
+    "id": "pulse_free_rubato",
+    "category": "pulse",
+    "prompt": "Is the music floating, freeform, or breathing without any steady beat or drums to count along with?",
+    "hint": "Found in Classical orchestra, solo grand piano, and ambient drone soundscapes.",
+    "polarOpposite": "A steady rhythm with clear drums or metronome",
+    "alternativePrompt": "Is the track completely drumless and drifting freely, where you cannot tap your foot to any regular timing?"
+  },
+  {
+    "id": "pulse_dembow_caribbean",
+    "category": "pulse",
+    "prompt": "Does the beat have the signature Latin dance bounce ('boom... cha-boom-cha' or 'boom-ch-boom-chick')?",
+    "hint": "The unmistakable rhythm of Reggaeton, Latin pop hits, and Dancehall.",
+    "polarOpposite": "A straight rock drum kit or electronic four-beat club kick",
+    "alternativePrompt": "Does the drum rhythm match the worldwide Latin dance beat heard in hits like 'Despacito' (a syncopated 'thump... ta-thump-ta')?"
+  },
+  {
+    "id": "pulse_reggae_one_drop",
+    "category": "pulse",
+    "prompt": "Does the track have a relaxed Jamaican rhythm with guitars or keyboards chopping sharply on the off-beats?",
+    "hint": "The laid-back skanking rhythm of Bob Marley, Roots Reggae, and Dub.",
+    "polarOpposite": "Heavy rock downbeats or driving electronic techno",
+    "alternativePrompt": "Does the song have that distinct Caribbean island sway where short guitar or piano chords 'skank' chop-chop on the upbeats?"
+  },
+  {
+    "id": "pulse_galloping_rolling_bass",
+    "category": "pulse",
+    "prompt": "Is there a fast, continuous galloping bassline that rolls like a machine gun behind every beat (a rapid 3-note bass bounce: thump-th-th-thump-th-th)?",
+    "hint": "The signature relentless 'rolling bass' of Psytrance, Goa Trance, and galloping Heavy Metal.",
+    "polarOpposite": "A slow hip-hop bass, single sustained bass notes, or sparse bounce",
+    "alternativePrompt": "Does the bass vibrate continuously like an electric motor humming at top speed (a non-stop 3-beat roll behind every kick drum)?"
+  },
+  {
+    "id": "pulse_heavy_breakdown",
+    "category": "pulse",
+    "prompt": "Does the song have sudden, heavy 'breakdowns' where the fast music abruptly slams into a slow, crushing, head-banging guitar/bass chug?",
+    "hint": "The physical climax of Metalcore, Deathcore, and Post-Hardcore.",
+    "polarOpposite": "Continuous, steady dance grooves that never abruptly crash",
+    "alternativePrompt": "Does the track suddenly screech to a halt and drop into a brutally slow, crushing mosh-pit stomp?"
+  },
+  {
+    "id": "pulse_train_beat_country",
+    "category": "pulse",
+    "prompt": "Is there a fast, chugging drum beat that sounds like a speeding steam train (a quick country two-step rhythm: chugga-chugga-chugga)?",
+    "hint": "The driving rhythmic engine of Country, Honky-Tonk, and Bluegrass.",
+    "polarOpposite": "Slow hip-hop sway or straight electronic club beat",
+    "alternativePrompt": "Do the drums sound like brushes or sticks chugging rapidly on a snare drum, mimicking a locomotive train rolling down the tracks?"
+  },
+  {
+    "id": "sound_electronic_dominant",
+    "category": "sound",
+    "prompt": "Are synthetic computer sounds, electronic beats, and digital sound effects the main instruments (rather than real guitars or acoustic drums)?",
+    "hint": "The core of Electronic, Club, Synthwave, and Modern Trap.",
+    "polarOpposite": "Real live garage bands or acoustic wooden instruments",
+    "alternativePrompt": "Does the music sound like it was produced entirely inside a computer using synthesizers, samplers, and digital drum pads?"
+  },
+  {
+    "id": "sound_acoustic_wood_strings",
+    "category": "sound",
+    "prompt": "Are natural acoustic wooden instruments (like violins, acoustic guitar, grand piano, cello, or upright bass) the main sound?",
+    "hint": "Heard in Classical orchestra, Folk, Bluegrass, Bossa Nova, and acoustic Jazz.",
+    "polarOpposite": "Electronic synthesizers and drum machines",
+    "alternativePrompt": "Can you hear real wooden instruments resonating naturally in a room (strings, acoustic guitar, or piano, without electric amps)?"
+  },
+  {
+    "id": "sound_electric_guitars",
+    "category": "sound",
+    "prompt": "Are electric guitars (chords, loud riffs, or guitar solos) central to the track?",
+    "hint": "Heard in Classic Rock, Grunge, Heavy Metal, Blues, and Punk.",
+    "polarOpposite": "Zero electric guitars; purely electronic or acoustic",
+    "alternativePrompt": "Is the track powered by the raw sound of amplified electric guitars playing chords, riffs, or screaming solos?"
+  },
+  {
+    "id": "sound_heavy_distortion",
+    "category": "sound",
+    "prompt": "Do the instruments sound fuzzy, distorted, gritty, or blown-out (like an amplifier turned up way too loud)?",
+    "hint": "Heard in Metal, Grunge rock, Hardstyle, and gritty Industrial music.",
+    "polarOpposite": "Clean, smooth, mellow acoustic or glossy electronic tones",
+    "alternativePrompt": "Is there a crunchy, noisy, razor-blade fuzz coating the instruments, making them sound aggressive and overdriven?"
+  },
+  {
+    "id": "sound_deep_subbass",
+    "category": "sound",
+    "prompt": "Is there an ultra-deep, rumbling bass so low and powerful that it physically shakes your chest, car, or headphones?",
+    "hint": "Heard in Dubstep, Trap, UK Drill, Drum & Bass, and Bass House.",
+    "polarOpposite": "Thin bass or natural upright wooden bass",
+    "alternativePrompt": "Can you feel deep bass frequencies that rumble your body or subwoofer more than you can actually hear pitch?"
+  },
+  {
+    "id": "sound_sliding_bass_glides",
+    "category": "sound",
+    "prompt": "Does the deep bassline bend and slide smoothly up and down in pitch (like sliding a finger along a string or pitch wheel)?",
+    "hint": "The signature gliding 808 bass in Modern Trap, UK Drill, and modern rap.",
+    "polarOpposite": "Rigid, non-sliding single bass notes",
+    "alternativePrompt": "Do the lowest bass booms swoop smoothly up or down in tone like a siren or sliding 808 note?"
+  },
+  {
+    "id": "sound_analog_warmth",
+    "category": "sound",
+    "prompt": "Does the music feel warm, smooth, and vintage (soft, rounded tones like an old vinyl record or warm electric piano, with no harsh sharp edges)?",
+    "hint": "Heard in Deep House, Classic Soul, Chillwave, and vintage 1970s rock.",
+    "polarOpposite": "Cold, sterile, laser-sharp digital bleeps",
+    "alternativePrompt": "Does the overall audio feel cozy, soft, and mellow\u2014like spinning an old record through warm vintage speakers?"
+  },
+  {
+    "id": "sound_brass_horns",
+    "category": "sound",
+    "prompt": "Are there horn instruments playing (like trumpets, saxophones, or a brass section)?",
+    "hint": "Common in Jazz, Motown Soul, Funk, Big Band, and Ska.",
+    "polarOpposite": "No horns or woodwinds present",
+    "alternativePrompt": "Can you hear real or synthesized brass instruments (trumpet, trombone, or saxophone blasting or soloing)?"
+  },
+  {
+    "id": "sound_lofi_crackles",
+    "category": "sound",
+    "prompt": "Does the audio have retro vinyl record crackles, fuzzy tape hiss, or vintage video-game bleeps?",
+    "hint": "The signature chill sound of Lo-Fi study beats, Vaporwave, and Chiptune.",
+    "polarOpposite": "Crystal-clear, pristine, high-definition modern studio audio",
+    "alternativePrompt": "Is there intentional background noise like crackling dust on a needle, tape cassette hiss, or muted vintage filtering?"
+  },
+  {
+    "id": "sound_bright_glossy_clean",
+    "category": "sound",
+    "prompt": "Does the production sound ultra-clean, polished, and sparkling (modern radio/pop clarity with no fuzz, dirt, or mud)?",
+    "hint": "Found in modern Pop, Nu-Disco, French Touch, and Progressive House.",
+    "polarOpposite": "Gritty, fuzzy, noisy, or rough underground audio",
+    "alternativePrompt": "Does the track sound like a pristine, sparkling million-dollar studio pop recording with crystalline highs and zero grain?"
+  },
+  {
+    "id": "sound_acid_303_squelch",
+    "category": "sound",
+    "prompt": "Is there a bubbling, squealing synthesizer that twists and shrieks like liquid (the classic psychedelic 'acid' synth sound)?",
+    "hint": "The defining squelching sound of Acid House, Acid Techno, and Psytrance.",
+    "polarOpposite": "Standard clean piano, warm strings, or realistic brass",
+    "alternativePrompt": "Do you hear a rubbery, whistling electronic synth lead that sounds like twisting wet rubber or bubbling liquid acid?"
+  },
+  {
+    "id": "sound_slap_bass_groove",
+    "category": "sound",
+    "prompt": "Is there a funky, popping bass guitar where the player slaps and plucks the strings with a sharp, thumping bounce?",
+    "hint": "The defining physical sound of Funk, Disco, Red Hot Chili Peppers, and Nu-Metal.",
+    "polarOpposite": "Smooth sustained sub-bass or country root-fifth notes",
+    "alternativePrompt": "Does the bass guitar have a sharp 'thump-and-pop' sound made by hitting and snapping the strings with a thumb?"
+  },
+  {
+    "id": "sound_snarling_neuro_bass",
+    "category": "sound",
+    "prompt": "Does the bass sound like an aggressive, snarling, robotic monster growl (harsh, metallic, and ripping rather than a smooth tone)?",
+    "hint": "Heard in aggressive Dubstep (Brostep) and Neurofunk Drum & Bass.",
+    "polarOpposite": "Gentle acoustic bass or warm organ pedal notes",
+    "alternativePrompt": "Does the bass sound like a roaring metallic beast or chainsaw ripping through speakers (an angry robotic growl)?"
+  },
+  {
+    "id": "sound_amen_break_chopped",
+    "category": "sound",
+    "prompt": "Are the drums frantic, chopped-up breakbeat loops that keep crashing and stuttering (like an acoustic live drum solo sliced up at double speed)? Note: this is NOT a straight club kick with fast hi-hats, but a chaotic broken drum roll.",
+    "hint": "The unmistakable chopped 'Amen Break' of Jungle, Drum & Bass, and Breakcore.",
+    "polarOpposite": "A steady electronic kick drum (four-on-the-floor) or un-chopped standard rhythm",
+    "alternativePrompt": "Does the track feature that classic 1990s jungle drum break\u2014a live acoustic drum loop rapidly sliced into stuttering rolls and cymbal crashes?"
+  },
+  {
+    "id": "sound_distorted_hardstyle_kick",
+    "category": "sound",
+    "prompt": "Is the main bass drum extraordinarily distorted with a high-pitched punch followed by a loud, buzzing bass roar (the heavy rave kick)?",
+    "hint": "The signature festival sound of Hardstyle and Gabber.",
+    "polarOpposite": "Clean, un-distorted acoustic or house kick",
+    "alternativePrompt": "Does the bass drum hit with a loud, crunchy 'dong' or screech followed by an earth-shattering distorted rumble?"
+  },
+  {
+    "id": "sound_nylon_acoustic_guitar",
+    "category": "sound",
+    "prompt": "Is there soft, gentle nylon-string acoustic guitar fingerpicking (a warm, mellow Spanish or Latin guitar feel)?",
+    "hint": "Defining acoustic instrument of Bossa Nova and Flamenco Guitar.",
+    "polarOpposite": "Steel-string bluegrass guitar, loud electric guitar, or synths",
+    "alternativePrompt": "Can you hear gentle, intimate fingerpicking on a Spanish or classical guitar with soft, mellow nylon strings?"
+  },
+  {
+    "id": "sound_polyrhythmic_percussion",
+    "category": "sound",
+    "prompt": "Are there layered hand drums and percussion playing lively rhythms (like congas, bongos, shakers, or wooden log drums)?",
+    "hint": "Found in Afrobeats, South African Amapiano, Afro House, and Salsa.",
+    "polarOpposite": "Strict mechanical drum machine without hand percussion",
+    "alternativePrompt": "Can you hear an intricate web of organic hand drums, shakers, and wooden percussions interlocking beneath the music?"
+  },
+  {
+    "id": "sound_jangly_indie_guitars",
+    "category": "sound",
+    "prompt": "Are the electric guitars bright, ringing, and chiming (clean or slightly gritty guitars like in indie/alternative rock, not heavy metal)?",
+    "hint": "Defining sound of Indie Rock, Jangle Pop, and Post-Punk.",
+    "polarOpposite": "Thick chugging metal distortion or synthetic leads",
+    "alternativePrompt": "Do the electric guitars chime with a sparkling, ringing sound like 90s alternative bands rather than heavy metal distortion?"
+  },
+  {
+    "id": "sound_pedal_steel_twang",
+    "category": "sound",
+    "prompt": "Is there an unmistakable country twang (a sliding, crying steel guitar, a fiddle, or a sharp twangy country electric guitar)?",
+    "hint": "The unmistakable sonic signature of Country, Honky-Tonk, and Outlaw Country.",
+    "polarOpposite": "Urban hip-hop synths, funk slap bass, or metal growls",
+    "alternativePrompt": "Does an instrument slide and 'weep' with a classic southern twang (like a lap steel guitar, banjo, or country fiddle)?"
+  },
+  {
+    "id": "sound_supersaws_anthem",
+    "category": "sound",
+    "prompt": "Are there huge, soaring walls of bright synthesizer chords that feel like a massive, hands-in-the-air festival anthem?",
+    "hint": "The defining euphoric synthesizer texture of Uplifting Trance and Melodic Dubstep.",
+    "polarOpposite": "Dry, minimal bleeps or organic guitars",
+    "alternativePrompt": "Do massive synth chords spread out across the speakers like a giant wall of light, creating an epic stadium festival vibe?"
+  },
+  {
+    "id": "sound_dub_echoes",
+    "category": "sound",
+    "prompt": "Do sounds echo and trail off into deep space (cavernous, repeating echoes where a single drum hit or chord rings out endlessly)?",
+    "hint": "The signature sound of Dub Reggae, Dub Techno, and Ambient Dub.",
+    "polarOpposite": "Dry, upfront, in-your-face pop production",
+    "alternativePrompt": "Do individual snare hits or guitar chops get swallowed by long, swirling echoes that fade slowly into outer space?"
+  },
+  {
+    "id": "voice_present",
+    "category": "voice",
+    "prompt": "Are there any human voices or singing in the track (or is it 100% instrumental)?",
+    "hint": "Crucial anchor question separating instrumental music from vocal songs.",
+    "polarOpposite": "Purely instrumental with zero voices",
+    "alternativePrompt": "Can you hear any human vocal cords at all anywhere in the track (even vocal chops, shouting, or whispers)?"
+  },
+  {
+    "id": "voice_clean_melodic",
+    "category": "voice",
+    "prompt": "Is there clear, melodic singing (a singer carrying tunes with pop hooks, soul, or clear vocals)?",
+    "hint": "Heard in Soul, House, Pop, Country, and Classic Rock.",
+    "polarOpposite": "Harsh screams, guttural growls, or spoken rap",
+    "alternativePrompt": "Is the singer singing beautiful, clear musical notes and melodies that you could easily hum along with?"
+  },
+  {
+    "id": "voice_rapping_spoken",
+    "category": "voice",
+    "prompt": "Is the vocal delivery fast-talking rhythmic hip-hop rhyming or rapping (note: rhythmic spoken rap verses, NOT ambient movie quotes, spiritual mantras, or tribal chants)?",
+    "hint": "The vocal core of Hip-Hop, Drill, Rap, and Grime.",
+    "polarOpposite": "Melodic singing, spiritual mantras, or purely instrumental",
+    "alternativePrompt": "Are the vocals delivering fast rhyming poetry or spoken verses over the beat, like an MC or rapper?"
+  },
+  {
+    "id": "voice_screaming_growls",
+    "category": "voice",
+    "prompt": "Are the vocals aggressive, harsh screaming, or deep guttural monster growling (like in Heavy Metal or Hardcore)?",
+    "hint": "Found in Death Metal, Black Metal, Metalcore, and Hardcore Punk.",
+    "polarOpposite": "Smooth, gentle, or clean singing",
+    "alternativePrompt": "Does the singer yell with harsh, throat-shredding screams or deep monster-like growls rather than singing notes?"
+  },
+  {
+    "id": "voice_autotune_vocoder",
+    "category": "voice",
+    "prompt": "Does the voice sound noticeably robotic, computerized, or heavily Auto-Tuned (like T-Pain, Daft Punk, or modern trap)?",
+    "hint": "Heard in Modern Trap, French House, and robotic pop.",
+    "polarOpposite": "Raw, acoustic, un-tuned human voice",
+    "alternativePrompt": "Do the vocals have that distinct metallic robot effect where their pitch snaps instantly from note to note (T-Pain or Daft Punk style)?"
+  },
+  {
+    "id": "voice_whispered_ethereal",
+    "category": "voice",
+    "prompt": "Are the vocals soft, whispered, or buried deep in echo (a dreamy, floating, ghostly voice rather than loud and upfront)?",
+    "hint": "Defining vocal style of Shoegaze, Dream Pop, and Chillwave.",
+    "polarOpposite": "Loud, upfront, punchy lead vocals",
+    "alternativePrompt": "Does the vocal sound like an intimate, airy whisper right in your ear or a dreamy choir floating from far away?"
+  },
+  {
+    "id": "voice_choir_wall",
+    "category": "voice",
+    "prompt": "Are there large groups of voices singing together (like a choir, opera singers, or big multi-voice harmonies)?",
+    "hint": "Heard in Symphonic Classical, Classic Soul, and Power Metal.",
+    "polarOpposite": "Single solo voice or no harmonies",
+    "alternativePrompt": "Do you hear a large group of voices or a church/opera choir singing rich harmonies together?"
+  },
+  {
+    "id": "atmo_dark_dystopian",
+    "category": "atmo",
+    "prompt": "Does the music feel dark, gloomy, menacing, or creepy (like the soundtrack to a horror or dark sci-fi movie)?",
+    "hint": "Heard in Industrial Techno, Neurofunk, Dark Ambient, Black Metal, and UK Drill.",
+    "polarOpposite": "Joyous, sunny, bright, or celebratory music",
+    "alternativePrompt": "Does the track have a sinister, moody atmosphere that feels like walking through a dark warehouse or thriller film?"
+  },
+  {
+    "id": "atmo_sunny_uplifting",
+    "category": "atmo",
+    "prompt": "Does the music feel sunny, happy, joyous, or celebratory (a warm, uplifting, feel-good vibe)?",
+    "hint": "Heard in House, Disco, Uplifting Trance, Afrobeats, and Pop.",
+    "polarOpposite": "Dark, brooding, melancholic, or aggressive mood",
+    "alternativePrompt": "Does this song immediately put a smile on your face and fill you with bright, feel-good, optimistic energy?"
+  },
+  {
+    "id": "atmo_nostalgic_melancholy",
+    "category": "atmo",
+    "prompt": "Does the song feel nostalgic, dreamy, or bittersweet (like a fond memory from the past or watching a sunset)?",
+    "hint": "Heard in Synthwave, Chillwave, Vaporwave, and Mid-West Emo.",
+    "polarOpposite": "Aggressive club adrenaline or neutral background utility",
+    "alternativePrompt": "Does the melody evoke a sentimental longing for bygone years, like looking through old polaroid photos?"
+  },
+  {
+    "id": "atmo_intimate_bedroom",
+    "category": "atmo",
+    "prompt": "Does the music feel quiet, close-up, and personal (like someone playing acoustic guitar softly right next to you in a small room)?",
+    "hint": "Heard in Acoustic Singer-Songwriter, Neoclassical piano, and Lo-Fi study beats.",
+    "polarOpposite": "Massive stadium, echoing concert hall, or festival space",
+    "alternativePrompt": "Does it feel like a private, unplugged performance played just for you in a quiet living room?"
+  },
+  {
+    "id": "atmo_violent_aggressive",
+    "category": "atmo",
+    "prompt": "Is the energy intense, chaotic, and aggressive (music that makes you want to smash things, mosh, or drive at 200 km/h)?",
+    "hint": "Found in Thrash Metal, Breakcore, Gabber, and Hardcore Punk.",
+    "polarOpposite": "Gentle, relaxing, or meditative soundscapes",
+    "alternativePrompt": "Does the music convey intense fury, high adrenaline, or chaotic rage that makes you want to smash something?"
+  }
+]

@@ -16,7 +16,23 @@ export default defineTool({
       }))
       .default([])
       .describe("Answers given so far."),
-    family: z.enum(["electronic", "rock", "hiphop", "jazz", "acoustic"]).optional().describe("Limit to one genre family."),
+    family: z
+      .enum([
+        "electronic",
+        "rock",
+        "metal",
+        "hip_hop",
+        "rnb_soul_funk",
+        "jazz",
+        "blues",
+        "country",
+        "classical",
+        "folk_acoustic",
+        "reggae_caribbean",
+        "latin_global",
+      ])
+      .optional()
+      .describe("Limit to one genre family."),
     parent: z.string().optional().describe("Genre id to pinpoint its subgenres, e.g. 'house'."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },

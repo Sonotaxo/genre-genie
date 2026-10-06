@@ -1,0 +1,2741 @@
+[
+  {
+    "id": "house",
+    "name": "House",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Chicago House",
+      "Classic House"
+    ],
+    "description": "Warm, communal dance music driven by a steady, buoyant heartbeat kick that makes the chest thud and hips sway. Radiant piano chords and uplifting human voices interlock over crisp handclaps to create a joyous, sweat-drenched warehouse party.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Frankie Knuckles",
+        "title": "Your Love"
+      },
+      {
+        "artist": "Marshall Jefferson",
+        "title": "Move Your Body"
+      },
+      {
+        "artist": "Crystal Waters",
+        "title": "Gypsy Woman (She's Homeless)"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Steady, bouncing four-beat bass drum thump accompanied by sharp off-beat hissing hats (120-128 BPM)",
+      "sound": "Warm electronic piano chords, bouncy synthesized basslines, rhythmic handclaps, and analog drum machines",
+      "voice": "Soulful, passionate human voices delivering soaring, gospel-infused affirmations or hypnotic spoken phrases",
+      "atmosphere": "Uplifting, communal, hedonistic, and emotionally warm"
+    },
+    "distinctionNotes": "Unlike Techno, which is mechanical, cold, and repetitive, House relies on soulful human warmth, bright piano chords, and swung, bouncing grooves.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/house/"
+  },
+  {
+    "id": "techno",
+    "name": "Techno",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Detroit Techno",
+      "Purist Techno"
+    ],
+    "description": "Hypnotic, machine-driven electronic music built from looping, metallic pulses that feel like standing inside an operating factory floor. Stripped of traditional melodies, it creates a trance-like state through subtle shifts in grating textures and hollow subterranean rumbles.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Derrick May",
+        "title": "Strings of Life"
+      },
+      {
+        "artist": "Jeff Mills",
+        "title": "The Bells"
+      },
+      {
+        "artist": "Laurent Garnier",
+        "title": "Crispy Bacon"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Relentless, heavy clockwork march with an unyielding mechanical kick (125-135 BPM)",
+      "sound": "Hissing industrial machinery, cycling synthesizer pulses, alien bleeps, and resonant metallic clicks",
+      "voice": "Rare to nonexistent; occasional ghostly, detached vocal snippets or robotic spoken mantras",
+      "atmosphere": "Dark, futuristic, cavernous, and intensely hypnotic"
+    },
+    "distinctionNotes": "Unlike House, which celebrates human warmth and organic soul, Techno is stark, synthetic, and architectural, emphasizing endless mechanical cycles over vocal hooks.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/techno/"
+  },
+  {
+    "id": "synthwave_outrun",
+    "name": "Synthwave / Outrun",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Retrowave",
+      "Outrun",
+      "Futuresynth"
+    ],
+    "description": "Cinematic, retro-futuristic synthesizer music that captures the feeling of speeding down a palm-lined highway toward a neon sunset in an imagined 1980s film. Gleaming synthesized brass and shimmering arpeggios float over punchy, echoing drum-machine beats.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Kavinsky",
+        "title": "Nightcall"
+      },
+      {
+        "artist": "The Midnight",
+        "title": "Sunset"
+      },
+      {
+        "artist": "Gunship",
+        "title": "Tech Noir"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Steady, driving mid-tempo beat with snappy, booming snare hits wrapped in giant cavernous echoes (85-115 BPM)",
+      "sound": "Bright analog synthesizer brass, soaring electric lead melodies, bubbling basslines, and glistening electric guitar solos",
+      "voice": "Airy, smooth 80s-style pop crooning, heavily filtered through radio static, or completely instrumental",
+      "atmosphere": "Nostalgic, romantic, cinematic, and saturated with neon melancholy"
+    },
+    "distinctionNotes": "Unlike modern EDM or House, Synthwave deliberately emulates the gated-reverb drums, warm analog poly-synths, and cinematic soundtrack moods of the mid-to-late 1980s.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/synthwave/"
+  },
+  {
+    "id": "drum_and_bass",
+    "name": "Drum & Bass",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "DnB",
+      "D&B"
+    ],
+    "description": "High-velocity electronic music driven by lightning-fast, syncopated drum breaks and deep, earth-quaking sub-bass that vibrates through the floor. The music combines rapid kinetic energy with expansive, atmospheric synth pads to evoke an urban speed run.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Goldie",
+        "title": "Inner City Life"
+      },
+      {
+        "artist": "Roni Size & Reprazent",
+        "title": "Brown Paper Bag"
+      },
+      {
+        "artist": "Pendulum",
+        "title": "Hold Your Colour"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Extremely fast, staggered two-step drum pattern driven by sharp, slicing snare hits (170-178 BPM)",
+      "sound": "Deep chest-rattling sub-bass rumbles, manipulated acoustic drum loops, swelling synthesizer chords, and sci-fi laser sweeps",
+      "voice": "Soulful, floating female vocal loops or rapid-fire MC chants emphasizing rhythmic momentum",
+      "atmosphere": "Frenetic, technologically sophisticated, adrenaline-fueled, and urban"
+    },
+    "distinctionNotes": "Unlike Dubstep, which operates at a half-time swagger, Drum & Bass moves at breakneck speeds, driven by tumbling, rolling snare patterns rather than robotic mid-bass drops.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/drum-and-bass/"
+  },
+  {
+    "id": "dubstep",
+    "name": "Dubstep",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "140",
+      "Bass Music"
+    ],
+    "description": "Heavy, spacious bass music propelled by an unhurried, swaying stomp and overwhelming tectonic sub-frequencies that you feel in your marrow. Built on dramatic pauses, the music balances deep empty silence with shuddering, aggressive walls of low-end pressure.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Skream",
+        "title": "Midnight Request Line"
+      },
+      {
+        "artist": "Digital Mystikz",
+        "title": "Anti War Dub"
+      },
+      {
+        "artist": "Burial",
+        "title": "Archangel"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Half-time swaggering rhythm where the heavy snare lands strictly once every two beats (typically 140 BPM)",
+      "sound": "Monstrously heavy sub-bass waves, metallic scrape sounds, cavernous echo drops, and cracking wood-block snares",
+      "voice": "Eerie, pitch-shifted, disembodied vocal murmurs washed out in endless dub delay",
+      "atmosphere": "Brooding, nocturnal, spatially expansive, and physically pulverizing"
+    },
+    "distinctionNotes": "Unlike Drum & Bass, Dubstep half-times its pulse to create a lumbering, heavyweight swagger with vast expanses of eerie negative space between beats.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/dubstep/"
+  },
+  {
+    "id": "ambient_downtempo",
+    "name": "Ambient / Downtempo",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Chillout",
+      "Atmospheric Ambient"
+    ],
+    "description": "Drifting, weightless electronic music made of vast sonic landscapes, gentle textural hiss, and slow-breathing harmonic clouds. It removes the pressure of the dance floor, allowing the listener to float through tranquil, timeless sound baths.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Brian Eno",
+        "title": "1/1"
+      },
+      {
+        "artist": "Boards of Canada",
+        "title": "Dayvan Cowboy"
+      },
+      {
+        "artist": "Bonobo",
+        "title": "Black Sands"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Completely rhythm-less and floating, or anchored by an unhurried, gentle, cushioned beat (60-90 BPM)",
+      "sound": "Vast synthesizer washes, field recordings of wind or water, delicate warm piano notes, and soft tape crackle",
+      "voice": "Wordless angelic vocal hums, faint whispered fragments, or completely voice-free",
+      "atmosphere": "Tranquil, meditative, melancholic, and boundless"
+    },
+    "distinctionNotes": "Unlike standard club genres designed to provoke immediate physical dancing, Ambient/Downtempo suppresses driving percussion to explore architectural acoustic space and psychological calm.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/ambient/"
+  },
+  {
+    "id": "deep_house",
+    "name": "Deep House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Soulful Deep House"
+    ],
+    "description": "Velvety, intimate house music characterized by warm electric piano chords, silky basslines, and late-night lounge sophistication. It trades peak-time energy for an intoxicating, understated groove that wraps around the listener like soft smoke.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Larry Heard / Fingers Inc.",
+        "title": "Can You Feel It"
+      },
+      {
+        "artist": "Kerri Chandler",
+        "title": "Atmosphere"
+      },
+      {
+        "artist": "Theo Parrish",
+        "title": "Footwork"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Muffled, gentle four-to-the-floor kick with a relaxed, deeply swung rhythmic shuffle (118-124 BPM)",
+      "sound": "Warm Fender Rhodes electric piano chords, muted jazz organ tones, rounded sub-bass, and organic shaker percussion",
+      "voice": "Sensual, hushed spoken word poetry or soulful, breathy vocal improvisations sitting deep in the mix",
+      "atmosphere": "Intimate, sultry, reflective, and subterranean"
+    },
+    "distinctionNotes": "Unlike Tech House, which uses piercing, dry metallic percussion and functional club builds, Deep House relies on warm jazz chords, muted acoustics, and meditative soul.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/deep-house/"
+  },
+  {
+    "id": "acid_house",
+    "name": "Acid House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Acid"
+    ],
+    "description": "Hypnotic, hallucinatory dance music driven by a signature squealing, squelching synthesizer line that morphs and bubbles like boiling liquid. Its relentless rhythmic pulse and dizzying frequency sweeps produce an ecstatic, disorienting trance state.",
+    "popularityWeight": 0.35,
+    "benchmarkTracks": [
+      {
+        "artist": "Phuture",
+        "title": "Acid Tracks"
+      },
+      {
+        "artist": "808 State",
+        "title": "Pacific State"
+      },
+      {
+        "artist": "A Guy Called Gerald",
+        "title": "Voodoo Ray"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Staccato, driving four-on-the-floor kick propelled by clicking, tinny hi-hats (122-128 BPM)",
+      "sound": "The iconic squealing, resonant, rubbery squelch of the Roland TB-303 synthesizer paired with dry vintage drum machine snaps",
+      "voice": "Minimal, warped, repeated vocal phrases manipulated with wild delays or ecstatic chants",
+      "atmosphere": "Trippy, euphoric, chaotic, and chemically charged"
+    },
+    "distinctionNotes": "Distinguished instantly from regular House by the prominent, shape-shifting, squealing Roland TB-303 bass synth that constantly twists its filter resonance into screaming, liquid shrieks.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/acid-house/"
+  },
+  {
+    "id": "tech_house",
+    "name": "Tech House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Modern Tech House"
+    ],
+    "description": "Lean, muscular club music that blends the clean, punchy drive of house with the cold, sterile percussion of techno. It features short, catchy bass loops and snappy drum hits designed to produce an unceasing, addictive physical groove.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Green Velvet",
+        "title": "Bigger Than Prince"
+      },
+      {
+        "artist": "Fisher",
+        "title": "Losing It"
+      },
+      {
+        "artist": "Booka Shade & M.A.N.D.Y.",
+        "title": "Body Language"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Punchy, prominent four-on-the-floor kick with crisp, tight wooden claps and driving snare rolls (124-128 BPM)",
+      "sound": "Short percussive sub-bass bounces, sterile white-noise whooshes, dry metallic bleeps, and processed cowbells",
+      "voice": "Quirky, pitched-down, spoken-word one-liners or chopped vocal loops used as rhythmic instruments",
+      "atmosphere": "High-energy, functional, sleek, and laser-focused on the dancefloor"
+    },
+    "distinctionNotes": "Unlike Deep House's emotional warmth, Tech House strips away soulful melodies in favor of a sterile, rubbery bassline and repetitive, hard-edged percussive drive.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/tech-house/"
+  },
+  {
+    "id": "french_touch_nu_disco",
+    "name": "French Touch / Nu-Disco",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "French House",
+      "Disco House",
+      "Filter House"
+    ],
+    "description": "Glamorous, high-energy dance music constructed around sparkling 1970s disco samples that sweep dramatically through warm underwater filters before exploding into euphoric climaxes. It feels like dancing under a blinding mirror ball while champagne corks pop.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Daft Punk",
+        "title": "Around the World"
+      },
+      {
+        "artist": "Stardust",
+        "title": "Music Sounds Better with You"
+      },
+      {
+        "artist": "Modjo",
+        "title": "Lady (Hear Me Tonight)"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Pumping, sidechained four-on-the-floor beat where the entire track ducks and breathes with the kick drum (120-128 BPM)",
+      "sound": "Thick funky electric slap bass, filtered brass loops, sparkling disco string samples, and phaser-drenched synth sweeps",
+      "voice": "Cheerfully robotic vocoder melodies or pitch-shifted disco diva loops singing infectious hooks",
+      "atmosphere": "Flamboyant, celebratory, sunlit, and gloriously stylish"
+    },
+    "distinctionNotes": "Unlike purist House, this style relies on recognizable, swept-frequency vintage disco samples, aggressive sidechain volume ducking, and metallic vocoder vocals.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/french-house/"
+  },
+  {
+    "id": "industrial_peak_time_techno",
+    "name": "Industrial / Peak Time Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Hard Techno",
+      "Industrial Techno"
+    ],
+    "description": "A punishing, relentless sonic assault driven by distorted, hammer-like bass drums that sound like steel beams pounding against concrete. Cavernous metallic reverberations and howling siren synths evoke a high-pressure, dark warehouse raved to exhaustion.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Surgeon",
+        "title": "Magneze"
+      },
+      {
+        "artist": "Perc",
+        "title": "Look What Your Love Has Done To Me"
+      },
+      {
+        "artist": "Charlotte de Witte",
+        "title": "Overdrive"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Ferocious, heavily overdriven four-on-the-floor kick drum thumping at relentless speeds (132-145 BPM)",
+      "sound": "Distorted screeching synth feedback, clanging sheet-metal hits, overdriven sub-bass rumbles, and harsh white-noise blasts",
+      "voice": "Aggressive, distorted shouts, cold military commands, or completely non-vocal",
+      "atmosphere": "Brutal, apocalyptic, suffocating, and adrenaline-charged"
+    },
+    "distinctionNotes": "Unlike Minimal or Melodic Techno, Industrial Techno uses extreme overdrive and distortion on its kick drums, creating an abrasive, physically punishing wall of noise.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/industrial-techno/"
+  },
+  {
+    "id": "melodic_techno",
+    "name": "Melodic Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Afterlife Sound",
+      "Emotional Techno"
+    ],
+    "description": "Dramatic, cinematic techno that pairs a stern, thumping kick drum with sweeping, tragic synthesizer melodies that build to emotional breaking points. Evokes flying through a vast, starry digital cosmos filled with ancient mechanical monoliths.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Stephan Bodzin",
+        "title": "Singularity"
+      },
+      {
+        "artist": "Tale of Us & Vaal",
+        "title": "Monument"
+      },
+      {
+        "artist": "ARTBAT",
+        "title": "Return to Oz (ARTBAT Remix)"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Steady, driving four-on-the-floor beat wrapped in deep, warm sub-bass pulses (122-126 BPM)",
+      "sound": "Cascading, arpeggiated sawtooth synthesizers, cinematic orchestral pads, dramatic snare builds, and cavernous reverbs",
+      "voice": "Ethereal, haunting, operatic vocal phrases drifting in wide acoustic spaces",
+      "atmosphere": "Grandiose, melancholic, epic, and emotionally transcendent"
+    },
+    "distinctionNotes": "Unlike Peak Time Techno's raw, abrasive violence, Melodic Techno prioritizes sweeping minor-key musical story arcs, emotional synthesizer arpeggios, and vast cinematic spaces.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/melodic-techno/"
+  },
+  {
+    "id": "minimal_techno",
+    "name": "Minimal Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Microhouse",
+      "Minimal"
+    ],
+    "description": "Skeletal, clinical electronic music stripped down to the barest microscopic clicks, muted thumps, and echoing hollow pops. It creates a surgical, hypnotic groove where every tiny ping of sound reverberates across vast empty silence.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Plastikman",
+        "title": "Spastik"
+      },
+      {
+        "artist": "Ricardo Villalobos",
+        "title": "Dexter"
+      },
+      {
+        "artist": "Robert Hood",
+        "title": "Minus"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Dry, clinical, unadorned kick drum marching through an austere grid (124-130 BPM)",
+      "sound": "Subtle sub-bass pulses, skeletal clicking percussion, glitchy static snaps, and muted metallic resonances",
+      "voice": "Virtually nonexistent, save for occasional dry, chopped-up syllables treated as percussive clicks",
+      "atmosphere": "Sterile, microscopic, meditative, and starkly architectural"
+    },
+    "distinctionNotes": "Unlike Peak Time or Melodic Techno, Minimal systematically deletes chord pads, melodies, and heavy reverb, maintaining a skeletal acoustic landscape dominated by negative space.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/minimal-techno/"
+  },
+  {
+    "id": "liquid_dnb",
+    "name": "Liquid DnB",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "drum_and_bass",
+    "aliases": [
+      "Liquid Funk"
+    ],
+    "description": "Smooth, soulful drum and bass where high-speed tumbling breakbeats glide effortlessly over lush electric piano chords and warm, liquid bass swells. It feels like rushing weightlessly through a glowing metropolis at midnight.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Calibre",
+        "title": "Even If"
+      },
+      {
+        "artist": "LTJ Bukem",
+        "title": "Horizons"
+      },
+      {
+        "artist": "High Contrast",
+        "title": "If We Ever"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Fast, rolling, aerodynamic breakbeat with crisp, light snare snaps (170-175 BPM)",
+      "sound": "Deep, smooth Sine-wave basslines, jazz guitar licks, shimmering Rhodes chords, and sweeping string textures",
+      "voice": "Silky, emotionally rich soul and R&B vocal melodies floating effortlessly across the mix",
+      "atmosphere": "Breezy, melancholic, elegant, and uplifting"
+    },
+    "distinctionNotes": "Unlike aggressive Neurofunk, Liquid DnB avoids distorted, gnarly basslines, substituting warm jazz harmonies, soul vocals, and a light, fluid atmosphere.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/liquid-funk/"
+  },
+  {
+    "id": "neurofunk",
+    "name": "Neurofunk",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "drum_and_bass",
+    "aliases": [
+      "Neuro"
+    ],
+    "description": "Dark, hyper-technical drum and bass featuring snarling, mechanical basslines that twist and tear like violent robotic creatures. Its razor-sharp drum engineering and dystopian sci-fi aesthetic create a claustrophobic, high-threat sonic landscape.",
+    "popularityWeight": 0.35,
+    "benchmarkTracks": [
+      {
+        "artist": "Noisia",
+        "title": "The Tide"
+      },
+      {
+        "artist": "Ed Rush & Optical",
+        "title": "Chubrub"
+      },
+      {
+        "artist": "Black Sun Empire & Noisia",
+        "title": "Feed the Machine"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Surgical, hyper-compressed two-step drum beats with cracking, whip-like snares (172-178 BPM)",
+      "sound": "Grotesque, morphing 'Reese' basslines, mechanical grinding textures, complex digital distortions, and icy laser hits",
+      "voice": "Sparse, menacing cybernetic vocal samples or deep, ominous spoken warnings",
+      "atmosphere": "Dystopian, clinical, predatory, and brutally aggressive"
+    },
+    "distinctionNotes": "Distinguished from Liquid DnB and Jungle by its complex, snarling, heavily modulated digital bass design and cold, hyper-precise sci-fi sound effects.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/neurofunk/"
+  },
+  {
+    "id": "jungle",
+    "name": "Jungle",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "drum_and_bass",
+    "aliases": [
+      "Oldskool Jungle",
+      "Ragga Jungle"
+    ],
+    "description": "Raw, rhythmically complex street music powered by chopped, tumbling acoustic drum breaks that stutter and crash over deep, vibrating reggae basslines. It crackles with Jamaican sound-system energy, sirens, and rapid vocal shouts.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Shy FX & UK Apachi",
+        "title": "Original Nuttah"
+      },
+      {
+        "artist": "Omni Trio",
+        "title": "Renegade Snares"
+      },
+      {
+        "artist": "Leviticus",
+        "title": "The Burial"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Complex, syncopated, violently chopped acoustic breakbeats (particularly the 'Amen break') darting at high speeds (160-170 BPM)",
+      "sound": "Earth-shaking reggae dub sub-bass, vinyl scratches, gunshot sound effects, and air-raid sirens",
+      "voice": "High-energy Jamaican dancehall toasting, reggae chants, and sped-up soulful vocal cries",
+      "atmosphere": "Rowdy, rebellious, organic, and relentlessly kinetic"
+    },
+    "distinctionNotes": "Unlike modern polished Drum & Bass, Jungle uses choppy, splintered, vintage acoustic breakbeat loops layered directly over heavy, warm Jamaican dub reggae bass.",
+    "parentGenreName": "Drum and Bass",
+    "referenceUrl": "https://rateyourmusic.com/genre/jungle/"
+  },
+  {
+    "id": "breakcore",
+    "name": "Breakcore",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "drum_and_bass",
+    "aliases": [
+      "Glitchcore"
+    ],
+    "description": "Frenetic, anarchic electronic chaos where classic drum breaks are shattered into millions of microscopic, glitching shards at terrifying speeds. Unpredictable bursts of distorted noise collide with absurd pop melodies and video game sound bites.",
+    "popularityWeight": 0.35,
+    "benchmarkTracks": [
+      {
+        "artist": "Venetian Snares",
+        "title": "Szamar Madar"
+      },
+      {
+        "artist": "Igorrr",
+        "title": "Very Noise"
+      },
+      {
+        "artist": "Aaron Spectre",
+        "title": "Look Out Cecil"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Spastic, wildly mutating time signatures and stuttering drum rolls careening at breakneck speeds (180-250+ BPM)",
+      "sound": "Mangled digital distortion, screaming noise bursts, sudden cut-up classical or pop samples, and crushing gabber kicks",
+      "voice": "Screaming punk vocals, absurdly pitched-up anime samples, or glitching vocal screams",
+      "atmosphere": "Maniacal, unhinged, rebellious, and overwhelming"
+    },
+    "distinctionNotes": "Unlike Jungle or DnB, Breakcore rejects a steady, danceable groove, deliberately fracturing drum patterns into spastic, irregular, hyper-speed rhythmic breakdowns.",
+    "parentGenreName": "Hardcore [EDM]",
+    "referenceUrl": "https://rateyourmusic.com/genre/breakcore/"
+  },
+  {
+    "id": "classic_dubstep",
+    "name": "Classic Dubstep",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "dubstep",
+    "aliases": [
+      "Deep Dubstep",
+      "UK Dubstep",
+      "140 Dub"
+    ],
+    "description": "Dark, cavernous bass music born in late-night London streets, where slow, menacing rimshots echo through freezing, empty urban alleys. The physical focus is entirely on chest-crushing, physical sub-bass tones that vibrate organs without screaming mid-range synths.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Benga & Coki",
+        "title": "Night"
+      },
+      {
+        "artist": "Loefah",
+        "title": "Horror Show"
+      },
+      {
+        "artist": "Pinch",
+        "title": "Qawwali"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Sparse, spacious half-time beat with snapping snare/rimshot on the third count (138-142 BPM)",
+      "sound": "Pure, devastating low-frequency sine rumbles, vast dub delay trails, clicking percussive wooden blocks, and eerie vinyl hiss",
+      "voice": "Muted Jamaican dub MC vocal echoes or eerie, distant female vocal fragments",
+      "atmosphere": "Brooding, nocturnal, paranoid, and subterranean"
+    },
+    "distinctionNotes": "Unlike Americanized 'Brostep', Classic Dubstep avoids shrieking, aggressive chainsaw synth drops, focusing entirely on pure, meditative sub-bass and eerie dub-reggae acoustic space.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/dubstep/"
+  },
+  {
+    "id": "color_bass_melodic_dubstep",
+    "name": "Color Bass / Melodic Dubstep",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "dubstep",
+    "aliases": [
+      "Color Bass",
+      "Future Riddim",
+      "Melodic Riddim"
+    ],
+    "description": "Vibrant, iridescent bass music that transforms heavy dubstep drops into exploding rainbows of pitch-tuned synthesizer harmonies and sparkling chord progressions. It blends aggressive physical impact with uplifting, video-game melodies and crystal-clear digital beauty.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Ace Aura",
+        "title": "Rise"
+      },
+      {
+        "artist": "Chime",
+        "title": "Phototropic"
+      },
+      {
+        "artist": "Seven Lions",
+        "title": "Worlds Apart"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Heavy, stomping half-time beat driven by crisp, punchy electronic snares (140-150 BPM)",
+      "sound": "Vocoded bass chords, glistening arpeggios, vocoder-tuned guttural growls, and sparkling chiptune flourishes",
+      "voice": "Passionate, soaring pop-EDM vocals singing emotive anthems, or pitched-up vocal chops",
+      "atmosphere": "Euphoric, radiant, fantastical, and emotionally charged"
+    },
+    "distinctionNotes": "Unlike raw, monochromatic Dubstep growls, Color Bass runs basslines through melodic vocoders and pitch-resonators to produce glistening, chord-based, iridescent synth textures.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/melodic-dubstep/"
+  },
+  {
+    "id": "darksynth",
+    "name": "Darksynth",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "synthwave_outrun",
+    "aliases": [
+      "Dark Synthwave",
+      "Cyberpunk Industrial"
+    ],
+    "description": "Aggressive, dystopian electronic music built on fast, distorted 80s synthesizers and heavy, relentless driving beats. Evokes a gritty cyberpunk night chase or horror film.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Carpenter Brut",
+        "title": "Turbo Killer"
+      },
+      {
+        "artist": "Perturbator",
+        "title": "Future Club"
+      },
+      {
+        "artist": "Dan Terminus",
+        "title": "The Chasm"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving, clockwork 4-on-the-floor or fast galloping electro rhythm (120-140 BPM)",
+      "sound": "Harsh overdriven synths, buzzsaw basslines, digital distortion, heavy 80s gated drums",
+      "voice": "Mostly instrumental; occasional dark samples, robotic vocoders, or distant distorted shouting",
+      "atmosphere": "Ominous, aggressive, neon-noir, high-octane horror"
+    },
+    "distinctionNotes": "Unlike standard Synthwave which is nostalgic, bright, and breezy, Darksynth is heavy, abrasive, and borrows heavily from Industrial Metal.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/darksynth/"
+  },
+  {
+    "id": "chillwave",
+    "name": "Chillwave",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "synthwave_outrun",
+    "aliases": [
+      "Glo-Fi",
+      "Hypnagogic Pop"
+    ],
+    "description": "Hazy, sun-bleached electronic pop drenched in tape saturation, evoking blurred childhood memories of summer vacations through faded Polaroid film. Murmuring, dream-like vocals float over sluggish drum machine loops and shimmering, submerged synthesizers.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Washed Out",
+        "title": "Feel It All Around"
+      },
+      {
+        "artist": "Neon Indian",
+        "title": "Deadbeat Summer"
+      },
+      {
+        "artist": "Toro y Moi",
+        "title": "Blessa"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Sluggish, relaxed mid-tempo drum machine beats with soft, cushioned impacts (80-95 BPM)",
+      "sound": "Submerged, warbling analog synthesizers, gentle tape hiss, chiming toy-like melodies, and muffled basslines",
+      "voice": "Dreamy, heavily reverbed, whispered vocals mixed as an indistinct, ghostly instrument",
+      "atmosphere": "Nostalgic, lazy, sun-drenched, and daydream-like"
+    },
+    "distinctionNotes": "Unlike the high-definition neon pulse of Synthwave, Chillwave is slow, lo-fi, woozy, and intentionally degraded with analog tape hiss and muffled textures.",
+    "parentGenreName": "Indietronica",
+    "referenceUrl": "https://rateyourmusic.com/genre/chillwave/"
+  },
+  {
+    "id": "chiptune_8bit",
+    "name": "Chiptune / 8-Bit",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "synthwave_outrun",
+    "aliases": [
+      "8-Bit",
+      "Nintendocore",
+      "Chip Music"
+    ],
+    "description": "High-energy, hyperactive music composed using the primitive, buzzing sound chips of vintage 1980s video game consoles. Its buzzing square waves, rapid-fire arpeggios, and crunchy noise-channel drums create an unmistakable pixelated adventure soundtrack.",
+    "popularityWeight": 0.35,
+    "benchmarkTracks": [
+      {
+        "artist": "Anamanaguchi",
+        "title": "Helix Nebula"
+      },
+      {
+        "artist": "Disasterpeace",
+        "title": "Compass"
+      },
+      {
+        "artist": "Chipzel",
+        "title": "Courage"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Frantic, energetic pulse driven by fast-snapping white-noise drum bursts (130-160 BPM)",
+      "sound": "Buzzy square-wave synths, hollow triangle basslines, rapid machine-gun arpeggios, and lo-fi digital sound FX",
+      "voice": "Mostly instrumental; occasional crunchy 8-bit digital voice synthesizers or vocoded squeaks",
+      "atmosphere": "Playful, hyperactive, pixelated, and heroic"
+    },
+    "distinctionNotes": "Distinct from other retro-synth styles by its deliberate limitation to the primitive, raw, unpolished audio synthesis hardware of vintage game consoles.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/chiptune/"
+  },
+  {
+    "id": "vaporwave",
+    "name": "Vaporwave",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "ambient_downtempo",
+    "aliases": [
+      "Mallsoft",
+      "Eccojams"
+    ],
+    "description": "Surreal, slowed-down corporate elevator music and smoothed-out 1980s pop hits warped into an eerie, dreamlike consumerist purgatory. It sounds like wandering through an abandoned, marble-tiled shopping mall in 1995 while half-asleep.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Macintosh Plus",
+        "title": "Floral Shoppe (Lisa Frank 420)"
+      },
+      {
+        "artist": "Saint Pepsi",
+        "title": "Enjoy Yourself"
+      },
+      {
+        "artist": "Blank Banshee",
+        "title": "Teen Pregnancy"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Heavily slowed, woozy, drunken drum machine beats that drag and stutter (60-80 BPM)",
+      "sound": "Pitched-down saxophone solos, cheesy corporate synth pads, echoing mall reverbs, and vinyl crackle",
+      "voice": "Deeply slowed, pitch-dropped, sluggish pop-star vocals transformed into eerie, androgynous croons",
+      "atmosphere": "Haunting, ironic, surreal, and dissociative"
+    },
+    "distinctionNotes": "Unlike Chillwave's sunlit indie nostalgia, Vaporwave specifically uses chopped, screwed, and pitched-down smooth jazz, muzak, and 80s commercial jingles to satirize consumerism.",
+    "parentGenreName": "Vapor",
+    "referenceUrl": "https://rateyourmusic.com/genre/vaporwave/"
+  },
+  {
+    "id": "psytrance",
+    "name": "Psytrance",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "trance",
+    "aliases": [
+      "Psychedelic Trance",
+      "Goa Trance"
+    ],
+    "description": "High-speed, hypnotic psychedelic dance music driven by an unyielding, rolling bassline that gallops like an electric stallion. Alien squelches, cosmic laser beams, and mind-bending stereo effects swirl relentlessly over a continuous, pounding kick drum.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Infected Mushroom",
+        "title": "Becoming Insane"
+      },
+      {
+        "artist": "Astrix",
+        "title": "Deep Jungle Walk"
+      },
+      {
+        "artist": "Astral Projection",
+        "title": "Kabalah"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Continuous, high-velocity 'rolling' bassline that gallops in three-note pulses behind every kick (138-148 BPM)",
+      "sound": "Rubbery modular sweeps, laser-beam synth leads, mind-altering stereo pans, and metallic alien chirps",
+      "voice": "Hypnotic, mystical vocal chants, philosophical monologue samples, or tribal throat singing",
+      "atmosphere": "Mystical, cosmic, manic, and intensely psychedelic"
+    },
+    "distinctionNotes": "Distinguished from other dance music by its relentless, galloping triple-bass bounce ('rolling bass') locked behind every kick drum and its heavy use of alien, psychedelic sound design.",
+    "parentGenreName": "Trance",
+    "referenceUrl": "https://rateyourmusic.com/genre/psytrance/"
+  },
+  {
+    "id": "hardstyle",
+    "name": "Hardstyle",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Euphoric Hardstyle",
+      "Rawstyle"
+    ],
+    "description": "Explosive, arena-sized electronic music famous for its massive, violently distorted bass drum that sounds like a roaring hollow gong. Bombastic, emotional stadium synth melodies build into thunderous drops of pure, screaming bass energy.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Headhunterz",
+        "title": "Dragonborn"
+      },
+      {
+        "artist": "Showtek",
+        "title": "FTS (Fuck The System)"
+      },
+      {
+        "artist": "Noisecontrollers",
+        "title": "So High"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Very heavy, galloping kick drum with a reversed bass sweep that creates an unyielding 'ta-chew' bounce (150-155 BPM)",
+      "sound": "Massive, screaming distorted kick drums, huge wall-of-sound sawtooth supersaws, and pitch-bent screech leads",
+      "voice": "Gravelly, tough-guy spoken hype intros followed by dramatic, soaring stadium vocal anthems",
+      "atmosphere": "Heroic, bombastic, aggressive, and overwhelmingly intense"
+    },
+    "distinctionNotes": "Identified instantly by its signature distorted kick drum, which features an overdriven high-pitched attack followed by a roaring, pitch-sliding sub-bass tail.",
+    "parentGenreName": "Hard Dance",
+    "referenceUrl": "https://rateyourmusic.com/genre/hardstyle/"
+  },
+  {
+    "id": "classic_rock",
+    "name": "Classic Rock",
+    "familyId": "rock",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Arena Rock",
+      "Hard Rock"
+    ],
+    "description": "Anthemic, guitar-driven rock music anchored by big, resonant acoustic drums and electric blues riffs that roar through stadium amplifiers. It feels celebratory and rebellious, built for singing along with windows rolled down on an open highway.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Led Zeppelin",
+        "title": "Whole Lotta Love"
+      },
+      {
+        "artist": "The Rolling Stones",
+        "title": "Gimme Shelter"
+      },
+      {
+        "artist": "The Who",
+        "title": "Won't Get Fooled Again"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving, muscular 4/4 beat anchored by a heavy, resonant acoustic snare drum on counts two and four (110-135 BPM)",
+      "sound": "Crunchy overdriven electric guitars, dynamic walking bass guitar, chiming cymbals, and raw tube amplifier warmth",
+      "voice": "Belting, gravelly lead vocals capable of soaring high-pitched screams and bluesy vibrato",
+      "atmosphere": "Sweaty, triumphant, rebellious, and stadium-sized"
+    },
+    "distinctionNotes": "Unlike Punk Rock's fast amateurism, Classic Rock features virtuoso guitar solos, expansive dynamic arrangements, and a blues-based swing.",
+    "parentGenreName": "Rock",
+    "referenceUrl": "https://rateyourmusic.com/genre/classic-rock/"
+  },
+  {
+    "id": "grunge",
+    "name": "Grunge",
+    "familyId": "rock",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Seattle Sound",
+      "Alternative Grunge"
+    ],
+    "description": "Sludgy, brooding rock music that swings violently between quiet, murky verses and explosive, fuzz-drenched choruses. It captures a raw sense of teenage alienation, balancing heavy punk cynicism with lumbering metal riffs.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Nirvana",
+        "title": "Smells Like Teen Spirit"
+      },
+      {
+        "artist": "Soundgarden",
+        "title": "Black Hole Sun"
+      },
+      {
+        "artist": "Alice in Chains",
+        "title": "Man in the Box"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Lumbering, mid-tempo drum stomp characterized by dramatic explosions from soft hi-hat taps to thrashing cymbals (90-130 BPM)",
+      "sound": "Thick, muddy fuzz-pedal guitar distortion, dirty bass rumbles, and unpolished, bashing drum kits",
+      "voice": "Anguished, raspy vocals that shift unpredictably from tired, mumbled laments into throat-tearing screams",
+      "atmosphere": "Gloomy, frustrated, unvarnished, and cathartic"
+    },
+    "distinctionNotes": "Unlike Classic Rock's polished bravado, Grunge features dark, self-deprecating lyrics, murky, sludge-distorted guitars, and stark loud-quiet-loud dynamic shifts.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/grunge/"
+  },
+  {
+    "id": "indie_rock",
+    "name": "Indie Rock",
+    "familyId": "rock",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Indie",
+      "Modern Alternative"
+    ],
+    "description": "Clever, melodic guitar music driven by crisp, nervous rhythms and ringing, unpretentious guitar patterns. It prioritizes emotional vulnerability, quirky lyrical poetry, and catchy, off-kilter hooks over heavy studio polish.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "The Strokes",
+        "title": "Last Nite"
+      },
+      {
+        "artist": "Arctic Monkeys",
+        "title": "I Bet You Look Good on the Dancefloor"
+      },
+      {
+        "artist": "Arcade Fire",
+        "title": "Wake Up"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Peppy, energetic, straight-ahead drum beat with bouncy hi-hat patterns and tight, punchy snare hits (110-140 BPM)",
+      "sound": "Jangling, lightly distorted electric guitars, melodic basslines, snappy snare drums, and occasional quirky synthesizers",
+      "voice": "Casual, conversational, sometimes crackling or imperfect lead vocals delivering witty, literate lyrics",
+      "atmosphere": "Youthful, intellectual, restless, and charmingly unpolished"
+    },
+    "distinctionNotes": "Unlike Grunge or Heavy Metal, Indie Rock avoids crushing, muddy wall-of-sound distortion, utilizing bright, jangly guitars and tidy, infectious melodies.",
+    "parentGenreName": "Alternative Rock",
+    "referenceUrl": "https://rateyourmusic.com/genre/indie-rock/"
+  },
+  {
+    "id": "punk_rock",
+    "name": "Punk Rock",
+    "familyId": "rock",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Punk",
+      "77 Punk"
+    ],
+    "description": "Fast, aggressive, stripped-down rock music played with manic urgency and total disregard for technical perfection. Short, blistering blasts of sound channel pure youthful rebellion, political anger, and chaotic energy.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "The Ramones",
+        "title": "Blitzkrieg Bop"
+      },
+      {
+        "artist": "Sex Pistols",
+        "title": "Anarchy in the U.K."
+      },
+      {
+        "artist": "The Clash",
+        "title": "London Calling"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Frantic, runaway tempo driven by relentless, eighth-note down-picked bass and bashing cymbals (150-200+ BPM)",
+      "sound": "Raw, buzzing power-chord guitars through cheap amplifiers, clattering drum kits, and distorted, simple basslines",
+      "voice": "Snotty, shouted, aggressive lead vocals often accompanied by rowdy, gang-chorus chants",
+      "atmosphere": "Confrontational, chaotic, sweaty, and fiercely anti-establishment"
+    },
+    "distinctionNotes": "Unlike Classic Rock, Punk completely rejects virtuosic guitar solos and lengthy songs, condensing tracks into two-minute explosions of raw, three-chord adrenaline.",
+    "parentGenreName": "Punk",
+    "referenceUrl": "https://rateyourmusic.com/genre/punk-rock/"
+  },
+  {
+    "id": "shoegaze_dream_pop",
+    "name": "Shoegaze / Dream Pop",
+    "familyId": "rock",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Shoegaze",
+      "Dream Pop",
+      "Noise Pop"
+    ],
+    "description": "Lush, overwhelming music where shimmering electric guitars are buried under mountainous waves of reverb, delay, and gentle feedback. Whispered, angelic voices blend into a warm, swirling ocean of sound, making the listener feel weightless.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "My Bloody Valentine",
+        "title": "Only Shallow"
+      },
+      {
+        "artist": "Slowdive",
+        "title": "Alison"
+      },
+      {
+        "artist": "Cocteau Twins",
+        "title": "Cherry-coloured Funk"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Sluggish, buried drum pulse that feels like wading through thick, warm water (75-115 BPM)",
+      "sound": "Colossal walls of gliding guitar feedback, tremolo-arm warping, cavernous reverb pedals, and soft, humming basslines",
+      "voice": "Ethereal, whispered, breathy voices mixed low beneath the instruments, sounding like an indistinct dream",
+      "atmosphere": "Weightless, hypnotic, melancholic, and sensory-overloaded"
+    },
+    "distinctionNotes": "Unlike Indie Rock, Shoegaze completely obliterates clear instrument separation, burying drums and voices beneath a colossal, reverberant wall of swirling guitar noise.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/shoegaze/"
+  },
+  {
+    "id": "traditional_heavy_metal",
+    "name": "Traditional Heavy Metal",
+    "familyId": "metal",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Classic Metal",
+      "NWOBHM",
+      "Traditional Metal"
+    ],
+    "description": "Theatrical, thunderous heavy music built around twin electric guitars harmonizing over galloping, iron-clad rhythms. Dramatic, operatic vocals soar above songs celebrating dark folklore, fantasy epics, and unstoppable power.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Black Sabbath",
+        "title": "Paranoid"
+      },
+      {
+        "artist": "Iron Maiden",
+        "title": "The Trooper"
+      },
+      {
+        "artist": "Judas Priest",
+        "title": "Painkiller"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Galloping, martial rhythm driven by tight double-kick accents and pounding basslines (110-145 BPM)",
+      "sound": "Screaming, synchronized dual-guitar harmonies, heavy tube-driven distortion, and bright, slicing guitar solos",
+      "voice": "High-pitched, operatic, vibrato-rich theatrical singing capable of glass-shattering screams",
+      "atmosphere": "Epic, martial, dramatic, and relentlessly heroic"
+    },
+    "distinctionNotes": "Unlike Thrash or Death Metal, Traditional Heavy Metal utilizes clean, operatic, soaring vocals and classic melodic scales rather than harsh growls or extreme blast-beats.",
+    "parentGenreName": "Metal",
+    "referenceUrl": "https://rateyourmusic.com/genre/heavy-metal/"
+  },
+  {
+    "id": "thrash_metal",
+    "name": "Thrash Metal",
+    "familyId": "metal",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Thrash",
+      "Speed Metal"
+    ],
+    "description": "Blistering, high-velocity metal that marries the dark aggression of heavy metal with the breakneck speed and bite of hardcore punk. Chugging guitar riffs strike with machine-gun precision alongside rapid, barked vocals.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Metallica",
+        "title": "Master of Puppets"
+      },
+      {
+        "artist": "Slayer",
+        "title": "Raining Blood"
+      },
+      {
+        "artist": "Megadeth",
+        "title": "Holy Wars... The Punishment Due"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Breakneck, machine-gun rhythmic sprint driven by rapid double-kick drums and lightning skank beats (160-220+ BPM)",
+      "sound": "Ultra-fast palm-muted 'chugging' guitar riffs with scooped mid-frequencies and chaotic, screeching whammy-bar solos",
+      "voice": "Harsh, snarling, aggressively barked or spat vocals delivered at rapid speeds",
+      "atmosphere": "Furious, apocalyptic, violent, and adrenaline-charged"
+    },
+    "distinctionNotes": "Unlike Traditional Metal, Thrash strips away melodic twin-guitar sweetness in favor of hyper-speed palm-muted chugging and barked vocal fury.",
+    "parentGenreName": "Metal",
+    "referenceUrl": "https://rateyourmusic.com/genre/thrash-metal/"
+  },
+  {
+    "id": "death_metal",
+    "name": "Death Metal",
+    "familyId": "metal",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Old School Death Metal",
+      "OSDM"
+    ],
+    "description": "Extreme, terrifying sonic violence defined by down-tuned, buzzsaw guitar riffs and inhuman, subterranean guttural roars. Relentless, explosive blast-beat drumming creates an overwhelming physical bludgeoning.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Death",
+        "title": "Crystal Mountain"
+      },
+      {
+        "artist": "Cannibal Corpse",
+        "title": "Hammer Smashed Face"
+      },
+      {
+        "artist": "Morbid Angel",
+        "title": "Chapel of Ghouls"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Violent, hyper-speed blast-beats alternating with sudden, sludgy, grinding tempo drops (180-240+ BPM)",
+      "sound": "Extremely low down-tuned guitars sounding like revving chainsaws, bludgeoning bass, and relentless double-kick artillery",
+      "voice": "Deep, inhuman, guttural throat growls and monstrous, unintelligible guttural rasps",
+      "atmosphere": "Macabre, suffocating, brutally grotesque, and horrific"
+    },
+    "distinctionNotes": "Distinguished from Thrash and Metalcore by its deep, guttural 'death growl' vocals and continuous, unhinged blast-beat drumming.",
+    "parentGenreName": "Metal",
+    "referenceUrl": "https://rateyourmusic.com/genre/death-metal/"
+  },
+  {
+    "id": "metalcore",
+    "name": "Metalcore",
+    "familyId": "metal",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Modern Metalcore",
+      "Melodic Metalcore"
+    ],
+    "description": "Modern, high-impact heavy music combining ferocious screamed verses with soaring, emotional melodic choruses. Songs build intense kinetic pressure before dropping into massive, slow-motion rhythmic breakdowns designed to move crowds.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Killswitch Engage",
+        "title": "My Curse"
+      },
+      {
+        "artist": "Bring Me the Horizon",
+        "title": "Shadow Moses"
+      },
+      {
+        "artist": "Parkway Drive",
+        "title": "Carrion"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving double-kick tempos that abruptly slam into ultra-heavy, half-time syncopated 'breakdowns' (120-150 BPM)",
+      "sound": "Drop-tuned, razor-sharp guitar chugs, soaring melodic dual-guitar leads, and cinematic electronic sub-drops",
+      "voice": "Sharp dynamic contrast between harsh, screamed/growled verses and polished, soaring, emotional clean-singing choruses",
+      "atmosphere": "Emotionally intense, athletic, cathartic, and modern"
+    },
+    "distinctionNotes": "Identified by its signature 'breakdowns'\u2014sudden, half-time chugging rhythmic stops\u2014and the strict alternating dynamic between screamed verses and clean, catchy pop-metal choruses.",
+    "parentGenreName": "Metal",
+    "referenceUrl": "https://rateyourmusic.com/genre/metalcore/"
+  },
+  {
+    "id": "nu_metal_alternative_metal",
+    "name": "Nu-Metal / Alternative Metal",
+    "familyId": "metal",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Nu-Metal",
+      "Aggro-Rock"
+    ],
+    "description": "Heavy, syncopated rock that fuses downtuned electric guitar riffs with hip-hop bounce, industrial electronics, and raw teenage angst. It prioritizes body-moving groove over fast guitar solos, delivering visceral, unfiltered emotion.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Korn",
+        "title": "Blind"
+      },
+      {
+        "artist": "Linkin Park",
+        "title": "In the End"
+      },
+      {
+        "artist": "System of a Down",
+        "title": "Chop Suey!"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Bouncing, hip-hop-influenced syncopated groove with heavy, deliberate head-nodding impact (85-115 BPM)",
+      "sound": "Sludgy, down-tuned seven-string guitars, percussive slap bass, turntables, and electronic synthesizer glitches",
+      "voice": "Eclectic delivery shifting rapidly between rhythmic rapping, agonized whispering, feral screaming, and melodic angst",
+      "atmosphere": "Alienated, turbulent, claustrophobic, and raw"
+    },
+    "distinctionNotes": "Unlike Thrash or Traditional Metal, Nu-Metal completely eliminates classic guitar solos in favor of bouncy, hip-hop-style grooves, turntables, and rap-style rhythmic vocals.",
+    "parentGenreName": "Metal",
+    "referenceUrl": "https://rateyourmusic.com/genre/alternative-metal/"
+  },
+  {
+    "id": "90s_boom_bap",
+    "name": "90s Boom Bap",
+    "familyId": "hip_hop",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Boom Bap",
+      "Golden Age Hip Hop",
+      "East Coast Hip Hop"
+    ],
+    "description": "Gritty, asphalt-flavored hip-hop defined by the crisp, hard crack of an acoustic snare drum and dusty jazz-record samples. Fluid, articulate poets deliver rhythmic rhymes that float over hypnotic, swinging vinyl loops.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Nas",
+        "title": "N.Y. State of Mind"
+      },
+      {
+        "artist": "The Notorious B.I.G.",
+        "title": "Juicy"
+      },
+      {
+        "artist": "Wu-Tang Clan",
+        "title": "C.R.E.A.M."
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Swung, head-nodding beat anchored by a heavy, booming kick drum and a loud, sharp acoustic snare crack (85-95 BPM)",
+      "sound": "Dusty vinyl crackle, chopped-up upright jazz basslines, horn stabs, and warm electric piano loops",
+      "voice": "Clear, deeply rhythmic, poetic vocal delivery emphasizing clever rhymes, internal cadences, and street storytelling",
+      "atmosphere": "Gritty, urban, nostalgic, and authentic"
+    },
+    "distinctionNotes": "Unlike Modern Trap, Boom Bap uses organic, sampled acoustic drum loops, swinging live-drum feels, and vinyl jazz samples rather than rapid synthesized hi-hats and deep 808 sub-bass.",
+    "parentGenreName": "Hip Hop",
+    "referenceUrl": "https://rateyourmusic.com/genre/boom-bap/"
+  },
+  {
+    "id": "modern_trap",
+    "name": "Modern Trap",
+    "familyId": "hip_hop",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Trap",
+      "Atlanta Trap"
+    ],
+    "description": "Dark, booming southern hip-hop powered by earth-shaking sub-bass notes and frantic, fluttering metallic hi-hats that skitter like nervous insects. Introspective or boastful lyrics are delivered through sleek, Auto-Tuned vocal flows.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Future",
+        "title": "Mask Off"
+      },
+      {
+        "artist": "Travis Scott",
+        "title": "Sicko Mode"
+      },
+      {
+        "artist": "21 Savage & Metro Boomin",
+        "title": "Bank Account"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Spacious half-time bounce propelled by frantic, rapid-fire, rolling metallic hi-hat patterns (130-150 BPM, felt at 65-75 BPM)",
+      "sound": "Massive, sustained Roland TR-808 sub-bass booms, crisp digital clap sounds, dark minor-key bell melodies, and eerie synth flutes",
+      "voice": "Heavily Auto-Tuned vocal delivery alternating between rhythmic triplet rap flows and hypnotic, melodic croons",
+      "atmosphere": "Nocturnal, menacing, luxurious, and drug-hazed"
+    },
+    "distinctionNotes": "Unlike Boom Bap's dusty vinyl drums, Trap relies entirely on electronic 808 sub-bass lines that slide in pitch and skittering, machine-gun digital hi-hat rolls.",
+    "parentGenreName": "Hip Hop",
+    "referenceUrl": "https://rateyourmusic.com/genre/trap/"
+  },
+  {
+    "id": "uk_drill",
+    "name": "UK Drill",
+    "familyId": "hip_hop",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Drill",
+      "London Drill"
+    ],
+    "description": "Cold, menacing urban rap driven by wildly sliding, pitch-bending sub-bass notes and an off-balance, skipping drum rhythm. Low-toned, masked narrators deliver clinical, fast-paced street reports over icy, haunting melodies.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Unknown T",
+        "title": "Homerton B"
+      },
+      {
+        "artist": "Central Cee",
+        "title": "Doja"
+      },
+      {
+        "artist": "Digga D",
+        "title": "No Diet"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Uneven, stumbling, syncopated rhythm where the snare lands with an unexpected skip (140-145 BPM)",
+      "sound": "Wildly pitch-sliding, distorted 808 bass glides, icy piano loops, clicking percussion, and ghostly reverse sounds",
+      "voice": "Deep, gravelly, aggressive British/London slang delivered in low, threatening, monotone flows",
+      "atmosphere": "Bleak, freezing, tense, and dangerous"
+    },
+    "distinctionNotes": "Distinct from Trap by its off-beat, skipping snare pattern (rather than standard trap claps) and dramatic, pitch-sliding 808 bass glides that leap up and down the musical register.",
+    "parentGenreName": "Hip Hop",
+    "referenceUrl": "https://rateyourmusic.com/genre/drill/"
+  },
+  {
+    "id": "lo_fi_hip_hop",
+    "name": "Lo-Fi Hip Hop",
+    "familyId": "hip_hop",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Chillhop",
+      "Lo-Fi Beats"
+    ],
+    "description": "Cozy, relaxed instrumental beat music colored with intentional imperfections like crackling vinyl, tape wobble, and sleepy jazz piano chords. Evokes studying beside a rain-streaked bedroom window late at night.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Jinsang",
+        "title": "Affection"
+      },
+      {
+        "artist": "Kupla",
+        "title": "Sleepy Fish"
+      },
+      {
+        "artist": "potsu",
+        "title": "i'm closing my eyes"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Sluggish, unquantized drum machine swing that lags lazily behind the beat (70-85 BPM)",
+      "sound": "Muffled, dusty vinyl surface noise, warbling out-of-tune electric piano keys, soft wooden kicks, and tape flutter",
+      "voice": "Predominantly instrumental; occasionally features faint, nostalgic dialogue clips from vintage anime or classic films",
+      "atmosphere": "Cozy, studious, comforting, and bittersweet"
+    },
+    "distinctionNotes": "Unlike 90s Boom Bap, Lo-Fi Hip Hop strips away the energetic vocal MC, intentionally degrades sound quality with muffled filters, and maintains a gentle, non-intrusive volume.",
+    "parentGenreName": "Hip Hop",
+    "referenceUrl": "https://rateyourmusic.com/genre/lo-fi-hip-hop/"
+  },
+  {
+    "id": "cloud_rap_phonk",
+    "name": "Cloud Rap / Phonk",
+    "familyId": "hip_hop",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Drift Phonk",
+      "Cloud Rap",
+      "Memphis Revival"
+    ],
+    "description": "Dreamy, drug-hazed hip-hop blending weightless, echoing synthesizer clouds with distorted vintage cassette tape samples. Whether floating through ambient soundscapes or ripping through high-speed drift-racing cowbell tracks, it maintains an eerie, otherworldly haze.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Clams Casino",
+        "title": "I'm God"
+      },
+      {
+        "artist": "Yung Lean",
+        "title": "Ginseng Strip 2002"
+      },
+      {
+        "artist": "Kordhell",
+        "title": "Murder In My Mind"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Floating, syrupy half-time crawl (in Cloud Rap) or driving, blown-out distorted stomp (in Phonk) (120-145 BPM)",
+      "sound": "Washed-out choir pads, blown-out 808 distortion, repeating tinny cowbell melodies, and lo-fi cassette tape grit",
+      "voice": "Mumbled, detached, heavily reverbed singing or chopped, pitch-dropped vintage Memphis rap cassette loops",
+      "atmosphere": "Eerie, narcotic, floating, and neon-nocturnal"
+    },
+    "distinctionNotes": "Unlike Modern Trap, Cloud Rap and Phonk feature heavily reverbed, washed-out ethereal ambient textures and pitch-shifted vintage cassette vocal loops.",
+    "parentGenreName": "Hip Hop",
+    "referenceUrl": "https://rateyourmusic.com/genre/cloud-rap/"
+  },
+  {
+    "id": "bebop_traditional_swing",
+    "name": "Bebop / Traditional Swing",
+    "familyId": "jazz",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Bebop",
+      "Swing",
+      "Acoustic Jazz"
+    ],
+    "description": "Acrobatic, exhilarating acoustic jazz driven by a shimmering, dancing ride cymbal and walking wooden basslines. Brass instruments trade lightning-fast melodies and complex, dizzying improvisations in an intimate, smoke-filled club.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Charlie Parker",
+        "title": "Ko-Ko"
+      },
+      {
+        "artist": "Benny Goodman",
+        "title": "Sing, Sing, Sing"
+      },
+      {
+        "artist": "Thelonious Monk",
+        "title": "'Round Midnight"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Fluid, swinging rhythmic skip anchored by a tapping acoustic ride cymbal and a continuous walking upright bass (120-300+ BPM)",
+      "sound": "Warm unamplified acoustic double bass, bright brass saxophone and trumpet stabs, and acoustic grand piano runs",
+      "voice": "Predominantly instrumental; when vocal, features nimble scat-singing that mimics acoustic instruments",
+      "atmosphere": "Sophisticated, frantic, virtuosic, and nocturnal"
+    },
+    "distinctionNotes": "Unlike Blues or Soul, Bebop utilizes extremely fast tempos, unpredictable harmonic acrobatics, and complex improvised brass solos rather than repetitive, soulful grooves.",
+    "parentGenreName": "Jazz",
+    "referenceUrl": "https://rateyourmusic.com/genre/bebop/"
+  },
+  {
+    "id": "delta_chicago_blues",
+    "name": "Delta / Chicago Blues",
+    "familyId": "blues",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "The Blues",
+      "Delta Blues",
+      "Chicago Blues"
+    ],
+    "description": "Earthbound, sorrowful American roots music driven by weeping guitar strings, wailing harmonicas, and raw foot-stomping rhythms. Weathered, heartfelt voices sing of hardship, heartbreak, and resilience through call-and-response laments.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Muddy Waters",
+        "title": "Mannish Boy"
+      },
+      {
+        "artist": "Robert Johnson",
+        "title": "Cross Road Blues"
+      },
+      {
+        "artist": "B.B. King",
+        "title": "The Thrill Is Gone"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Unhurried, swinging shuffle rhythm following a predictable 12-bar chord cycle (60-100 BPM)",
+      "sound": "Metallic slide guitar strings, weeping bent electric guitar notes, crying harmonicas, and hollow wooden drum thumps",
+      "voice": "Gravelly, strained, deeply emotional vocal delivery utilizing raw call-and-response shouting",
+      "atmosphere": "Sorrowful, weathered, earthy, and resilient"
+    },
+    "distinctionNotes": "Unlike Jazz, the Blues is built on simple 12-bar chord structures, bent 'blue notes' that intentionally weep between pitches, and raw storytelling.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/delta-blues/"
+  },
+  {
+    "id": "motown_classic_soul",
+    "name": "Motown / Classic Soul",
+    "familyId": "rnb_soul_funk",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Soul",
+      "Northern Soul",
+      "Motown"
+    ],
+    "description": "Infectious, uplifting rhythm and blues characterized by punchy brass horns, melodic electric bass runs, and driving tambourines. Powerhouse singers deliver church-inspired performances celebrating love and unity.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Stevie Wonder",
+        "title": "Superstition"
+      },
+      {
+        "artist": "Marvin Gaye",
+        "title": "What's Going On"
+      },
+      {
+        "artist": "Aretha Franklin",
+        "title": "Respect"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving, joyful four-beat pulse reinforced by constant tambourine shakes and a lively backbeat (100-125 BPM)",
+      "sound": "Melodic, bubbling electric bass guitar, bright brass sections, vibraphone accents, and crisp handclaps",
+      "voice": "Virtuosic, impassioned, church-trained lead vocals backed by tight, harmonizing call-and-response choirs",
+      "atmosphere": "Joyous, uplifting, romantic, and community-centered"
+    },
+    "distinctionNotes": "Unlike the Blues, Classic Soul is joyous, polished, and radio-ready, propelled by driving tambourines, sophisticated brass sections, and buoyant vocal choruses.",
+    "parentGenreName": "R&B",
+    "referenceUrl": "https://rateyourmusic.com/genre/soul/"
+  },
+  {
+    "id": "funk",
+    "name": "Funk",
+    "familyId": "rnb_soul_funk",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "P-Funk",
+      "Deep Funk"
+    ],
+    "description": "Irresistibly groovy, syncopated dance music anchored by a heavy, slapping electric bass and sharp, rhythmic guitar scratches. Everything locks into a deep, sweaty pocket that compels physical movement on the 'one' beat.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "James Brown",
+        "title": "Get Up (I Feel Like Being a) Sex Machine"
+      },
+      {
+        "artist": "Parliament",
+        "title": "Flash Light"
+      },
+      {
+        "artist": "Sly & The Family Stone",
+        "title": "Thank You (Falettinme Be Mice Elf Agin)"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Intensely syncopated, rubbery groove that places overwhelming dynamic emphasis on beat 'one' (95-115 BPM)",
+      "sound": "Percussive slapped electric bass, chicken-scratch muted electric guitars, punchy horn blasts, and analog synthesizers",
+      "voice": "Rhythmic, spontaneous shouts, grunts, spoken hype calls, and flamboyant communal group singing",
+      "atmosphere": "Electrifying, flamboyant, humorous, and unabashedly sweaty"
+    },
+    "distinctionNotes": "Unlike Soul, Funk de-emphasizes romantic vocal melodies in favor of relentless, syncopated rhythm where all instruments\u2014including guitars and voices\u2014act as percussive drums.",
+    "parentGenreName": "R&B",
+    "referenceUrl": "https://rateyourmusic.com/genre/funk/"
+  },
+  {
+    "id": "neo_soul",
+    "name": "Neo-Soul",
+    "familyId": "rnb_soul_funk",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Progressive Soul"
+    ],
+    "description": "Velvety, intimate music blending vintage soul warmth with relaxed, hip-hop drum grooves. Silky, jazz-inflected vocals glide over warm electric piano chords to create a personal, candlelit atmosphere.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "D'Angelo",
+        "title": "Brown Sugar"
+      },
+      {
+        "artist": "Erykah Badu",
+        "title": "On & On"
+      },
+      {
+        "artist": "Lauryn Hill",
+        "title": "Doo Wop (That Thing)"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Lagging, relaxed drum groove that sits subtly behind the beat with warm, muted acoustic snare hits (75-90 BPM)",
+      "sound": "Warm Rhodes electric piano chords, round deep bass guitar, muted trumpet mutes, and rich acoustic rimshots",
+      "voice": "Silky, breathy, conversational singing rich with complex jazz runs, spoken poetry, and intimate harmonies",
+      "atmosphere": "Intimate, sensual, thoughtful, and warm"
+    },
+    "distinctionNotes": "Unlike Classic Soul, Neo-Soul adopts late-90s hip-hop drum sensibilities, lagging behind the beat with muted, cozy acoustic textures and intimate, poetic vocals.",
+    "parentGenreName": "R&B",
+    "referenceUrl": "https://rateyourmusic.com/genre/neo-soul/"
+  },
+  {
+    "id": "symphonic_orchestral_classical",
+    "name": "Symphonic / Orchestral Classical",
+    "familyId": "classical",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Orchestral",
+      "Symphonic Classical"
+    ],
+    "description": "Grand, sweeping acoustic music performed by dozens of unamplified wooden strings, shining brass horns, and thunderous drums in resonant halls. Its dramatic shifts in volume tell wordless, cinematic stories of human triumph and tragedy.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Ludwig van Beethoven",
+        "title": "Symphony No. 5 in C Minor"
+      },
+      {
+        "artist": "Pyotr Ilyich Tchaikovsky",
+        "title": "1812 Overture"
+      },
+      {
+        "artist": "Igor Stravinsky",
+        "title": "The Rite of Spring"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Flexible, human-led tempo (Rubato) that breathes, accelerates, and halts without a mechanical click",
+      "sound": "Bowed acoustic violins, rich cellos, roaring brass horns, woodwind flutes, and booming timpani kettledrums",
+      "voice": "Purely instrumental, or accompanied by booming, unamplified operatic choirs singing in Latin or European tongues",
+      "atmosphere": "Monumental, architectural, emotionally profound, and timeless"
+    },
+    "distinctionNotes": "Unlike all modern pop genres, Symphonic Classical uses zero electric amplification or steady drum kits, relying on the natural acoustics of large concert halls and large ensembles.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/classical-music/"
+  },
+  {
+    "id": "country_traditional_bluegrass",
+    "name": "Country & Bluegrass",
+    "familyId": "country",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Traditional Country",
+      "Bluegrass",
+      "Honky-Tonk",
+      "Hillbilly Music"
+    ],
+    "description": "Down-home, acoustic string music played on wooden banjos, fiddles, and flat-picked guitars around back porches and barn dances. High, clear vocal harmonies tell timeless tales of mountain life, hard travel, and faith.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Bill Monroe",
+        "title": "Blue Moon of Kentucky"
+      },
+      {
+        "artist": "Woody Guthrie",
+        "title": "This Land Is Your Land"
+      },
+      {
+        "artist": "Doc Watson",
+        "title": "Deep River Blues"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Lively train-beat locomotive snare shuffle or steady two-step 'boom-chick' (100-140 BPM)",
+      "sound": "Crying pedal steel guitar, country fiddle, bright Telecaster twang, acoustic dreadnought guitar, and five-string banjo",
+      "voice": "Twangy, storytelling lead vocals with Southern drawl and high lonesome tenor harmonies",
+      "atmosphere": "Dusty honky-tonk bar, rustic front porch, open prairie, or rural dancehall"
+    },
+    "distinctionNotes": "Unlike Country Rock, Bluegrass completely eschews electric guitars and drum kits, relying on acoustic stringed instruments to generate rhythm and melody.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/country/"
+  },
+  {
+    "id": "spanish_flamenco_guitar",
+    "name": "Spanish / Flamenco Guitar",
+    "familyId": "folk_acoustic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Flamenco",
+      "Spanish Classical Guitar"
+    ],
+    "description": "Fiery, dramatic Spanish acoustic guitar music punctuated by sharp finger-tapping and thunderous hand claps. Rapid nylon-string guitar flourishes weave around deeply emotional vocal cries of love, grief, and pride.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Paco de Luc\u00eda",
+        "title": "Entre dos aguas"
+      },
+      {
+        "artist": "Vicente Amigo",
+        "title": "Tres Notas Para Decir Te Quiero"
+      },
+      {
+        "artist": "Sabicas",
+        "title": "Malague\u00f1a"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Complex, fluctuating syncopated cycles reinforced by clapping hands (palmas) and stamping wooden heels",
+      "sound": "Crisp, bright nylon-string guitar strums (rasgueado), knuckles knocking on wooden soundboards, and castanets",
+      "voice": "Strained, passionate, gravelly Andalusian vocal laments (cante) full of raw vibrato and microtonal cries",
+      "atmosphere": "Passionate, fiery, tragic, and proudly Andalusian"
+    },
+    "distinctionNotes": "Distinct from classical guitar by its rapid, percussive knuckle-taps on the instrument body, rasgueado finger-strums, and accompaniment by syncopated handclaps.",
+    "parentGenreName": "Spanish Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/flamenco/"
+  },
+  {
+    "id": "ambient_neoclassical",
+    "name": "Ambient Neoclassical",
+    "familyId": "classical",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Post-Classical",
+      "Modern Classical"
+    ],
+    "description": "Intimate, fragile acoustic music where you can hear the creaking wooden pedals of a soft-felted piano and the gentle scrape of a cello bow. It blends classical elegance with ambient silence, creating an intensely personal sanctuary.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Max Richter",
+        "title": "On the Nature of Daylight"
+      },
+      {
+        "artist": "\u00d3lafur Arnalds",
+        "title": "Near Light"
+      },
+      {
+        "artist": "Nils Frahm",
+        "title": "Says"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Slow, gently drifting, or completely unmetered, moving with the unhurried pace of human breathing (50-70 BPM)",
+      "sound": "Muted 'felted' acoustic piano, close-miked solitary violins, subtle electronic drone washes, and mechanical instrument noises",
+      "voice": "Almost exclusively instrumental, preserving absolute stillness",
+      "atmosphere": "Introspective, fragile, tenderly melancholic, and peaceful"
+    },
+    "distinctionNotes": "Unlike Symphonic Classical's grand, booming concert halls, Ambient Neoclassical is close-miked, minimalist, quiet, and emphasizes the physical, mechanical noises of the piano itself.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/modern-classical/"
+  },
+  {
+    "id": "reggae_dub",
+    "name": "Reggae & Dub",
+    "familyId": "reggae_caribbean",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Roots Reggae",
+      "Dub Reggae"
+    ],
+    "description": "Hypnotic, sun-warmed Jamaican music where the third beat drops with a heavy drum kick and the rhythm guitar chops on the off-beat. Vast, echoing delay effects wash over deep, vibrating basslines like ocean waves.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Bob Marley & The Wailers",
+        "title": "Three Little Birds"
+      },
+      {
+        "artist": "King Tubby & Augustus Pablo",
+        "title": "King Tubby Meets Rockers Uptown"
+      },
+      {
+        "artist": "Lee 'Scratch' Perry",
+        "title": "Disco Devil"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Relaxed 'one-drop' rhythm where beat one is empty and the snare/kick lands heavily on beat three (65-80 BPM)",
+      "sound": "Deep, warm electric basslines, short chopped rhythm guitar chords ('skank'), melodica leads, and swirling tape delays",
+      "voice": "Spiritual, conscious Jamaican patois singing or chanting, drenched in endless spring reverb and echo",
+      "atmosphere": "Spiritual, peaceful, smoky, and deeply grounded"
+    },
+    "distinctionNotes": "Distinguished by its signature 'off-beat' guitar chops and the 'one-drop' drum pulse, which leaves the first beat completely silent while dropping weight onto the third.",
+    "parentGenreName": "Reggae / Ska / Dancehall",
+    "referenceUrl": "https://rateyourmusic.com/genre/reggae/"
+  },
+  {
+    "id": "bossa_nova",
+    "name": "Bossa Nova",
+    "familyId": "latin_global",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Brazilian Jazz"
+    ],
+    "description": "Cool, sun-drenched Brazilian music that glides with the elegance of a gentle sea breeze along an open beach. Soft, conversational whispers float over intricate nylon-string guitar chords and lightly brushed drum rhythms.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Stan Getz & Astrud Gilberto",
+        "title": "The Girl from Ipanema"
+      },
+      {
+        "artist": "Ant\u00f4nio Carlos Jobim",
+        "title": "Wave"
+      },
+      {
+        "artist": "Jo\u00e3o Gilberto",
+        "title": "Desafinado"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Gentle, syncopated swaying rhythm played with soft wire brushes on a snare drum (110-130 BPM, felt relaxed)",
+      "sound": "Delicate, nylon-string acoustic guitar chords, warm upright bass, gentle piano fills, and soft ocean-shaker percussion",
+      "voice": "Intimate, quiet, unforced vocal whispers delivered in Portuguese or English without heavy vibrato",
+      "atmosphere": "Romantic, breezy, sophisticated, and sun-lit"
+    },
+    "distinctionNotes": "Unlike fast, festive Samba, Bossa Nova reduces percussion to a whisper, favoring intimate nylon-string jazz chords and breathy, soft singing.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/bossa-nova/"
+  },
+  {
+    "id": "reggaeton_latin_trap",
+    "name": "Reggaeton / Latin Trap",
+    "familyId": "latin_global",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Reggaeton",
+      "Urbano"
+    ],
+    "description": "High-energy, body-moving Caribbean urban music propelled by an unmistakable, stomping 'boom-ch-boom-chick' drum groove. Charismatic vocalists deliver rapid-fire Spanish rhymes and catchy, party-starting choruses.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Daddy Yankee",
+        "title": "Gasolina"
+      },
+      {
+        "artist": "Bad Bunny",
+        "title": "Tit\u00ed Me Pregunt\u00f3"
+      },
+      {
+        "artist": "Don Omar",
+        "title": "Danza Kuduro"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "The signature, hard-hitting 'Dem Bow' syncopated drum rhythm: a heavy kick followed by two syncopated snare snaps (90-100 BPM)",
+      "sound": "Sharp electronic timbales, deep synthetic sub-bass kicks, synthetic brass stabs, and tropical synth melodies",
+      "voice": "Energetic, rhythmic Spanish vocal delivery moving between fast-talking rap verses and Auto-Tuned sung hooks",
+      "atmosphere": "Sensual, festive, sun-soaked, and relentlessly danceable"
+    },
+    "distinctionNotes": "Instantly recognized by the inescapable Caribbean 'Dem Bow' rhythm\u2014a mechanical 'boom-ch-boom-chick' pattern that underpins virtually every track.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/reggaeton/"
+  },
+  {
+    "id": "afrobeats",
+    "name": "Afrobeats",
+    "familyId": "latin_global",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Afropop",
+      "Naija Beats"
+    ],
+    "description": "Buoyant, infectious West African pop music built on rolling polyrhythmic drum patterns and bright, sunny melodies. Sweet, silky vocals weave in and out of warm horn lines and clean guitar riffs, celebrating romance and triumph.",
+    "popularityWeight": 1.0,
+    "benchmarkTracks": [
+      {
+        "artist": "Wizkid",
+        "title": "Essence"
+      },
+      {
+        "artist": "Burna Boy",
+        "title": "Last Last"
+      },
+      {
+        "artist": "Rema",
+        "title": "Calm Down"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Syncopated, undulating West African drum bounce that makes the body sway continuously (98-108 BPM)",
+      "sound": "Warm electronic keyboard chords, clean plucked African guitar licks, wooden log-percussion taps, and lush brass stabs",
+      "voice": "Melodic, buoyant, sing-along vocal deliveries shifting seamlessly between English, Nigerian Pidgin, and Yoruba",
+      "atmosphere": "Joyful, celebratory, breezy, and warm"
+    },
+    "distinctionNotes": "Unlike Reggaeton's rigid Dem Bow beat, Afrobeats uses flowing, rolling West African polyrhythms, clean highlife guitars, and sunny melodic pop hooks.",
+    "parentGenreName": "Pop",
+    "referenceUrl": "https://rateyourmusic.com/genre/afrobeats/"
+  },
+  {
+    "id": "amapiano",
+    "name": "Amapiano",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Piano",
+      "South African Amapiano"
+    ],
+    "description": "Deep, hypnotic South African house music driven by a signature rattling shaker and a resonant, subterranean 'log drum' that punches and slides in the low frequencies. Mellow, jazzy piano chords float across an unhurried, magnetic township groove.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Tyler ICU & Tumelo_za",
+        "title": "Mnike"
+      },
+      {
+        "artist": "Uncle Waffles & Tony Duardo",
+        "title": "Tanzania"
+      },
+      {
+        "artist": "Kabza De Small & DJ Maphorisa",
+        "title": "Nana Thula"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Unhurried, low-slung house pulse with a crisp off-beat shaker and sudden, percussive log-drum bursts (110-116 BPM)",
+      "sound": "Warm, jazzy Rhodes piano chords, ticking shakers, airy flutes, and the iconic, metallic, pitching 'log drum' bass kick",
+      "voice": "Soulful, breathy vocal melodies and repetitive, rhythmic call-and-response vocal chants in Zulu and Xhosa",
+      "atmosphere": "Spiritual, hypnotic, sophisticated, and deeply rhythmic"
+    },
+    "distinctionNotes": "Distinguished from standard Deep House by its lower tempo (112 BPM), continuous rolling shaker percussion, and the prominent, pitched, metallic South African 'log drum'.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/amapiano/"
+  },
+  {
+    "id": "progressive_house",
+    "name": "Progressive House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Festival Prog House",
+      "Melodic House"
+    ],
+    "description": "Epic, melodic club music built around patient emotional builds, soaring synthesizer hooks, and clean four-on-the-floor drops.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Deadmau5",
+        "title": "Strobe"
+      },
+      {
+        "artist": "Eric Prydz",
+        "title": "Opus"
+      },
+      {
+        "artist": "Avicii",
+        "title": "Levels"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Steady, punchy four-on-the-floor kick with driving offbeat open hi-hats (126-128 BPM)",
+      "sound": "Layered melodic synthesizer plucks, euphoric supersaw leads, white noise sweeps, and deep rolling bass",
+      "voice": "Soaring, clean, emotional pop-style vocal anthems or purely instrumental builds",
+      "atmosphere": "Massive festival mainstage euphoria, laser-lit arenas, and emotional climaxes"
+    },
+    "distinctionNotes": "Unlike Tech House's sterile minimalism, Progressive House is melodically maximalist with long emotional chord progressions and dramatic buildups.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/progressive-house/"
+  },
+  {
+    "id": "electro_house",
+    "name": "Electro House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Complextro",
+      "Dirty Electro"
+    ],
+    "description": "High-voltage, abrasive dance music featuring grinding sawtooth basslines, robotic vocal glitches, and massive distorted drops.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Benny Benassi",
+        "title": "Satisfaction"
+      },
+      {
+        "artist": "Knife Party",
+        "title": "Internet Friends"
+      },
+      {
+        "artist": "Porter Robinson",
+        "title": "Say My Name"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Heavy, pounding four-on-the-floor kick with hard, snappy snare claps on beats two and four (126-130 BPM)",
+      "sound": "Buzzing, overdriven distorted saw-wave basslines, pitch-bent screech leads, and chopped vocal glitch snippets",
+      "voice": "Robotic vocoder phrases, playful hype one-liners, or aggressive shouted vocals",
+      "atmosphere": "Adrenaline-fueled, gritty, robotic, and electrifying"
+    },
+    "distinctionNotes": "Unlike standard House's warm soulful pianos, Electro House relies on aggressive distortion, abrasive buzzing basslines, and razor-sharp digital edges.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/electro-house/"
+  },
+  {
+    "id": "tropical_house",
+    "name": "Tropical House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Summer House",
+      "Melodic Deep House"
+    ],
+    "description": "Breezy, relaxed dance music featuring sunny pan flutes, bright marimbas, and smooth melodic hooks that evoke a beach sunset.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Kygo",
+        "title": "Firestone"
+      },
+      {
+        "artist": "Thomas Jack",
+        "title": "Rivers"
+      },
+      {
+        "artist": "Robin Schulz",
+        "title": "Sugar"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Gentle, unhurried four-on-the-floor thump with a relaxed, swaying shuffle (100-115 BPM)",
+      "sound": "Synthetic pan flutes, wooden marimba plucks, bright acoustic guitar strums, and warm rounded sub-bass",
+      "voice": "Airy, clean, smooth pop singing delivering gentle, romantic melodies",
+      "atmosphere": "Sunny, beachside, breezy, relaxed, and sun-drenched"
+    },
+    "distinctionNotes": "Unlike club-focused Tech or Deep House, Tropical House runs at a much slower tempo (100-114 BPM) and prominently features acoustic marimbas and pan flutes.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/tropical-house/"
+  },
+  {
+    "id": "afro_house",
+    "name": "Afro House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "Ancestral House",
+      "Deep Afro House"
+    ],
+    "description": "Hypnotic, percussion-heavy house music that interlocks warm electronic four-on-the-floor kicks with rich West and South African hand drumming.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Black Coffee",
+        "title": "Drive"
+      },
+      {
+        "artist": "Culoe De Song",
+        "title": "Rambo"
+      },
+      {
+        "artist": "Shimza",
+        "title": "African Woman"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Steady, rolling four-on-the-floor kick surrounded by dense polyrhythmic hand shakers and congas (120-125 BPM)",
+      "sound": "Deep warm sub-bass, organic kalimbas, ethnic wooden shakers, and lush atmospheric synthesizer chords",
+      "voice": "Chanted African vocal harmonies, spiritual mantras, or soulful English melodies",
+      "atmosphere": "Spiritual, earthy, hypnotic, and deeply rhythmic"
+    },
+    "distinctionNotes": "Unlike Tech House's sterile mechanical percussion, Afro House is saturated with organic, acoustic wooden hand percussion and spiritual warmth.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/afro-house/"
+  },
+  {
+    "id": "bass_house",
+    "name": "Bass House",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "house",
+    "aliases": [
+      "G-House",
+      "Night Bass"
+    ],
+    "description": "Gritty, aggressive hybrid of UK garage, dubstep, and four-on-the-floor house, characterized by massive metallic wobbles and pitch-shifting bass drops.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Jauz",
+        "title": "Feel the Volume"
+      },
+      {
+        "artist": "AC Slater",
+        "title": "Bass Inside"
+      },
+      {
+        "artist": "JOYRYDE",
+        "title": "HOT DRUM"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Punchy, heavy four-on-the-floor kick with hard snapping claps (126-128 BPM)",
+      "sound": "Metallic FM-synth wobbles, gritty distorted reese bass growls, and subterranean sub-pressure",
+      "voice": "Chopped hip-hop vocal stabs, pitched-down one-liners, or ragga hype shouts",
+      "atmosphere": "Dark, aggressive, high-octane club energy"
+    },
+    "distinctionNotes": "Unlike Tech House, Bass House features massive, aggressive metallic wobbles derived directly from Dubstep and UK Garage bass design.",
+    "parentGenreName": "House",
+    "referenceUrl": "https://rateyourmusic.com/genre/bass-house/"
+  },
+  {
+    "id": "dub_techno",
+    "name": "Dub Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Echospace",
+      "Basic Channel style"
+    ],
+    "description": "Deeply hypnotic, cavernous techno washed in infinite tape-delay echo trails, filtered chord stabs, and vinyl hiss.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Basic Channel",
+        "title": "Phylyps Trak"
+      },
+      {
+        "artist": "Deepchord",
+        "title": "Vantage Isle"
+      },
+      {
+        "artist": "Rhythm & Sound",
+        "title": "Mango Drive"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Muffled, warm, subterranean four-on-the-floor kick drum (118-124 BPM)",
+      "sound": "Cavernous tape-delay echoes, filtered minor chord stabs trailing into infinite reverb, and soft analog tape hiss",
+      "voice": "Instrumental; occasional ghostly, distant, un-decipherable vocal fragments",
+      "atmosphere": "Cavernous, meditative, subterranean, oceanic, and deeply immersive"
+    },
+    "distinctionNotes": "Unlike Peak-Time Techno's hard abrasive kicks, Dub Techno is soft, cavernous, and bathed in endless dub reggae-style tape echoes.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/dub-techno/"
+  },
+  {
+    "id": "acid_techno",
+    "name": "Acid Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "London Acid Techno"
+    ],
+    "description": "Relentless, hard-edged underground techno driven by screaming, squelching Roland TB-303 synthesizer lines and distorted kicks.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "D.A.V.E. The Drummer",
+        "title": "Hydraulix 9"
+      },
+      {
+        "artist": "Chris Liberator",
+        "title": "Soul Mantra"
+      },
+      {
+        "artist": "Reinier Zonneveld",
+        "title": "Acid Nebula"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Pounding, unyielding four-on-the-floor kick drum (135-145 BPM)",
+      "sound": "Screaming, resonant Roland TB-303 acid squelch, metallic open hi-hats, and industrial distortion",
+      "voice": "Almost exclusively instrumental",
+      "atmosphere": "Sweaty, underground illegal warehouse rave, psychedelic, and relentless"
+    },
+    "distinctionNotes": "Unlike Acid House, Acid Techno is much faster (135-145 BPM), much harder, and trades soulful pianos for industrial mechanical aggression.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/acid-techno/"
+  },
+  {
+    "id": "hard_techno",
+    "name": "Hard Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Schranz",
+      "Neo-Hard Techno"
+    ],
+    "description": "Brutal, high-velocity techno built from distorted industrial kicks, relentless mechanical repetition, and furious energy.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Nico Moreno",
+        "title": "Purple Widow"
+      },
+      {
+        "artist": "I Hate Models",
+        "title": "Toro"
+      },
+      {
+        "artist": "Klangkuenstler",
+        "title": "Weltschmerz"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Sledgehammer four-on-the-floor kick drum pounding at relentless speeds (145-160 BPM)",
+      "sound": "Heavily saturated, distorted kick drums, industrial metal percussion, and screaming modular synthesizer noise",
+      "voice": "Instrumental or harsh, shouted punk-style vocal snippets",
+      "atmosphere": "Apocalyptic, furious, visceral moshpit energy inside a concrete bunker"
+    },
+    "distinctionNotes": "Unlike standard Techno (125-132 BPM), Hard Techno pushes speeds to 150+ BPM with extreme distortion and visceral, violent physical impact.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/hard-techno/"
+  },
+  {
+    "id": "trance",
+    "name": "Trance",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Classic Trance",
+      "Euro Trance"
+    ],
+    "description": "Euphoric, emotional electronic music driven by a steady four-on-the-floor pulse, soaring arpeggios, and dramatic cinematic buildups.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Ti\u00ebsto",
+        "title": "Adagio for Strings"
+      },
+      {
+        "artist": "Armin van Buuren",
+        "title": "Communication"
+      },
+      {
+        "artist": "Paul van Dyk",
+        "title": "For an Angel"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Relentless, driving four-on-the-floor kick with sharp offbeat hi-hats (135-140 BPM)",
+      "sound": "Soaring supersaw synth chords, glistening arpeggios, rolling basslines, and white noise riser sweeps",
+      "voice": "Ethereal, soaring female vocal anthems or purely instrumental emotional themes",
+      "atmosphere": "Transcendental, euphoric, emotional, and arena-filling"
+    },
+    "distinctionNotes": "Unlike Techno, which is repetitive and mechanical, Trance is hyper-melodic, emotional, and centered around massive soaring breakdowns.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/trance/"
+  },
+  {
+    "id": "uplifting_trance",
+    "name": "Uplifting Trance",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "trance",
+    "aliases": [
+      "Epic Trance",
+      "138 Trance"
+    ],
+    "description": "The emotional peak of trance music, featuring hyper-fast rolling bass, massive church-like breakdowns, and triumphant supersaw climaxes.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Aly & Fila",
+        "title": "We Control the Sunlight"
+      },
+      {
+        "artist": "John O'Callaghan",
+        "title": "Find Yourself"
+      },
+      {
+        "artist": "RAM",
+        "title": "RAMelia"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving, fast four-on-the-floor kick with rolling 138-142 BPM basslines",
+      "sound": "Enormous detuned supersaw synth leads, grand piano breakdown solos, and lush orchestral string pads",
+      "voice": "Angelic, soaring, high-register vocal performances singing themes of love and liberation",
+      "atmosphere": "Transcendental euphoria, hands-in-the-air festival arena ecstacy"
+    },
+    "distinctionNotes": "Unlike Psytrance's alien modular squelches, Uplifting Trance is defined by massive emotional orchestral breakdowns and soaring major-key supersaws.",
+    "parentGenreName": "Trance",
+    "referenceUrl": "https://rateyourmusic.com/genre/uplifting-trance/"
+  },
+  {
+    "id": "jump_up_dnb",
+    "name": "Jump Up DnB",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "drum_and_bass",
+    "aliases": [
+      "Modern Jump Up"
+    ],
+    "description": "High-energy, playful drum and bass characterized by cartoonish screeching bass synths, rolling two-step breakbeats, and hype MC vocals.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Hedex",
+        "title": "Semi-Automatic"
+      },
+      {
+        "artist": "Macky Gee",
+        "title": "Tour"
+      },
+      {
+        "artist": "DJ Hazard",
+        "title": "Mr Happy"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Rapid, punchy two-step drum pattern at blistering speed (174-178 BPM)",
+      "sound": "High-pitched, screeching 'foghorn' and laser synth melodies, bouncy sub-bass, and crisp snappy snares",
+      "voice": "Energetic live MC hype toasting and crowd chants",
+      "atmosphere": "Chaotic, sweaty, rowdy, and athletic rave energy"
+    },
+    "distinctionNotes": "Unlike Neurofunk's dark dystopian sci-fi growls, Jump Up features cartoonish, high-pitched screeching synth hooks designed for instant hype.",
+    "parentGenreName": "Drum and Bass",
+    "referenceUrl": "https://rateyourmusic.com/genre/jump-up/"
+  },
+  {
+    "id": "brostep",
+    "name": "Brostep",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "dubstep",
+    "aliases": [
+      "Heavy Dubstep",
+      "American Dubstep"
+    ],
+    "description": "Abrasive, adrenaline-charged bass music characterized by aggressive robotic screech leads, snarling growls, and crushing half-time drops.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Skrillex",
+        "title": "Scary Monsters and Nice Sprites"
+      },
+      {
+        "artist": "Excision",
+        "title": "Codename X"
+      },
+      {
+        "artist": "Zomboy",
+        "title": "Like a Bitch"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Heavy half-time beat with colossal snare crack on beat three (140-150 BPM)",
+      "sound": "Harsh, snarling metallic growls, screeching vocoder shrieks, and subterranean sub-bass impacts",
+      "voice": "Quirky pop-culture speech samples, aggressive screamed pre-drop chants, or pitch-shifted hooks",
+      "atmosphere": "Intense, chaotic, headbanging, and explosive festival energy"
+    },
+    "distinctionNotes": "Unlike Classic Dubstep's deep, quiet, spacious sub-bass rumbles, Brostep is aggressively loud, mid-range heavy, and full of metallic robotic growls.",
+    "parentGenreName": "Dubstep",
+    "referenceUrl": "https://rateyourmusic.com/genre/brostep/"
+  },
+  {
+    "id": "uk_garage_future_garage",
+    "name": "UK Garage / Future Garage",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "dubstep",
+    "aliases": [
+      "2-Step",
+      "Future Garage",
+      "UKG"
+    ],
+    "description": "Sensual, swinging urban electronic music featuring syncopated skipping 2-step beats, warm pitched vocal chops, and deep rubbery bass.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Burial",
+        "title": "Archangel"
+      },
+      {
+        "artist": "MJ Cole",
+        "title": "Sincere"
+      },
+      {
+        "artist": "Overmono",
+        "title": "Good Lies"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Shuffling, swung 2-step syncopated beat with skipped snare hits (130-138 BPM)",
+      "sound": "Warm Rhodes electric keys, vinyl surface rain crackle, filtered pitched vocal snippets, and deep rounded basslines",
+      "voice": "Melancholic, chopped R&B vocal samples pitched up or down into emotional textures",
+      "atmosphere": "Nocturnal, rainy, urban, reflective, and deeply soulful"
+    },
+    "distinctionNotes": "Unlike four-on-the-floor House, UK Garage uses a syncopated, skipping 2-step rhythm where the second kick drum is displaced.",
+    "parentGenreName": "Electronic Dance Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/uk-garage/"
+  },
+  {
+    "id": "gabber_hardcore",
+    "name": "Gabber / Hardcore Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "hardstyle",
+    "aliases": [
+      "Early Hardcore",
+      "Mainstream Gabber"
+    ],
+    "description": "Furious, unrelenting rave music driven by ultra-fast, heavily overdriven distorted kicks, screeching industrial stabs, and raw energy.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Angerfist",
+        "title": "Incoming"
+      },
+      {
+        "artist": "Paul Elstak",
+        "title": "Rainbow in the Sky"
+      },
+      {
+        "artist": "Neophyte",
+        "title": "Braincracking"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Ferocious four-on-the-floor distorted kick pounding at extreme speeds (160-200 BPM)",
+      "sound": "Extreme square-wave kick distortion, roaring sawtooth synthesizer shrieks, and industrial noise",
+      "voice": "Aggressive shouted or pitched-down Dutch/English rave mantras",
+      "atmosphere": "Manic, furious, strobe-lit, and physically exhausting"
+    },
+    "distinctionNotes": "Unlike Hardstyle (150 BPM with pitch-bending reverse bass), Gabber is much faster (160-200 BPM) and uses abrasive, squared-off distorted kick drums.",
+    "parentGenreName": "Hardcore [EDM]",
+    "referenceUrl": "https://rateyourmusic.com/genre/gabber/"
+  },
+  {
+    "id": "idm_experimental_electronic",
+    "name": "IDM / Glitch",
+    "familyId": "electronic",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Intelligent Dance Music",
+      "Braindance",
+      "Glitch"
+    ],
+    "description": "Intricate, cerebral electronic music featuring complex algorithmic drum programming, warm analog synths, and micro-sound glitch textures.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Aphex Twin",
+        "title": "Windowlicker"
+      },
+      {
+        "artist": "Boards of Canada",
+        "title": "Dayvan Cowboy"
+      },
+      {
+        "artist": "Autechre",
+        "title": "Gantz Graf"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Unpredictable, shifting, asymmetric breakbeats and micro-percussion (variable BPM, often 90-140 BPM)",
+      "sound": "Warped analog synthesizers, digital clicks and cuts, tape-degraded poly-pads, and micro-sampled noise",
+      "voice": "Rare; heavily processed, pitch-bent vocal fragments or vocoders",
+      "atmosphere": "Cerebral, headphone-focused, nostalgic, melancholic, or alien"
+    },
+    "distinctionNotes": "Unlike functional club music designed for dancefloors, IDM is designed for attentive home headphone listening with complex asymmetric rhythms.",
+    "parentGenreName": "Electronic",
+    "referenceUrl": "https://rateyourmusic.com/genre/idm/"
+  },
+  {
+    "id": "psychedelic_rock",
+    "name": "Psychedelic Rock",
+    "familyId": "rock",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Acid Rock",
+      "Space Rock"
+    ],
+    "description": "Mind-bending rock music featuring swirling phasing effects, feedback-drenched guitar solos, modal jamming, and surreal lyrics.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "The Jimi Hendrix Experience",
+        "title": "Purple Haze"
+      },
+      {
+        "artist": "Pink Floyd",
+        "title": "Interstellar Overdrive"
+      },
+      {
+        "artist": "Tame Impala",
+        "title": "Elephant"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving 4/4 rock beat with loose, swinging cymbals and fluid transitions",
+      "sound": "Wah-wah electric guitars, lush flanger/phaser effects, sitar textures, and Hammond organ sweeps",
+      "voice": "Dreamy, echoing melodic singing or impassioned blues-rock shouting",
+      "atmosphere": "Trippy, disorienting, expansive, colorful, and surreal"
+    },
+    "distinctionNotes": "Unlike Classic Rock's straight riffs, Psychedelic Rock uses heavy studio audio effects (flangers, delays, reverse tape) to simulate altered states.",
+    "parentGenreName": "Rock",
+    "referenceUrl": "https://rateyourmusic.com/genre/psychedelic-rock/"
+  },
+  {
+    "id": "black_metal",
+    "name": "Black Metal",
+    "familyId": "metal",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Atmospheric Black Metal",
+      "Norwegian Black Metal"
+    ],
+    "description": "Dark, icy extreme metal characterized by relentless blast beats, buzzing tremolo-picked guitar walls, shrieked vocals, and raw lo-fi production.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Mayhem",
+        "title": "Freezing Moon"
+      },
+      {
+        "artist": "Burzum",
+        "title": "Dunkelheit"
+      },
+      {
+        "artist": "Darkthrone",
+        "title": "Transilvanian Hunger"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Relentless, high-velocity blast beats and fast galloping double-kicks",
+      "sound": "Raw, buzzing walls of tremolo-picked electric guitar chords recorded with cold, thin, distorted lo-fi fidelity",
+      "voice": "High-pitched, rasping, agonized shrieks and feral hisses",
+      "atmosphere": "Bleak, freezing, nocturnal, medieval, and misanthropic"
+    },
+    "distinctionNotes": "Unlike Death Metal's low-tuned chugging riffs and deep guttural throat growls, Black Metal uses thin buzzing tremolo picking and high-pitched shrieks.",
+    "parentGenreName": "Metal",
+    "referenceUrl": "https://rateyourmusic.com/genre/black-metal/"
+  },
+  {
+    "id": "country_honky_tonk",
+    "name": "Traditional Country & Honky-Tonk",
+    "familyId": "country",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Classic Country",
+      "Honky Tonk",
+      "Outlaw Country"
+    ],
+    "description": "Heartfelt, storytelling music from rural America, driven by the crying slides of the pedal steel guitar, twangy Telecasters, and two-step rhythms.",
+    "popularityWeight": 0.8,
+    "benchmarkTracks": [
+      {
+        "artist": "Hank Williams",
+        "title": "Hey Good Lookin'"
+      },
+      {
+        "artist": "Johnny Cash",
+        "title": "Folsom Prison Blues"
+      },
+      {
+        "artist": "George Jones",
+        "title": "He Stopped Loving Her Today"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Brisk locomotive two-step 'boom-chick' rhythm or walking bass shuffle (100-130 BPM)",
+      "sound": "Crying, pitch-sliding pedal steel guitar, bright Telecaster twang, acoustic dreadnought guitar, and fiddle",
+      "voice": "Rich, resonant baritone or twangy tenor vocals with clear Southern diction and emotional vibrato",
+      "atmosphere": "Neon-lit roadside honky-tonk, sawdust dancehall, open prairie highway"
+    },
+    "distinctionNotes": "Unlike Funk or Rock, Country is defined by narrative storytelling, the unmistakable crying glide of the pedal steel guitar, and alternating root-fifth bass.",
+    "parentGenreName": "Root",
+    "referenceUrl": "https://rateyourmusic.com/genre/country/"
+  },
+  {
+    "id": "salsa_mambo",
+    "name": "Salsa & Mambo",
+    "familyId": "latin_global",
+    "tier": "macro",
+    "parentGenreId": null,
+    "aliases": [
+      "Salsa Dura",
+      "Afro-Cuban Jazz"
+    ],
+    "description": "Irresistible, fiery Latin dance music powered by interlocking congas, timbales, walking piano montunos, and blazing brass horns.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Celia Cruz",
+        "title": "La Vida Es Un Carnaval"
+      },
+      {
+        "artist": "Hector Lavoe",
+        "title": "El Cantante"
+      },
+      {
+        "artist": "Buena Vista Social Club",
+        "title": "Chan Chan"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Driving, complex syncopated clave rhythm with rapid conga slaps and cowbell accents (180-220 BPM dance tempo)",
+      "sound": "Syncopated acoustic piano montunos, explosive brass horns (trumpets, trombones), and rich Afro-Cuban percussion",
+      "voice": "Passionate Spanish vocal improvisation (sonero) with vibrant call-and-response group choruses",
+      "atmosphere": "Sun-drenched, celebratory, fiery, and deeply communal"
+    },
+    "distinctionNotes": "Unlike Reggaeton's modern electronic dembow kick, Salsa is completely acoustic and live, driven by the traditional two-three clave pattern and live brass.",
+    "parentGenreName": "Latin Music",
+    "referenceUrl": "https://rateyourmusic.com/genre/salsa/"
+  },
+  {
+    "id": "dark_ambient",
+    "name": "Dark Ambient",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "ambient_downtempo",
+    "aliases": [
+      "Drone Ambient",
+      "Industrial Ambient"
+    ],
+    "description": "Claustrophobic, ominous soundscapes built from low-frequency subterranean drones, distant metallic echoes, and total absence of rhythm.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Lustmord",
+        "title": "Heresy"
+      },
+      {
+        "artist": "Atrium Carceri",
+        "title": "The Untold"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Complete absence of drums, pulse, or meter (unmetered dark space)",
+      "sound": "Subterranean sub-bass rumbles, distant echoing metal clangs, deep low-pass drone textures",
+      "voice": "Instrumental with occasional ghostly, distant whispering",
+      "atmosphere": "Ominous, terrifying, subterranean, claustrophobic, and apocalyptic"
+    },
+    "distinctionNotes": "Unlike standard Ambient, Dark Ambient is menacing, dissonant, and devoid of warm relaxation.",
+    "parentGenreName": "Ambient",
+    "referenceUrl": "https://rateyourmusic.com/genre/dark-ambient/"
+  },
+  {
+    "id": "trip_hop_downtempo",
+    "name": "Trip Hop / Downtempo",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "ambient_downtempo",
+    "aliases": [
+      "Bristol Sound",
+      "Downtempo Beats"
+    ],
+    "description": "Dark, smoky, slow-motion urban beats fusing dusty 90s hip-hop breakbeats, warm jazz organs, and sensual cinematic vocals.",
+    "popularityWeight": 0.7,
+    "benchmarkTracks": [
+      {
+        "artist": "Portishead",
+        "title": "Glory Box"
+      },
+      {
+        "artist": "Massive Attack",
+        "title": "Teardrop"
+      },
+      {
+        "artist": "Tricky",
+        "title": "Black Steel"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Slow, heavy, swung hip-hop breakbeat (75-90 BPM)",
+      "sound": "Dusty vinyl crackle, warm Fender Rhodes chords, deep upright or sub-bass, and cinematic strings",
+      "voice": "Sensual, melancholic, breathy female or male singing",
+      "atmosphere": "Nocturnal, smoky lounge, cinematic, melancholic, and mysterious"
+    },
+    "distinctionNotes": "Unlike pure Ambient, Trip Hop is heavily rhythmic with slow, swung, dusty hip-hop drum loops.",
+    "parentGenreName": "Downtempo",
+    "referenceUrl": "https://rateyourmusic.com/genre/trip-hop/"
+  },
+  {
+    "id": "happy_hardcore_uk",
+    "name": "Happy Hardcore / UK Hardcore",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "hardstyle",
+    "aliases": [
+      "UK Hardcore",
+      "Ravecore"
+    ],
+    "description": "Manic, euphoric rave music driven by blistering 170 BPM four-on-the-floor beats, pitch-shifted female pop vocals, and joyful piano riffs.",
+    "popularityWeight": 0.6,
+    "benchmarkTracks": [
+      {
+        "artist": "Scott Brown",
+        "title": "Fly With You"
+      },
+      {
+        "artist": "Darren Styles",
+        "title": "Save Me"
+      },
+      {
+        "artist": "S3RL",
+        "title": "Pretty Rave Girl"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Manic, unyielding four-on-the-floor kick at blistering speed (165-175 BPM)",
+      "sound": "Bright bouncy synth stabs, joyful acoustic piano riffs, and snappy off-beat hi-hats",
+      "voice": "High-pitched chipmunk-style or hyper-clean female vocal singing euphoric anthems",
+      "atmosphere": "Transcendental, childish, joyous, euphoric, and strobe-lit"
+    },
+    "distinctionNotes": "Unlike dark Gabber or aggressive Hardstyle, Happy Hardcore is unabashedly joyful, fast (170 BPM), and driven by bright piano chords.",
+    "parentGenreName": "Hardcore [EDM]",
+    "referenceUrl": "https://rateyourmusic.com/genre/happy-hardcore/"
+  }
+]

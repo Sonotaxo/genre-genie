@@ -65,11 +65,11 @@ export function AudioAkinator() {
     return e;
   };
 
-  const respond = useCallback((value: number) => {
+  const respond = useCallback((value: number, isAlt?: boolean) => {
     const e = engineRef.current;
     const q = e?.nextQuestion();
     if (!e || !q) return;
-    e.answer(q.attribute.id, value);
+    e.answer(q.attribute.id, value, isAlt ?? false);
     setHintOpen(false);
     if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) {
       const top = e.ranked()[0]!.genre;
@@ -218,8 +218,11 @@ function QuestionView({
   engine, q, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
 }: {
   engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; drill: string | null; baseCount: number;
-  hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number) => void; onUndo: () => void;
+  hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
 }) {
+  const [showAlt, setShowAlt] = useState(false);
+  useEffect(() => setShowAlt(false), [q.id]);
+
   const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category];
   const meta = CATEGORY_META[q.category];
@@ -240,7 +243,7 @@ function QuestionView({
           </div>
         </div>
         <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
-          Q{n} of ~{drill ? 4 : 10}
+          Q{n} of ~{drill ? 4 : 12}
         </span>
       </div>
       <div className="mb-4 rounded-2xl border border-border bg-card/60 p-4">
@@ -261,10 +264,22 @@ function QuestionView({
         <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
       )}
       <div className={`animate-slide-in rounded-3xl border ${cat.border} bg-card/80 p-6 backdrop-blur md:p-10`}>
-        <span className={`inline-flex items-center gap-2 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest`}>
-          {meta.emoji} {meta.label}
-        </span>
-        <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">{q.question}</h2>
+        <div className="flex items-center justify-between">
+          <span className={`inline-flex items-center gap-2 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest`}>
+            {meta.emoji} {meta.label}
+          </span>
+          {q.alternativePrompt && (
+            <button
+              onClick={() => setShowAlt(!showAlt)}
+              className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-primary transition active:scale-95"
+            >
+              🔄 {showAlt ? "Original wording" : "Explain differently"}
+            </button>
+          )}
+        </div>
+        <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
+          {showAlt ? q.alternativePrompt : q.question}
+        </h2>
         <button onClick={() => setHintOpen(!hintOpen)} className="mt-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ChevronDown className={`size-4 transition ${hintOpen ? "rotate-180" : ""}`} /> Hint
         </button>
@@ -273,7 +288,7 @@ function QuestionView({
           {RESPONSES.map((r, i) => (
             <button
               key={r.label}
-              onClick={() => onRespond(r.value)}
+              onClick={() => onRespond(r.value, showAlt)}
               className={`flex items-center justify-between rounded-xl border px-4 py-4 text-left font-bold transition-transform duration-100 active:scale-95 md:flex-col md:justify-center md:gap-1 md:text-center ${RESP_CLASS[i]}`}
             >
               <span>{r.label}</span>

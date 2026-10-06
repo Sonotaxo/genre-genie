@@ -9,7 +9,11 @@ export const RESPONSES = [
 ] as const;
 export type ResponseValue = (typeof RESPONSES)[number]["value"];
 
-export interface Answer { attributeId: string; value: number }
+export interface Answer {
+  attributeId: string;
+  value: number;
+  isAlternative?: boolean;
+}
 
 export function likelihood(u: number, weight: number): number {
   return Math.max(0.05, Math.min(0.95, (1 + u * weight) / 2));
@@ -17,7 +21,9 @@ export function likelihood(u: number, weight: number): number {
 
 export function entropy(probs: number[]): number {
   let h = 0;
-  for (const p of probs) if (p > 0) h -= p * Math.log2(p);
+  for (const p of probs) {
+    if (p > 1e-9) h -= p * Math.log2(p);
+  }
   return h;
 }
 
@@ -26,42 +32,97 @@ function normalize(p: number[]): number[] {
   return p.map((x) => x / s);
 }
 
-interface Snapshot { probs: number[]; answers: Answer[]; pruned: string[] }
+interface Snapshot {
+  probs: number[];
+  answers: Answer[];
+  pruned: string[];
+  unsureIds: string[];
+  retriedIds: string[];
+}
 
 export class AkinatorEngine {
   candidates: Genre[];
   probs: number[];
   answers: Answer[] = [];
   pruned = new Set<string>();
+  unsureIds = new Set<string>();
+  retriedIds = new Set<string>();
   private stack: Snapshot[] = [];
   readonly attributes: Attribute[];
 
-  constructor(opts: { family?: Family; parent?: string; priorAnswers?: Answer[]; genres?: Genre[]; attributes?: Attribute[] } = {}) {
+  constructor(
+    opts: {
+      family?: Family;
+      parent?: string;
+      priorAnswers?: Answer[];
+      genres?: Genre[];
+      attributes?: Attribute[];
+    } = {}
+  ) {
     const all = opts.genres ?? GENRES;
     this.attributes = opts.attributes ?? ATTRIBUTES;
-    this.candidates = opts.parent
-      ? all.filter((g) => g.parent === opts.parent)
-      : all.filter((g) => g.parent === null && (!opts.family || g.family === opts.family));
+
+    if (opts.parent) {
+      this.candidates = all.filter((g) => g.parent === opts.parent);
+    } else {
+      this.candidates = all.filter(
+        (g) => g.parent === null && (!opts.family || g.family === opts.family)
+      );
+    }
+
     this.probs = normalize(this.candidates.map((g) => g.popularity));
-    for (const a of opts.priorAnswers ?? []) this.applyAnswer(a.attributeId, a.value, false);
-  }
 
-  get questionCount() { return this.answers.length; }
-  get canUndo() { return this.stack.length > 0; }
-
-  private w(g: Genre, attr: string) { return g.weights[attr] ?? 0; }
-
-  private applyAnswer(attr: string, u: number, record = true) {
-    this.probs = normalize(this.probs.map((p, i) => p * likelihood(u, this.w(this.candidates[i]!, attr))));
-    if (record) this.answers.push({ attributeId: attr, value: u });
-    if (attr === "voice_present" && u <= -0.5) {
-      for (const a of this.attributes) if (a.voiceDependent) this.pruned.add(a.id);
+    for (const a of opts.priorAnswers ?? []) {
+      this.applyAnswer(a.attributeId, a.value, a.isAlternative ?? false, false);
     }
   }
 
-  answer(attr: string, u: number) {
-    this.stack.push({ probs: [...this.probs], answers: [...this.answers], pruned: [...this.pruned] });
-    this.applyAnswer(attr, u);
+  get questionCount() {
+    return this.answers.length;
+  }
+
+  get canUndo() {
+    return this.stack.length > 0;
+  }
+
+  private w(g: Genre, attr: string) {
+    return g.weights[attr] ?? 0;
+  }
+
+  private applyAnswer(attr: string, u: number, isAlternative = false, record = true) {
+    this.probs = normalize(
+      this.probs.map((p, i) => p * likelihood(u, this.w(this.candidates[i]!, attr)))
+    );
+
+    if (record) {
+      this.answers.push({ attributeId: attr, value: u, isAlternative });
+
+      if (u === 0 && !isAlternative) {
+        this.unsureIds.add(attr);
+      } else {
+        this.unsureIds.delete(attr);
+        if (isAlternative) {
+          this.retriedIds.add(attr);
+        }
+      }
+    }
+
+    if (attr === "voice_present" && u <= -0.5) {
+      for (const a of this.attributes) {
+        if (a.voiceDependent) this.pruned.add(a.id);
+      }
+    }
+  }
+
+  answer(attr: string, u: number, isAlternative = false) {
+    this.stack.push({
+      probs: [...this.probs],
+      answers: [...this.answers],
+      pruned: [...this.pruned],
+      unsureIds: [...this.unsureIds],
+      retriedIds: [...this.retriedIds],
+    });
+    this.applyAnswer(attr, u, isAlternative);
   }
 
   undo() {
@@ -70,9 +131,13 @@ export class AkinatorEngine {
     this.probs = s.probs;
     this.answers = s.answers;
     this.pruned = new Set(s.pruned);
+    this.unsureIds = new Set(s.unsureIds);
+    this.retriedIds = new Set(s.retriedIds);
   }
 
-  entropy() { return entropy(this.probs); }
+  entropy() {
+    return entropy(this.probs);
+  }
 
   certainty() {
     const m = this.candidates.length;
@@ -83,26 +148,57 @@ export class AkinatorEngine {
   informationGain(attr: string): number {
     const h = this.entropy();
     let expected = 0;
-    const preds: number[] = [];
-    const posts: number[][] = [];
-    for (const r of RESPONSES) {
-      const post = this.probs.map((p, i) => p * likelihood(r.value, this.w(this.candidates[i]!, attr)));
-      preds.push(post.reduce((a, b) => a + b, 0));
-      posts.push(post);
+
+    for (const ans of [1.0, -1.0]) {
+      let pAns = 0.0;
+      const post: number[] = [];
+
+      for (let i = 0; i < this.candidates.length; i++) {
+        const w = this.w(this.candidates[i]!, attr);
+        const l = likelihood(ans, w);
+        const p = l * this.probs[i]!;
+        post.push(p);
+        pAns += p;
+      }
+
+      if (pAns > 1e-9) {
+        const normPost = post.map((x) => x / pAns);
+        expected += pAns * entropy(normPost);
+      } else {
+        expected += h;
+      }
     }
-    const tot = preds.reduce((a, b) => a + b, 0);
-    posts.forEach((post, k) => { expected += (preds[k]! / tot) * entropy(normalize(post)); });
+
     return h - expected;
   }
 
-  nextQuestion(): { attribute: Attribute; gain: number } | null {
+  nextQuestion(): { attribute: Attribute; gain: number; isAlternative?: boolean } | null {
     const asked = new Set(this.answers.map((a) => a.attributeId));
-    let best: { attribute: Attribute; gain: number } | null = null;
+    let best: { attribute: Attribute; gain: number; isAlternative?: boolean } | null = null;
+
+    // 1. Evaluate unasked attributes
     for (const a of this.attributes) {
       if (asked.has(a.id) || this.pruned.has(a.id)) continue;
       const gain = this.informationGain(a.id);
-      if (!best || gain > best.gain) best = { attribute: a, gain };
+      if (!best || gain > best.gain) {
+        best = { attribute: a, gain, isAlternative: false };
+      }
     }
+
+    // 2. Unsure Fallback: Re-prompt high-value unsure questions with alternativePrompt
+    if (this.unsureIds.size > 0 && this.answers.length >= 3) {
+      for (const uid of this.unsureIds) {
+        if (this.retriedIds.has(uid)) continue;
+        const attr = this.attributes.find((a) => a.id === uid);
+        if (!attr) continue;
+        const uGain = this.informationGain(uid);
+        if (uGain > Math.max(best?.gain ?? 0, 0.08)) {
+          best = { attribute: attr, gain: uGain, isAlternative: true };
+          break;
+        }
+      }
+    }
+
     return best;
   }
 
@@ -112,20 +208,23 @@ export class AkinatorEngine {
       .sort((a, b) => b.prob - a.prob);
   }
 
-  /** True when one candidate clearly dominates (no further questions needed). */
+  /** True when one candidate clearly dominates. */
   isClear(): boolean {
     if (this.candidates.length <= 1) return true;
     const [a, b] = this.ranked();
-    return a!.prob >= 0.65 || a!.prob - (b?.prob ?? 0) > 0.35;
+    return a!.prob >= 0.60 || a!.prob - (b?.prob ?? 0) > 0.35;
   }
 
-  isConverged(maxQuestions = 15): boolean {
+  /** Adaptive dynamic convergence without arbitrary hard cutoffs. */
+  isConverged(maxQuestions = 25): boolean {
     if (this.candidates.length <= 1) return true;
     const [a, b] = this.ranked();
     const n = this.questionCount;
-    if (a!.prob >= 0.65) return true;
+
+    if (a!.prob >= 0.60) return true;
     if (n >= 3 && a!.prob - (b?.prob ?? 0) > 0.35) return true;
     if (n >= maxQuestions) return true;
+
     const next = this.nextQuestion();
     return !next || next.gain < 0.005;
   }
