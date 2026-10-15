@@ -44,8 +44,25 @@ export function GenreGenie() {
   const [, force] = useReducer((x: number) => x + 1, 0);
   const [drill, setDrill] = useState<string | null>(null);
   const [macroAnswers, setMacroAnswers] = useState<Answer[]>([]);
-  const [hintOpen, setHintOpen] = useState(true);
+  const [hintOpen, setHintOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      const saved = localStorage.getItem("genre_genie_show_hints");
+      return saved !== null ? saved === "true" : true;
+    } catch {
+      return true;
+    }
+  });
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const handleSetHintOpen = useCallback((open: boolean) => {
+    setHintOpen(open);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem("genre_genie_show_hints", String(open));
+      } catch {}
+    }
+  }, []);
 
   const engine = engineRef.current;
   const question = screen === "PLAYING" && engine ? engine.nextQuestion() : null;
@@ -129,7 +146,6 @@ export function GenreGenie() {
     const q = e?.nextQuestion();
     if (!e || !q) return;
     e.answer(q.attribute.id, value, isAlt ?? q.isAlternative ?? false);
-    setHintOpen(false);
 
     if (drill) {
       // In subgenre mode
@@ -286,7 +302,7 @@ export function GenreGenie() {
           drill={drill}
           baseCount={macroAnswers.length}
           hintOpen={hintOpen}
-          setHintOpen={setHintOpen}
+          setHintOpen={handleSetHintOpen}
           onRespond={respond}
           onUndo={undo}
           onSelectGenre={selectGenreEarly}
