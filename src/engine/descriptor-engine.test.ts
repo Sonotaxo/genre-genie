@@ -9,9 +9,12 @@ describe("DescriptorEngine Unit Tests", () => {
     expect(engine.questionCount).toBe(0);
     expect(engine.canUndo).toBe(false);
 
-    // UX / Dilemma of choice invariant: always at most 4 options per question
+    // UX / Dilemma of choice invariant: always exactly 4 options per question, with option 4 as "Don't Know / Neither"
     for (const q of engine.questions) {
-      expect(q.options.length).toBeLessThanOrEqual(4);
+      expect(q.options.length).toBe(4);
+      const opt4 = q.options[3]!;
+      expect(opt4.label).toContain("Don't Know");
+      expect(Object.keys(opt4.effects).length).toBe(0);
     }
   });
 

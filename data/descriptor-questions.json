@@ -41,7 +41,7 @@
       {
         "id": "tempo_unsure",
         "emoji": "❓",
-        "label": "Not Sure / Freeform",
+        "label": "Don't Know / Neither",
         "description": "Floating without a clear pulse, or hard to tell",
         "effects": {}
       }
@@ -89,10 +89,10 @@
         }
       },
       {
-        "id": "rhythm_other",
+        "id": "rhythm_unsure",
         "emoji": "❓",
-        "label": "Other Rhythm / Floating",
-        "description": "Caribbean dance bounce, country chug, or floating without drums",
+        "label": "Don't Know / Neither",
+        "description": "Different rhythm, floating freely, or hard to tell",
         "effects": {}
       }
     ]
@@ -135,15 +135,11 @@
         }
       },
       {
-        "id": "chopped_amen_break",
-        "emoji": "🌪️",
-        "label": "Ultra-Fast Sliced Drum Rolls",
-        "description": "Frantic, stuttering drum rolls sliced up at high speed (Jungle / Drum & Bass)",
-        "effects": {
-          "sound_amen_break_chopped": 1.0,
-          "pulse_breakbeat_syncopated": 1.0,
-          "pulse_four_on_the_floor": -1.0
-        }
+        "id": "specialty_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Standard drum beat, no specialty rhythm, or unsure",
+        "effects": {}
       }
     ]
   },
@@ -190,8 +186,8 @@
       {
         "id": "inst_unsure",
         "emoji": "❓",
-        "label": "A Blend / Other Instruments",
-        "description": "Horns, hand percussion, country twang, or hard to isolate",
+        "label": "Don't Know / Neither",
+        "description": "A balanced blend of instruments, other instruments, or hard to isolate",
         "effects": {}
       }
     ]
@@ -232,10 +228,10 @@
         }
       },
       {
-        "id": "organic_none",
+        "id": "organic_unsure",
         "emoji": "❓",
-        "label": "None of These / Standard",
-        "description": "Standard band, electronic sound, or not present",
+        "label": "Don't Know / Neither",
+        "description": "Standard band instruments, electronic sounds, or none of these",
         "effects": {}
       }
     ]
@@ -284,13 +280,11 @@
         }
       },
       {
-        "id": "voice_stylized",
-        "emoji": "✨",
-        "label": "Stylized / Other Vocals",
-        "description": "Harsh screaming, heavy Auto-Tune, whispers, choir, or vocal chops",
-        "effects": {
-          "voice_present": 1.0
-        }
+        "id": "voice_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Repeated vocal snippets, unusual vocal delivery, or not sure",
+        "effects": {}
       }
     ]
   },
@@ -334,10 +328,10 @@
         }
       },
       {
-        "id": "vocal_standard",
+        "id": "vocal_style_unsure",
         "emoji": "❓",
-        "label": "Natural / None of These",
-        "description": "Standard singing, no heavy vocal effects, or purely instrumental",
+        "label": "Don't Know / Neither",
+        "description": "Normal natural singing without these effects, or purely instrumental",
         "effects": {}
       }
     ]
@@ -379,14 +373,11 @@
         }
       },
       {
-        "id": "bass_acoustic_funky",
-        "emoji": "🎸",
-        "label": "Funky / Acoustic / Standard",
-        "description": "Funky slapped electric bass, acoustic upright, or gentle low end",
-        "effects": {
-          "sound_slap_bass_groove": 0.7,
-          "sound_snarling_neuro_bass": -1.0
-        }
+        "id": "bass_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Gentle natural bass, non-dominant low end, or hard to tell",
+        "effects": {}
       }
     ]
   },
@@ -408,22 +399,13 @@
         }
       },
       {
-        "id": "analog_warmth",
-        "emoji": "📻",
-        "label": "Warm Vintage Tone",
-        "description": "Soft and smooth like playing an old 1970s vinyl record on warm speakers",
-        "effects": {
-          "sound_analog_warmth": 1.0,
-          "sound_heavy_distortion": -0.5
-        }
-      },
-      {
         "id": "lofi_crackles",
         "emoji": "📼",
-        "label": "Dusty Lo-Fi Crackles",
-        "description": "Noticeable needle crackles, tape cassette hiss, or muted cozy bedroom sound",
+        "label": "Dusty Lo-Fi / Vintage Warmth",
+        "description": "Noticeable needle crackles, tape cassette hiss, or warm cozy record player sound",
         "effects": {
-          "sound_lofi_crackles": 1.0
+          "sound_lofi_crackles": 1.0,
+          "sound_analog_warmth": 0.8
         }
       },
       {
@@ -435,6 +417,13 @@
           "sound_heavy_distortion": 1.0,
           "sound_bright_glossy_clean": -0.8
         }
+      },
+      {
+        "id": "clarity_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Standard, balanced sound without notable grit or vintage crackle",
+        "effects": {}
       }
     ]
   },
@@ -473,14 +462,11 @@
         }
       },
       {
-        "id": "synth_subtle_none",
-        "emoji": "🚫",
-        "label": "Subtle Glow or No Synths",
-        "description": "Soft background pads, real instruments, or no notable synthesizers",
-        "effects": {
-          "sound_supersaws_anthem": -0.8,
-          "sound_acid_303_squelch": -0.8
-        }
+        "id": "synth_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Subtle background pads, real acoustic instruments, or no synths",
+        "effects": {}
       }
     ]
   },
@@ -521,10 +507,10 @@
         }
       },
       {
-        "id": "subtle_soft_tap",
-        "emoji": "🪶",
-        "label": "Soft Beat / Not Sure",
-        "description": "Gentle taps, finger snaps, minimal beats, or standard drums",
+        "id": "kick_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Soft gentle tap, standard drum beat, or not sure",
         "effects": {}
       }
     ]
@@ -567,13 +553,11 @@
         }
       },
       {
-        "id": "no_guitars",
-        "emoji": "🚫",
-        "label": "No Guitars in This Song",
-        "description": "Purely electronic beats, synthesizers, piano, or vocal only",
-        "effects": {
-          "sound_electric_guitars": -0.9
-        }
+        "id": "guitar_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "No guitars in this song, or hard to tell",
+        "effects": {}
       }
     ]
   },
@@ -616,15 +600,11 @@
         }
       },
       {
-        "id": "nostalgic_intimate",
-        "emoji": "🌅",
-        "label": "Nostalgic, Dreamy or Intimate",
-        "description": "Sentimental longing for the past, quiet bedroom vibe, or sunset memories",
-        "effects": {
-          "atmo_nostalgic_melancholy": 0.8,
-          "atmo_intimate_bedroom": 0.8,
-          "atmo_violent_aggressive": -1.0
-        }
+        "id": "atmo_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Neutral emotional vibe, bittersweet nostalgic, or hard to tell",
+        "effects": {}
       }
     ]
   },
@@ -665,8 +645,8 @@
       {
         "id": "groove_unsure",
         "emoji": "❓",
-        "label": "Standard / Not Sure",
-        "description": "Standard rhythmic flow",
+        "label": "Don't Know / Neither",
+        "description": "Standard rhythmic flow, or hard to tell",
         "effects": {}
       }
     ]
