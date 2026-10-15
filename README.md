@@ -46,7 +46,7 @@ The engine runs **100% client-side** in TypeScript:
 ### Installation
 
 ```bash
-git clone https://github.com/steppschuh/genre-genie.git
+git clone https://github.com/Sonotaxo/genre-genie.git
 cd genre-genie
 bun install
 ```
