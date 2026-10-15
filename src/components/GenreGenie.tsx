@@ -499,14 +499,22 @@ function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenCh
     // Build markdown issue body
     const title = `[Correction] Predicted: ${predictedGenre?.name ?? "Unknown"} vs Actual: ${actualName}`;
 
-    const answerRows = engine.answers
+    // Format compact answer rows (attribute ID + answer) to stay safely within URL limits
+    const maxUrlAnswers = 35;
+    const displayedAnswers = engine.answers.slice(0, maxUrlAnswers);
+    const answerRows = displayedAnswers
       .map((a, i) => {
-        const attr = ATTRIBUTES.find((att) => att.id === a.attributeId);
         const resp = RESPONSES.find((r) => r.value === a.value)?.label ?? String(a.value);
-        const qText = attr ? (a.isAlternative && attr.alternativePrompt ? attr.alternativePrompt : attr.question) : a.attributeId;
-        return `| ${i + 1} | \`${a.attributeId}\` | ${qText} | **${resp}** |`;
+        return `| ${i + 1} | \`${a.attributeId}\` | **${resp}** |`;
       })
       .join("\n");
+
+    const overflowNote = engine.answers.length > maxUrlAnswers
+      ? `\n\n*... and ${engine.answers.length - maxUrlAnswers} more questions (full list copied to clipboard).*`
+      : "";
+
+    // Safely trim note if extraordinarily long to prevent URL length overflow
+    const safeNote = note.trim().length > 600 ? `${note.trim().slice(0, 600)}… *(truncated)*` : note.trim();
 
     const body = `### 🎵 Genre Correction Report
 
@@ -517,31 +525,32 @@ function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenCh
 ---
 
 ### 📝 Listener Notes
-${note.trim() ? `> ${note.trim().replace(/\n/g, "\n> ")}` : "*No extra notes provided.*"}
+${safeNote ? `> ${safeNote.replace(/\n/g, "\n> ")}` : "*No extra notes provided.*"}
 
 ---
 
 ### 🔍 Session Diagnostic Trace (${engine.answers.length} questions)
-<details>
-<summary>Click to view asked questions & responses</summary>
+<details open>
+<summary>View question responses</summary>
 
-| # | Attribute ID | Question Asked | Listener Response |
-|---|---|---|---|
+| # | Attribute | Listener Response |
+|---|---|---|
 ${answerRows}
-
-\`\`\`json
-${JSON.stringify(trace, null, 2)}
-\`\`\`
-</details>
+</details>${overflowNote}
 
 ---
 *Reported from [Genre Genie](https://sonotaxo.github.io/genre-genie/)*
 `;
 
+    const fullTraceString = JSON.stringify(trace, null, 2);
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(fullTraceString).catch(() => {});
+    }
+
     const issueUrl = `https://github.com/Sonotaxo/genre-genie/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=${encodeURIComponent("calibration,feedback")}`;
 
     window.open(issueUrl, "_blank", "noopener,noreferrer");
-    toast.success("Opening GitHub issue to calibrate the engine. Thank you!");
+    toast.success("Opening GitHub issue! Full diagnostic trace copied to clipboard.");
     onOpenChange(false);
     setSearch("");
     setActual(null);
