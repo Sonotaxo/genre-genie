@@ -3,7 +3,7 @@ import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
-import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family } from "@/engine/data";
+import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family, type Genre } from "@/engine/data";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
@@ -519,6 +519,94 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
   );
 }
 
+function CandidateCard({
+  title,
+  candidates,
+  canEarlySelect,
+  onSelectGenre,
+  showParentTag = false,
+}: {
+  title: string;
+  candidates: { genre: Genre; prob: number }[];
+  canEarlySelect: boolean;
+  onSelectGenre?: ((genreId: string) => void) | undefined;
+  showParentTag?: boolean | undefined;
+}) {
+  const top = candidates[0];
+
+  return (
+    <div className="flex flex-col justify-between rounded-2xl border border-border bg-card/60 p-4">
+      <div>
+        {canEarlySelect && top && onSelectGenre && (
+          <div className="mb-3.5 flex flex-col gap-2 rounded-xl border border-pulse/40 bg-pulse/10 p-2.5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-sm">🎯</span>
+              <span className="text-muted-foreground">
+                Spot your genre? Is it <strong className="text-foreground">{top.genre.name}</strong>?
+              </span>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => onSelectGenre(top.genre.id)}
+              className="h-7 shrink-0 bg-pulse text-xs font-semibold text-primary-foreground hover:bg-pulse/90 active:scale-95"
+            >
+              <Check className="mr-1 size-3.5" />
+              Yes, that&apos;s it!
+            </Button>
+          </div>
+        )}
+
+        <div className="mb-2 flex items-center justify-between">
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{title}</p>
+          {canEarlySelect && (
+            <span className="font-mono text-[10px] uppercase tracking-wider text-pulse">Leading match</span>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          {candidates.slice(0, 3).map((r) => {
+            const parentName =
+              showParentTag && r.genre.parent
+                ? GENRES.find((g) => g.id === r.genre.parent)?.name
+                : null;
+            return (
+              <div key={r.genre.id} className="flex items-center gap-3 text-sm">
+                <div className="w-36 truncate font-semibold">
+                  <span>{r.genre.name}</span>
+                  {parentName && (
+                    <span className="ml-1 text-[11px] font-normal text-muted-foreground">
+                      ({parentName})
+                    </span>
+                  )}
+                </div>
+                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500"
+                    style={{ width: `${Math.min(r.prob * 100, 100)}%` }}
+                  />
+                </div>
+                <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function checkEarlySelect(
+  candidates: { genre: Genre; prob: number }[],
+  questionCount: number
+): boolean {
+  if (candidates.length === 0 || questionCount < 4) return false;
+  const top = candidates[0];
+  const second = candidates[1];
+  if (!top || top.prob < 0.35) return false;
+  if (!second) return true;
+  return top.prob - second.prob >= 0.20 || top.prob >= second.prob * 2.0;
+}
+
 function QuestionView({
   engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo, onSelectGenre,
 }: {
@@ -538,23 +626,22 @@ function QuestionView({
   const n = engine.questionCount + 1;
   const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
 
-  const ranked = engine.ranked();
-  const topCandidate = ranked[0];
-  const secondCandidate = ranked[1];
+  const isMicroMode = Boolean(drill) || engine.candidates.some((c) => c.parent !== null);
+  const parentCandidates = isMicroMode
+    ? []
+    : engine.ranked().filter((r) => r.genre.parent === null);
+  const subCandidates = isMicroMode
+    ? engine.ranked()
+    : engine.rankedAllSubgenres();
 
-  // Early selection threshold:
-  // Allowed when:
-  // 1. At least 4 questions have been answered.
-  // 2. Top candidate has reached at least 35% probability.
-  // 3. One candidate has significantly higher confidence than the others:
-  //    margin >= 20% OR ratio >= 2.0x runner up (e.g. 40.9% vs 13.8%).
-  const canEarlySelect =
-    topCandidate &&
-    engine.questionCount >= 4 &&
-    topCandidate.prob >= 0.35 &&
-    (!secondCandidate ||
-      topCandidate.prob - secondCandidate.prob >= 0.20 ||
-      topCandidate.prob >= secondCandidate.prob * 2.0);
+  const showTwoCards =
+    !isMicroMode &&
+    parentCandidates.length > 0 &&
+    subCandidates.length > 0 &&
+    subCandidates[0]!.prob >= 0.15;
+
+  const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
+  const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
 
   return (
     <section>
@@ -574,44 +661,41 @@ function QuestionView({
           Q{n}
         </span>
       </div>
-      <div className="mb-4 rounded-2xl border border-border bg-card/60 p-4">
-        <div className="mb-2 flex items-center justify-between">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Top candidates</p>
-          {canEarlySelect && (
-            <span className="font-mono text-[10px] uppercase tracking-wider text-pulse">Leading match identified</span>
-          )}
-        </div>
-        <div className="space-y-1.5">
-          {ranked.slice(0, 3).map((r) => (
-            <div key={r.genre.id} className="flex items-center gap-3 text-sm">
-              <span className="w-32 truncate font-semibold">{r.genre.name}</span>
-              <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
-                <div className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500" style={{ width: `${r.prob * 100}%` }} />
-              </div>
-              <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
-            </div>
-          ))}
-        </div>
 
-        {canEarlySelect && onSelectGenre && (
-          <div className="mt-3.5 flex flex-col gap-2 rounded-xl border border-pulse/40 bg-pulse/10 p-2.5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-sm">🎯</span>
-              <span className="text-muted-foreground">
-                Spot your genre? Is it <strong className="text-foreground">{topCandidate.genre.name}</strong>?
-              </span>
-            </div>
-            <Button
-              size="sm"
-              onClick={() => onSelectGenre(topCandidate.genre.id)}
-              className="h-7 shrink-0 bg-pulse text-xs font-semibold text-primary-foreground hover:bg-pulse/90 active:scale-95"
-            >
-              <Check className="mr-1 size-3.5" />
-              Yes, that&apos;s it!
-            </Button>
-          </div>
-        )}
-      </div>
+      {showTwoCards ? (
+        <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <CandidateCard
+            title="Parent genres"
+            candidates={parentCandidates}
+            canEarlySelect={canEarlySelectParent}
+            onSelectGenre={onSelectGenre}
+          />
+          <CandidateCard
+            title="Sub-genres"
+            candidates={subCandidates}
+            canEarlySelect={canEarlySelectSub}
+            onSelectGenre={onSelectGenre}
+            showParentTag={true}
+          />
+        </div>
+      ) : (
+        <div className="mb-4">
+          <CandidateCard
+            title={isMicroMode ? "Candidate sub-genres" : "Top candidates"}
+            candidates={
+              isMicroMode
+                ? subCandidates
+                : parentCandidates.length > 0
+                ? parentCandidates
+                : subCandidates
+            }
+            canEarlySelect={isMicroMode ? canEarlySelectSub : canEarlySelectParent}
+            onSelectGenre={onSelectGenre}
+            showParentTag={isMicroMode}
+          />
+        </div>
+      )}
+
       {drillName && (
         <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
       )}
