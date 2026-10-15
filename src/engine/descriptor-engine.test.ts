@@ -46,7 +46,7 @@ describe("DescriptorEngine Unit Tests", () => {
     engine.answer("rhythm_pattern", "four_on_floor");
     engine.answer("tempo_pace", "fast_club");
     engine.answer("groove_feel", "swung_shuffle");
-    engine.answer("sound_texture", "bright_glossy");
+    engine.answer("sound_clarity", "bright_glossy");
 
     const topSub = engine.rankedAllSubgenres()[0]!;
     expect(topSub.genre.name).toBe("Tech House");
@@ -60,7 +60,7 @@ describe("DescriptorEngine Unit Tests", () => {
     engine.answer("rhythm_pattern", "syncopated_breakbeat");
     engine.answer("tempo_pace", "slow_meditative");
     engine.answer("groove_feel", "swung_shuffle");
-    engine.answer("sound_texture", "lofi_crackles");
+    engine.answer("sound_clarity", "lofi_crackles");
 
     const top = engine.ranked()[0]!;
     expect(top.genre.name).toBe("90s Boom Bap");
@@ -75,7 +75,7 @@ describe("DescriptorEngine Unit Tests", () => {
     engine.answer("tempo_pace", "fast_club");
     engine.answer("groove_feel", "straight_march");
     engine.answer("vocal_delivery", "purely_instrumental");
-    engine.answer("sound_texture", "heavy_distortion");
+    engine.answer("sound_clarity", "heavy_distortion");
     engine.answer("atmosphere_mood", "dark_dystopian");
 
     const ranked = engine.ranked();

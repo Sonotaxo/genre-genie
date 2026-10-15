@@ -10,10 +10,10 @@
   {
     "id": "pulse_breakbeat_syncopated",
     "category": "pulse",
-    "prompt": "Is the drum rhythm an uneven, rolling, energetic shuffle (like a fast live drum solo or hip-hop break) rather than a straight club thump?",
-    "hint": "Found in Drum & Bass, Jungle, Breakcore, and classic funk/breakbeat loops.",
+    "prompt": "Is the drum rhythm an uneven, rolling, energetic shuffle (like a lively drum roll or classic hip-hop groove) rather than a straight club thump?",
+    "hint": "Found in Drum & Bass, Jungle, Breakcore, and classic funk drum loops.",
     "polarOpposite": "A straight, repetitive four-beat club thump",
-    "alternativePrompt": "Do the drums feel scattered and zigzagging like a live drummer showing off on a snare drum, rather than a robotic metronome?"
+    "alternativePrompt": "Do the drums feel scattered and energetic like a live drummer showing off on a snare drum, rather than a robotic metronome?"
   },
   {
     "id": "pulse_halftime_sway",
@@ -69,21 +69,21 @@
     "prompt": "Does the beat have the signature Latin dance bounce ('boom... cha-boom-cha' or 'boom-ch-boom-chick')?",
     "hint": "The unmistakable rhythm of Reggaeton, Latin pop hits, and Dancehall.",
     "polarOpposite": "A straight rock drum kit or electronic four-beat club kick",
-    "alternativePrompt": "Does the drum rhythm match the worldwide Latin dance beat heard in hits like 'Despacito' (a syncopated 'thump... ta-thump-ta')?"
+    "alternativePrompt": "Does the drum rhythm match the worldwide Latin dance beat heard in hits like 'Despacito' (a bouncy 'thump... ta-thump-ta')?"
   },
   {
     "id": "pulse_reggae_one_drop",
     "category": "pulse",
     "prompt": "Does the track have a relaxed Jamaican rhythm with guitars or keyboards chopping sharply on the off-beats?",
-    "hint": "The laid-back skanking rhythm of Bob Marley, Roots Reggae, and Dub.",
+    "hint": "The laid-back island rhythm of Bob Marley, Roots Reggae, and Dub.",
     "polarOpposite": "Heavy rock downbeats or driving electronic techno",
-    "alternativePrompt": "Does the song have that distinct Caribbean island sway where short guitar or piano chords 'skank' chop-chop on the upbeats?"
+    "alternativePrompt": "Does the song have that distinct Caribbean island sway where short guitar or piano chords chop on the upbeats?"
   },
   {
     "id": "pulse_galloping_rolling_bass",
     "category": "pulse",
     "prompt": "Is there a fast, continuous galloping bassline that rolls like a machine gun behind every beat (a rapid 3-note bass bounce: thump-th-th-thump-th-th)?",
-    "hint": "The signature relentless 'rolling bass' of Psytrance, Goa Trance, and galloping Heavy Metal.",
+    "hint": "The signature relentless rolling bass of Psytrance and galloping Heavy Metal.",
     "polarOpposite": "A slow hip-hop bass, single sustained bass notes, or sparse bounce",
     "alternativePrompt": "Does the bass vibrate continuously like an electric motor humming at top speed (a non-stop 3-beat roll behind every kick drum)?"
   },
@@ -98,7 +98,7 @@
   {
     "id": "pulse_train_beat_country",
     "category": "pulse",
-    "prompt": "Is there a fast, chugging drum beat that sounds like a speeding steam train (a quick country two-step rhythm: chugga-chugga-chugga)?",
+    "prompt": "Is there a fast, chugging drum beat that sounds like a speeding steam train (a quick country rhythm: chugga-chugga-chugga)?",
     "hint": "The driving rhythmic engine of Country, Honky-Tonk, and Bluegrass.",
     "polarOpposite": "Slow hip-hop sway or straight electronic club beat",
     "alternativePrompt": "Do the drums sound like brushes or sticks chugging rapidly on a snare drum, mimicking a locomotive train rolling down the tracks?"
@@ -187,7 +187,7 @@
     "id": "sound_acid_303_squelch",
     "category": "sound",
     "prompt": "Is there a rubbery, squelching synthesizer line that twists and shrieks with high-pitched resonance (the distinctive bubbling 'acid' rave sound)?",
-    "hint": "The iconic Roland TB-303 squelch heard in Acid House, Acid Techno, and Psytrance.",
+    "hint": "The iconic bubbling electronic squelch heard in Acid House, Acid Techno, and rave music.",
     "polarOpposite": "Standard clean piano, warm strings, or realistic brass",
     "alternativePrompt": "Do you hear a rubbery, whistling electronic synth lead that sounds like twisting wet rubber or bubbling liquid acid?"
   },
@@ -203,17 +203,17 @@
     "id": "sound_snarling_neuro_bass",
     "category": "sound",
     "prompt": "Does the bass make morphing, aggressive robot growls or metallic chainsaw sounds (like heavy Dubstep or aggressive sci-fi sound effects)?",
-    "hint": "Heard in aggressive Dubstep (Brostep) and Neurofunk Drum & Bass.",
+    "hint": "Heard in aggressive Dubstep and heavy sci-fi bass music.",
     "polarOpposite": "Gentle acoustic bass or warm organ pedal notes",
     "alternativePrompt": "Does the bass sound like a roaring metallic beast or chainsaw ripping through speakers (an angry robotic growl)?"
   },
   {
     "id": "sound_amen_break_chopped",
     "category": "sound",
-    "prompt": "Are the drums frantic, chopped-up breakbeat loops that stutter and crash rapidly (a fast, chaotic drum roll rather than a steady club beat)?",
-    "hint": "The unmistakable chopped 'Amen Break' of Jungle, Drum & Bass, and Breakcore.",
-    "polarOpposite": "A steady electronic kick drum (four-on-the-floor) or un-chopped standard rhythm",
-    "alternativePrompt": "Does the track feature that classic 1990s jungle drum break—a live acoustic drum loop rapidly sliced into stuttering rolls and cymbal crashes?"
+    "prompt": "Are the drums frantic, rapidly sliced drum rolls that stutter and crash at high speed (rather than a steady club beat)?",
+    "hint": "The unmistakable sliced drum rolls heard in Jungle, Drum & Bass, and Breakcore.",
+    "polarOpposite": "A steady, repetitive club thump or standard rock drum beat",
+    "alternativePrompt": "Does the track feature that classic energetic drum break—an acoustic drum kit rapidly sliced into stuttering rolls and cymbal crashes?"
   },
   {
     "id": "sound_distorted_hardstyle_kick",
