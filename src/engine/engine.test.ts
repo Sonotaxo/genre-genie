@@ -243,6 +243,50 @@ describe("GenreGenieEngine Core Unit Tests", () => {
     // Even under techno drilldown, Tech House can win because it's not ruled out
     expect(e.ranked()[0]!.genre.id).toBe("tech_house");
   });
+
+  it("seamlessly classifies Tech House via macroProbs prior even when macro leaned toward Techno", () => {
+    // Exact user trace responses
+    const answers = [
+      { attributeId: "sound_electronic_dominant", value: 1 },
+      { attributeId: "pulse_four_on_the_floor", value: 1 },
+      { attributeId: "pulse_halftime_sway", value: -0.5 },
+      { attributeId: "pulse_swung_groove", value: 0 },
+      { attributeId: "pulse_tempo_fast", value: 0.5 },
+      { attributeId: "voice_clean_melodic", value: -0.5 },
+      { attributeId: "atmo_sunny_uplifting", value: -1 },
+      { attributeId: "sound_polyrhythmic_percussion", value: -1 },
+      { attributeId: "pulse_hyper_fast", value: -1 },
+      { attributeId: "voice_present", value: 1 },
+      { attributeId: "voice_rapping_spoken", value: 0.5 },
+      { attributeId: "pulse_breakbeat_syncopated", value: -0.5 },
+      { attributeId: "sound_acoustic_wood_strings", value: -1 },
+      { attributeId: "atmo_dark_dystopian", value: 0.5 },
+      { attributeId: "voice_whispered_ethereal", value: -1 },
+      { attributeId: "sound_sliding_bass_glides", value: -0.5 },
+      { attributeId: "sound_snarling_neuro_bass", value: -0.5 },
+      { attributeId: "sound_brass_horns", value: -1 },
+      { attributeId: "pulse_train_beat_country", value: -0.5 },
+    ];
+
+    const macroEngine = new GenreGenieEngine();
+    for (const a of answers) {
+      macroEngine.answer(a.attributeId, a.value);
+    }
+
+    const macroProbs = new Map(macroEngine.ranked().map((r) => [r.genre.id, r.prob]));
+    // Subgenre engine initialized with macro probabilities
+    const subEngine = new GenreGenieEngine({
+      macroProbs,
+      priorAnswers: macroEngine.answers,
+    });
+
+    const topSub = subEngine.ranked()[0];
+    const secondSub = subEngine.ranked()[1];
+    expect(topSub).toBeDefined();
+    expect(topSub!.genre.id).toBe("tech_house");
+    expect(topSub!.prob).toBeGreaterThan(0.60);
+    expect(topSub!.prob).toBeGreaterThan(secondSub!.prob * 5);
+  });
 });
 
 describe("Genre Genie Matrix 100% Convergence Suite", () => {

@@ -105,9 +105,22 @@ export function GenreGenie() {
   }, [drill, macroAnswers.length]);
 
   const makeDrill = (parent: string, prior: Answer[]) => {
-    const e = new AkinatorEngine({ parent, priorAnswers: prior });
-    // mark prior answers as asked so we don't repeat them
+    const e = new AkinatorEngine({
+      parent,
+      priorAnswers: prior,
+      allowCrossFamilySubgenres: true,
+    });
     e.answers = prior.map((a) => ({ ...a }));
+    return e;
+  };
+
+  const makeSubgenreDrill = (macroE: AkinatorEngine) => {
+    const macroProbs = new Map(macroE.ranked().map((r) => [r.genre.id, r.prob]));
+    const e = new AkinatorEngine({
+      macroProbs,
+      priorAnswers: macroE.answers,
+    });
+    e.answers = macroE.answers.map((a) => ({ ...a }));
     return e;
   };
 
@@ -117,21 +130,62 @@ export function GenreGenie() {
     if (!e || !q) return;
     e.answer(q.attribute.id, value, isAlt ?? q.isAlternative ?? false);
     setHintOpen(false);
-    if (e.isConverged(drill ? 8 + macroAnswers.length : 25)) {
-      const top = e.ranked()[0]!.genre;
-      if (!drill && hasSubgenres(top.id)) {
-        const prior = [...e.answers];
-        const d = makeDrill(top.id, prior);
-        if (d.isClear()) {
-          // subgenre already obvious from the answers: show it directly
-          setMacroAnswers(prior);
-          macroRef.current = e;
-          autoDrillRef.current = true;
-          engineRef.current = d;
-          setDrill(top.id);
-        }
+
+    if (drill) {
+      // In subgenre mode
+      const limit = Math.min(8 + macroAnswers.length, 25);
+      if (e.isConverged(limit)) {
+        setScreen("CONVERGED");
       }
-      setScreen("CONVERGED");
+    } else {
+      // In macro mode
+      const macroRanked = e.ranked();
+      const topMacro = macroRanked[0];
+      const secondMacro = macroRanked[1];
+      const viableMacroWithSubgenres = macroRanked
+        .slice(0, 3)
+        .filter((r) => r.prob >= 0.05 && hasSubgenres(r.genre.id));
+
+      const macroConverged = e.isConverged(20);
+      const isMacroAmbiguous =
+        topMacro &&
+        secondMacro &&
+        (topMacro.prob < 0.82 || topMacro.prob - secondMacro.prob < 0.35);
+      const subgenreLeading = e.rankedAllSubgenres()[0];
+      const isCrossFamilySubgenreLeading =
+        subgenreLeading &&
+        topMacro &&
+        subgenreLeading.genre.parent !== topMacro.genre.id &&
+        subgenreLeading.prob >= 0.25;
+
+      // When it's unclear which main genre we're in because multiple subgenres could match,
+      // or when the macro round reaches convergence and subgenres are in play:
+      // DO NOT present the main genre! Instead, seamlessly continue drilling down the sub-genre.
+      const shouldDrillSubgenres =
+        viableMacroWithSubgenres.length >= 1 &&
+        (macroConverged ||
+          (e.questionCount >= 8 && (isMacroAmbiguous || isCrossFamilySubgenreLeading)));
+
+      if (shouldDrillSubgenres) {
+        const prior = [...e.answers];
+        const subEngine = makeSubgenreDrill(e);
+        setMacroAnswers(prior);
+        macroRef.current = e;
+        engineRef.current = subEngine;
+        autoDrillRef.current = true;
+        setDrill(subEngine.ranked()[0]?.genre.parent ?? topMacro?.genre.id ?? "subgenres");
+
+        // If the subgenre is already decisively clear from the answers, show it directly:
+        if (subEngine.isClear() || subEngine.isConverged(Math.min(8 + prior.length, 25))) {
+          setScreen("CONVERGED");
+        } else {
+          // Seamlessly continue drilling down without stopping:
+          setScreen("PLAYING");
+        }
+      } else if (macroConverged) {
+        // Macro converged and no subgenres exist for this style (e.g. Flamenco, Delta Blues)
+        setScreen("CONVERGED");
+      }
     }
     force();
   }, [drill, macroAnswers.length]);
@@ -596,7 +650,7 @@ function Diagnosis({
         <div className="mt-4 flex flex-col items-start gap-6 md:flex-row md:items-center">
           <Gauge value={top.prob} />
           <div>
-            {drill && <p className="font-mono text-xs uppercase tracking-widest text-sound">Subgenre of {GENRES.find((x) => x.id === drill)?.name}</p>}
+            {g.parent && <p className="font-mono text-xs uppercase tracking-widest text-sound">Subgenre of {GENRES.find((x) => x.id === g.parent)?.name ?? g.parent}</p>}
             <h2 className="bg-gradient-to-r from-pulse to-voice bg-clip-text text-5xl font-extrabold tracking-tight text-transparent md:text-6xl">{g.name}</h2>
             <p className="mt-3 max-w-xl text-muted-foreground">{g.summary}</p>
           </div>

@@ -40,6 +40,18 @@ interface Snapshot {
   retriedIds: string[];
 }
 
+export interface EngineOptions {
+  family?: Family;
+  parent?: string;
+  parents?: string[];
+  candidates?: Genre[];
+  macroProbs?: Map<string, number> | Record<string, number>;
+  priorAnswers?: Answer[];
+  genres?: Genre[];
+  attributes?: Attribute[];
+  allowCrossFamilySubgenres?: boolean;
+}
+
 export class GenreGenieEngine {
   candidates: Genre[];
   probs: number[];
@@ -51,31 +63,34 @@ export class GenreGenieEngine {
   readonly attributes: Attribute[];
 
   readonly allGenres: Genre[];
-  readonly opts: {
-    family?: Family;
-    parent?: string;
-    priorAnswers?: Answer[];
-    genres?: Genre[];
-    attributes?: Attribute[];
-    allowCrossFamilySubgenres?: boolean;
-  };
+  readonly opts: EngineOptions;
 
-  constructor(
-    opts: {
-      family?: Family;
-      parent?: string;
-      priorAnswers?: Answer[];
-      genres?: Genre[];
-      attributes?: Attribute[];
-      allowCrossFamilySubgenres?: boolean;
-    } = {}
-  ) {
+  constructor(opts: EngineOptions = {}) {
     this.opts = opts;
     const all = opts.genres ?? GENRES;
     this.allGenres = all;
     this.attributes = opts.attributes ?? ATTRIBUTES;
 
-    if (opts.parent) {
+    if (opts.candidates) {
+      this.candidates = opts.candidates;
+      this.probs = normalize(this.candidates.map((g) => g.popularity));
+    } else if (opts.macroProbs) {
+      // Subgenre drilldown mode with Bayesian prior from macro probabilities:
+      // Evaluates subgenres across all macro families. Families with higher macro
+      // probabilities get proportionally higher priors, but related subgenres from
+      // competing macro families (e.g. Tech House when Techno leads) are never locked out!
+      const probMap =
+        opts.macroProbs instanceof Map
+          ? opts.macroProbs
+          : new Map(Object.entries(opts.macroProbs));
+      const subgenres = all.filter((g) => g.parent !== null || g.tier === "micro");
+      this.candidates = subgenres;
+      const initial = subgenres.map((g) => {
+        const parentP = probMap.get(g.parent!) ?? 0.005;
+        return g.popularity * Math.max(parentP, 0.01);
+      });
+      this.probs = normalize(initial);
+    } else if (opts.parent) {
       if (opts.allowCrossFamilySubgenres === true) {
         // Prioritize parent's subgenres with 5.0 prior weight, but also include other subgenres (1.0 prior weight)
         // so subgenres from other macro genres are never completely ruled out!
@@ -89,6 +104,10 @@ export class GenreGenieEngine {
         this.candidates = all.filter((g) => g.parent === opts.parent);
         this.probs = normalize(this.candidates.map((g) => g.popularity));
       }
+    } else if (opts.parents && opts.parents.length > 0) {
+      const subgenres = all.filter((g) => g.parent && opts.parents!.includes(g.parent));
+      this.candidates = subgenres;
+      this.probs = normalize(subgenres.map((g) => g.popularity));
     } else {
       this.candidates = all.filter(
         (g) => g.parent === null && (!opts.family || g.family === opts.family)
@@ -97,7 +116,7 @@ export class GenreGenieEngine {
     }
 
     for (const a of opts.priorAnswers ?? []) {
-      this.applyAnswer(a.attributeId, a.value, a.isAlternative ?? false, false);
+      this.applyAnswer(a.attributeId, a.value, a.isAlternative ?? false, true);
     }
   }
 
@@ -164,7 +183,18 @@ export class GenreGenieEngine {
    * Useful when an answer is corrected or flipped.
    */
   recalculate() {
-    if (this.opts.parent && this.opts.allowCrossFamilySubgenres === true) {
+    if (this.opts.macroProbs) {
+      const probMap =
+        this.opts.macroProbs instanceof Map
+          ? this.opts.macroProbs
+          : new Map(Object.entries(this.opts.macroProbs));
+      const subgenres = this.allGenres.filter((g) => g.parent !== null || g.tier === "micro");
+      const initial = subgenres.map((g) => {
+        const parentP = probMap.get(g.parent!) ?? 0.005;
+        return g.popularity * Math.max(parentP, 0.01);
+      });
+      this.probs = normalize(initial);
+    } else if (this.opts.parent && this.opts.allowCrossFamilySubgenres === true) {
       const weights = this.candidates.map((g) =>
         g.parent === this.opts.parent ? g.popularity * 5.0 : g.popularity * 1.0
       );
