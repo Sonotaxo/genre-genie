@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check } from "lucide-react";
+import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check, Bug, Copy } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
 import { DescriptorEngine, type DescriptorQuestion } from "@/engine/descriptor-engine";
 import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family, type Genre } from "@/engine/data";
@@ -276,15 +276,139 @@ export function GenreGenie() {
   };
 
   const startDrill = (parent: string) => {
+    if (engineMode === "descriptor") {
+      const d = descriptorEngineRef.current;
+      if (!d) return;
+      const subEngine = new DescriptorEngine({
+        genres: GENRES.filter((g) => g.parent === parent || g.id === parent),
+      });
+      descriptorEngineRef.current = subEngine;
+      setDrill(parent);
+      setScreen("PLAYING");
+      force();
+      return;
+    }
+
     const prior = [...(engineRef.current?.answers ?? [])];
     setMacroAnswers(prior);
     macroRef.current = engineRef.current;
     autoDrillRef.current = false;
-    engineRef.current = makeDrill(parent, prior);
+    const subEngine = makeDrill(parent, prior);
+    engineRef.current = subEngine;
     setDrill(parent);
-    setScreen(engineRef.current.isConverged(8 + prior.length) ? "CONVERGED" : "PLAYING");
+
+    const next = subEngine.nextQuestion();
+    if (next && next.gain >= 0.005) {
+      setScreen("PLAYING");
+    } else {
+      setScreen("CONVERGED");
+      toast.info(`Pinpointed to ${subEngine.ranked()[0]?.genre.name}`);
+    }
     force();
   };
+
+  const isLocalDev =
+    import.meta.env.DEV ||
+    (typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname.endsWith(".local")));
+
+  const copyDevSnapshot = useCallback(() => {
+    const activeEngine = engineMode === "descriptor" ? descriptorEngineRef.current : engineRef.current;
+    if (!activeEngine) {
+      toast.error("No active engine to inspect.");
+      return;
+    }
+
+    const ranked = activeEngine.ranked();
+    const top = ranked[0];
+    const allSubs = activeEngine.rankedAllSubgenres();
+    const nextQ = screen === "PLAYING" ? activeEngine.nextQuestion() : null;
+    const tension = top ? activeEngine.computeTension(top.genre) : null;
+
+    let traceText = "";
+    if (engineMode === "descriptor") {
+      const d = descriptorEngineRef.current;
+      traceText = (d?.descriptorAnswers ?? [])
+        .map((a, i) => {
+          const q = d?.questions.find((x) => x.id === a.questionId);
+          const opt = q?.options.find((o) => o.id === a.optionId);
+          return `| ${i + 1} | \`${a.questionId}\` | **${opt?.label ?? a.optionId}** (${opt?.emoji ?? ""}) | ${q?.question ?? ""} |`;
+        })
+        .join("\n");
+    } else {
+      const e = engineRef.current;
+      traceText = (e?.answers ?? [])
+        .map((a, i) => {
+          const resp = RESPONSES.find((r) => r.value === a.value)?.label ?? String(a.value);
+          const attr = ATTRIBUTES.find((x) => x.id === a.attributeId);
+          return `| ${i + 1} | \`${a.attributeId}\` | **${resp}** (\`${a.value}\`) | ${attr?.question ?? ""} |`;
+        })
+        .join("\n");
+    }
+
+    const lines = [
+      `### 🛠️ Genre Genie Dev Diagnostic Snapshot`,
+      ``,
+      `- **Timestamp**: ${new Date().toISOString()}`,
+      `- **Screen**: \`${screen}\``,
+      `- **Engine Mode**: \`${engineMode}\``,
+      `- **Drill Target**: \`${drill ?? "none"}\`${drill ? ` (${GENRES.find((g) => g.id === drill)?.name ?? drill})` : ""}`,
+      `- **Auto-Drill Active**: \`${autoDrillRef.current}\``,
+      `- **Total Questions Asked**: ${activeEngine.questionCount}`,
+      `- **Engine Certainty**: ${Math.round(activeEngine.certainty() * 100)}%`,
+      `- **Top Predicted Genre**: **${top?.genre.name ?? "None"}** (${top ? (top.prob * 100).toFixed(1) : 0}%)`,
+      ``,
+      `#### 📊 Top 5 Candidates`,
+      ...ranked.slice(0, 5).map((r, i) => `${i + 1}. **${r.genre.name}**: ${(r.prob * 100).toFixed(1)}%${r.genre.parent ? ` *(subgenre of ${r.genre.parent})*` : ""}`),
+      ``,
+      `#### 🔬 Top 5 Subgenres Across All Families`,
+      ...allSubs.slice(0, 5).map((r, i) => `${i + 1}. **${r.genre.name}**: ${(r.prob * 100).toFixed(1)}%${r.genre.parent ? ` *(parent: ${r.genre.parent})*` : ""}`),
+      ``,
+    ];
+
+    if (nextQ) {
+      lines.push(
+        `#### ❓ Next Question`,
+        `- **Question**: ${"attribute" in nextQ ? nextQ.attribute.question : nextQ.question}`,
+        `- **Category**: ${"attribute" in nextQ ? nextQ.attribute.category : nextQ.category}`,
+        `- **Attribute / Question ID**: \`${"attribute" in nextQ ? nextQ.attribute.id : nextQ.id}\``,
+        `- **Information Gain**: ${"gain" in nextQ ? (nextQ.gain as number).toFixed(4) : "N/A"}`,
+        ``
+      );
+    }
+
+    if (tension?.outlier) {
+      lines.push(
+        `#### ⚠️ Detected Contradiction / Outlier`,
+        `- **Attribute**: \`${tension.outlier.attributeId}\` (*${tension.outlier.attribute.question}*)`,
+        `- **Actual Listener Answer**: \`${tension.outlier.actual}\``,
+        `- **Expected For ${top?.genre.name}**: \`${tension.outlier.expected}\``,
+        `- **Contradiction Delta**: \`${tension.outlier.delta.toFixed(2)}\``,
+        ``
+      );
+    }
+
+    lines.push(
+      `#### 🔍 Question & Answer Trace (${activeEngine.questionCount} questions)`,
+      `| # | Attribute ID | Answer | Question Text |`,
+      `|---|---|---|---|`,
+      traceText || "| - | *No answers recorded* | - | - |",
+      ``
+    );
+
+    const snapshot = lines.join("\n");
+    navigator.clipboard.writeText(snapshot).then(
+      () => {
+        toast.success("Dev diagnostic snapshot copied to clipboard!");
+      },
+      (err) => {
+        console.error("Failed to copy dev snapshot", err);
+        toast.error("Failed to copy snapshot to clipboard");
+      }
+    );
+  }, [engineMode, screen, drill]);
 
   const selectGenreEarly = useCallback((genreId: string) => {
     const e = engineRef.current;
@@ -370,6 +494,17 @@ export function GenreGenie() {
               Standard (Yes/No)
             </button>
           </div>
+          {isLocalDev && (
+            <button
+              type="button"
+              onClick={copyDevSnapshot}
+              className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 px-3 py-1 font-mono text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20 active:scale-95"
+              title="Copy full diagnostic session snapshot to clipboard for AI debugging"
+            >
+              <Bug className="size-3.5" />
+              <span>Dev Copy State</span>
+            </button>
+          )}
           <a
             href="https://github.com/Sonotaxo/genre-genie"
             target="_blank"
@@ -412,13 +547,16 @@ export function GenreGenie() {
       )}
       {screen === "CONVERGED" && (
         <Diagnosis
+          key={drill ?? "macro"}
           engine={(engineMode === "descriptor" ? descriptorEngine : engine)!}
-          drill={engineMode === "descriptor" ? null : drill}
-          onDrill={engineMode === "descriptor" ? () => {} : startDrill}
+          drill={drill}
+          onDrill={startDrill}
           onAgain={() => setScreen("IDLE")}
           onUndo={engineMode === "descriptor" ? undoDescriptor : undo}
           onWrong={() => setFeedbackOpen(true)}
           onFlipAnswer={flipAnswer}
+          onCopyDevSnapshot={copyDevSnapshot}
+          isLocalDev={isLocalDev}
         />
       )}
       {(engineMode === "descriptor" ? descriptorEngine : engine) && (
@@ -1093,10 +1231,12 @@ function Gauge({ value }: { value: number }) {
 }
 
 function Diagnosis({
-  engine, drill, onDrill, onAgain, onUndo, onWrong, onFlipAnswer,
+  engine, drill, onDrill, onAgain, onUndo, onWrong, onFlipAnswer, onCopyDevSnapshot, isLocalDev,
 }: {
   engine: AkinatorEngine | DescriptorEngine; drill: string | null; onDrill: (id: string) => void; onAgain: () => void; onUndo: () => void; onWrong: () => void;
   onFlipAnswer: (attrId: string, newValue: number) => void;
+  onCopyDevSnapshot?: () => void;
+  isLocalDev?: boolean;
 }) {
   const ranked = engine.ranked();
   const top = ranked[0]!;
@@ -1271,6 +1411,15 @@ function Diagnosis({
       <div className="flex flex-wrap gap-2">
         {canDrill && (
           <Button onClick={() => onDrill(g.id)} className="bg-sound text-foreground hover:bg-sound/80 active:scale-95"><Microscope /> Pinpoint Exact Subgenre</Button>
+        )}
+        {isLocalDev && onCopyDevSnapshot && (
+          <Button
+            variant="outline"
+            onClick={onCopyDevSnapshot}
+            className="border-amber-500/50 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 active:scale-95"
+          >
+            <Bug className="mr-1.5 size-4" /> Dev Copy State
+          </Button>
         )}
         <Button variant="outline" onClick={onWrong} className="active:scale-95"><X /> Wrong Genre? Teach Me</Button>
         <Button variant="ghost" onClick={onUndo} className="active:scale-95"><ChevronLeft /> Change last answer</Button>
