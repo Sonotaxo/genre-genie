@@ -50,10 +50,10 @@
   {
     "id": "pulse_swung_groove",
     "category": "pulse",
-    "prompt": "Does the rhythm have a bouncy, swinging groove with an off-beat skip (making you want to snap your fingers or bob your head side-to-side)?",
-    "hint": "The bouncy swing heard in Jazz, Funk, UK Garage, Deep House, and Bossa Nova.",
+    "prompt": "Does the beat have a loose, bouncing swing with a playful skip in its step (making you snap your fingers or sway side-to-side, like Jazz, Funk, or UK Garage)?",
+    "hint": "The bouncy swing of UK Garage, Deep House, and Funk. Note: If the drums hit like a straight, rigid, robotic metronome (1-2-3-4), answer NO.",
     "polarOpposite": "A rigid, robotic machine-grid or stiff military march",
-    "alternativePrompt": "Does the groove have a playful 'skip in its step' that makes you want to snap your fingers or sway side to side?"
+    "alternativePrompt": "Does the groove have a playful skip or bounce rather than marching like a stiff, robotic metronome?"
   },
   {
     "id": "pulse_free_rubato",
@@ -130,10 +130,10 @@
   {
     "id": "sound_heavy_distortion",
     "category": "sound",
-    "prompt": "Do the instruments sound fuzzy, distorted, gritty, or blown-out (like an amplifier turned up way too loud)?",
-    "hint": "Heard in Metal, Grunge rock, Hardstyle, and gritty Industrial music.",
+    "prompt": "Do the drums, bass, or instruments sound heavily overdriven, crunchy, or aggressive (like harsh factory machinery, fuzz, or a blown-out speaker cone rather than a clean, soft beat)?",
+    "hint": "Heard in Industrial Techno, Metal, Hardstyle, and Grunge. Note: Listen to whether the beat has a gritty, biting edge, rather than smooth and clean.",
     "polarOpposite": "Clean, smooth, mellow acoustic or glossy electronic tones",
-    "alternativePrompt": "Is there a crunchy, noisy, razor-blade fuzz coating the instruments, making them sound aggressive and overdriven?"
+    "alternativePrompt": "Is there an abrasive, buzzing, or noisy crunch coating the drums or synth leads, making them sound aggressive and distorted?"
   },
   {
     "id": "sound_deep_subbass",
@@ -154,10 +154,10 @@
   {
     "id": "sound_analog_warmth",
     "category": "sound",
-    "prompt": "Does the music feel warm, smooth, and vintage (soft, rounded tones like an old vinyl record or warm electric piano, with no harsh sharp edges)?",
+    "prompt": "Does the audio have a warm, soft, cozy vintage tone (smooth and rounded like playing an old 1970s vinyl record through warm living room speakers, with no harsh digital glare)?",
     "hint": "Heard in Deep House, Classic Soul, Chillwave, and vintage 1970s rock.",
     "polarOpposite": "Cold, sterile, laser-sharp digital bleeps",
-    "alternativePrompt": "Does the overall audio feel cozy, soft, and mellow\u2014like spinning an old record through warm vintage speakers?"
+    "alternativePrompt": "Does the overall audio feel cozy, soft, and mellow—like spinning an old record through warm vintage speakers?"
   },
   {
     "id": "sound_brass_horns",
@@ -178,16 +178,16 @@
   {
     "id": "sound_bright_glossy_clean",
     "category": "sound",
-    "prompt": "Does the production sound ultra-clean, polished, and sparkling (modern radio/pop clarity with no fuzz, dirt, or mud)?",
-    "hint": "Found in modern Pop, Nu-Disco, French Touch, and Progressive House.",
-    "polarOpposite": "Gritty, fuzzy, noisy, or rough underground audio",
-    "alternativePrompt": "Does the track sound like a pristine, sparkling million-dollar studio pop recording with crystalline highs and zero grain?"
+    "prompt": "Does the music have a sunny, cheerful, commercial radio-pop sound (ultra-bright, polished, and sparkling like modern pop or disco hits, with zero dark or gloomy shadows)?",
+    "hint": "Found in Radio Pop, Nu-Disco, and French Touch. Note: This means upbeat, glossy pop music (like Dua Lipa), NOT just a well-mixed dark techno club track.",
+    "polarOpposite": "Gritty, fuzzy, noisy, dark, or rough underground audio",
+    "alternativePrompt": "Does the track sound like a sparkling, feel-good studio pop song with bright, sunny melodies and no gritty or menacing tones?"
   },
   {
     "id": "sound_acid_303_squelch",
     "category": "sound",
-    "prompt": "Is there a bubbling, squealing synthesizer that twists and shrieks like liquid (the classic psychedelic 'acid' synth sound)?",
-    "hint": "The defining squelching sound of Acid House, Acid Techno, and Psytrance.",
+    "prompt": "Is there a rubbery, squelching synthesizer line that twists and shrieks with high-pitched resonance (the distinctive bubbling 'acid' rave sound)?",
+    "hint": "The iconic Roland TB-303 squelch heard in Acid House, Acid Techno, and Psytrance.",
     "polarOpposite": "Standard clean piano, warm strings, or realistic brass",
     "alternativePrompt": "Do you hear a rubbery, whistling electronic synth lead that sounds like twisting wet rubber or bubbling liquid acid?"
   },
@@ -202,7 +202,7 @@
   {
     "id": "sound_snarling_neuro_bass",
     "category": "sound",
-    "prompt": "Does the bass sound like an aggressive, snarling, robotic monster growl (harsh, metallic, and ripping rather than a smooth tone)?",
+    "prompt": "Does the bass make morphing, aggressive robot growls or metallic chainsaw sounds (like heavy Dubstep or aggressive sci-fi sound effects)?",
     "hint": "Heard in aggressive Dubstep (Brostep) and Neurofunk Drum & Bass.",
     "polarOpposite": "Gentle acoustic bass or warm organ pedal notes",
     "alternativePrompt": "Does the bass sound like a roaring metallic beast or chainsaw ripping through speakers (an angry robotic growl)?"
@@ -234,8 +234,8 @@
   {
     "id": "sound_polyrhythmic_percussion",
     "category": "sound",
-    "prompt": "Are there layered hand drums and percussion playing lively rhythms (like congas, bongos, shakers, or wooden log drums)?",
-    "hint": "Found in Afrobeats, South African Amapiano, Afro House, and Salsa.",
+    "prompt": "Are there acoustic hand drums and percussion playing lively rhythms (like congas, bongos, wooden log drums, or shakers)?",
+    "hint": "Common in Afrobeats, Amapiano, Afro House, and Latin dance.",
     "polarOpposite": "Strict mechanical drum machine without hand percussion",
     "alternativePrompt": "Can you hear an intricate web of organic hand drums, shakers, and wooden percussions interlocking beneath the music?"
   },
@@ -266,10 +266,10 @@
   {
     "id": "sound_dub_echoes",
     "category": "sound",
-    "prompt": "Do sounds echo and trail off into deep space (cavernous, repeating echoes where a single drum hit or chord rings out endlessly)?",
-    "hint": "The signature sound of Dub Reggae, Dub Techno, and Ambient Dub.",
+    "prompt": "Do sounds bounce into the distance with long, repeating echoes (cavernous 'echo... echo... echo...' delay trails that swallow drum hits or chord stabs, like in Jamaican dub reggae)?",
+    "hint": "Signature delay effect of Dub Reggae and Dub Techno. Note: This means obvious repeating echo trails, NOT just standard room reverb.",
     "polarOpposite": "Dry, upfront, in-your-face pop production",
-    "alternativePrompt": "Do individual snare hits or guitar chops get swallowed by long, swirling echoes that fade slowly into outer space?"
+    "alternativePrompt": "Can you clearly hear individual chords or snare hits bouncing over and over as they fade away into deep space?"
   },
   {
     "id": "voice_present",
