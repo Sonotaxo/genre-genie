@@ -50,10 +50,10 @@
   {
     "id": "pulse_swung_groove",
     "category": "pulse",
-    "prompt": "Does the beat have a loose, bouncing swing with a playful skip in its step (making you snap your fingers or sway side-to-side, like Jazz, Funk, or UK Garage)?",
-    "hint": "The bouncy swing of UK Garage, Deep House, and Funk. Note: If the drums hit like a straight, rigid, robotic metronome (1-2-3-4), answer NO.",
-    "polarOpposite": "A rigid, robotic machine-grid or stiff military march",
-    "alternativePrompt": "Does the groove have a playful skip or bounce rather than marching like a stiff, robotic metronome?"
+    "prompt": "Does the beat have a bouncy swing or shuffle (a loose, head-bobbing groove rather than a stiff, straight beat)?",
+    "hint": "The bouncy, swaying groove common in Jazz, Funk, R&B, and classic Hip-Hop.",
+    "polarOpposite": "A stiff, robotic machine beat or straight march",
+    "alternativePrompt": "Does the rhythm have a relaxed, playful bounce that makes you want to snap your fingers, rather than marching to a rigid metronome?"
   },
   {
     "id": "pulse_free_rubato",
@@ -131,7 +131,7 @@
     "id": "sound_heavy_distortion",
     "category": "sound",
     "prompt": "Do the drums, bass, or instruments sound heavily overdriven, crunchy, or aggressive (like harsh factory machinery, fuzz, or a blown-out speaker cone rather than a clean, soft beat)?",
-    "hint": "Heard in Industrial Techno, Metal, Hardstyle, and Grunge. Note: Listen to whether the beat has a gritty, biting edge, rather than smooth and clean.",
+    "hint": "The raw, overdriven crunch characteristic of Heavy Metal, Grunge, Industrial Techno, and Hardstyle.",
     "polarOpposite": "Clean, smooth, mellow acoustic or glossy electronic tones",
     "alternativePrompt": "Is there an abrasive, buzzing, or noisy crunch coating the drums or synth leads, making them sound aggressive and distorted?"
   },
@@ -179,7 +179,7 @@
     "id": "sound_bright_glossy_clean",
     "category": "sound",
     "prompt": "Does the music have a sunny, cheerful, commercial radio-pop sound (ultra-bright, polished, and sparkling like modern pop or disco hits, with zero dark or gloomy shadows)?",
-    "hint": "Found in Radio Pop, Nu-Disco, and French Touch. Note: This means upbeat, glossy pop music (like Dua Lipa), NOT just a well-mixed dark techno club track.",
+    "hint": "The sparkling, high-polish production of modern Radio Pop, Disco, and upbeat Dance hits (like Dua Lipa or Bruno Mars).",
     "polarOpposite": "Gritty, fuzzy, noisy, dark, or rough underground audio",
     "alternativePrompt": "Does the track sound like a sparkling, feel-good studio pop song with bright, sunny melodies and no gritty or menacing tones?"
   },
@@ -210,10 +210,10 @@
   {
     "id": "sound_amen_break_chopped",
     "category": "sound",
-    "prompt": "Are the drums frantic, chopped-up breakbeat loops that keep crashing and stuttering (like an acoustic live drum solo sliced up at double speed)? Note: this is NOT a straight club kick with fast hi-hats, but a chaotic broken drum roll.",
+    "prompt": "Are the drums frantic, chopped-up breakbeat loops that stutter and crash rapidly (a fast, chaotic drum roll rather than a steady club beat)?",
     "hint": "The unmistakable chopped 'Amen Break' of Jungle, Drum & Bass, and Breakcore.",
     "polarOpposite": "A steady electronic kick drum (four-on-the-floor) or un-chopped standard rhythm",
-    "alternativePrompt": "Does the track feature that classic 1990s jungle drum break\u2014a live acoustic drum loop rapidly sliced into stuttering rolls and cymbal crashes?"
+    "alternativePrompt": "Does the track feature that classic 1990s jungle drum break—a live acoustic drum loop rapidly sliced into stuttering rolls and cymbal crashes?"
   },
   {
     "id": "sound_distorted_hardstyle_kick",
@@ -259,7 +259,7 @@
     "id": "sound_supersaws_anthem",
     "category": "sound",
     "prompt": "Does the track feature thick, buzzing electronic chords that swell into a big, emotional melody (the euphoric synth sound typical of festival EDM drops and Uplifting Trance)?",
-    "hint": "Signature sound of Trance, Progressive House, and festival EDM (think Avicii, Swedish House Mafia, or Armin van Buuren). Note: If the track is driven by a simple bassline groove, dark club beats, or vocal snippets without big buzzing chords, answer NO.",
+    "hint": "Signature sound of festival EDM drops, Trance, and Progressive House (popularized by artists like Avicii, Swedish House Mafia, and Calvin Harris).",
     "polarOpposite": "Minimal bass grooves, dark repetitive beats, or acoustic instruments",
     "alternativePrompt": "Are wide, buzzing synths playing rich, triumphant chords that fill the entire track—rather than a stripped-down bass groove or dark club beat?"
   },
@@ -267,7 +267,7 @@
     "id": "sound_dub_echoes",
     "category": "sound",
     "prompt": "Do sounds bounce into the distance with long, repeating echoes (cavernous 'echo... echo... echo...' delay trails that swallow drum hits or chord stabs, like in Jamaican dub reggae)?",
-    "hint": "Signature delay effect of Dub Reggae and Dub Techno. Note: This means obvious repeating echo trails, NOT just standard room reverb.",
+    "hint": "Signature sound of Dub Reggae and Dub Techno, where repeating echo trails swirl into deep space.",
     "polarOpposite": "Dry, upfront, in-your-face pop production",
     "alternativePrompt": "Can you clearly hear individual chords or snare hits bouncing over and over as they fade away into deep space?"
   },
@@ -290,9 +290,9 @@
   {
     "id": "voice_rapping_spoken",
     "category": "voice",
-    "prompt": "Is the vocal delivery fast-talking rhythmic hip-hop rhyming or rapping (note: rhythmic spoken rap verses, NOT ambient movie quotes, spiritual mantras, or tribal chants)?",
-    "hint": "The vocal core of Hip-Hop, Drill, Rap, and Grime.",
-    "polarOpposite": "Melodic singing, spiritual mantras, or purely instrumental",
+    "prompt": "Are the vocals delivered as fast-talking rhythmic rhyming or rapping over the beat (rather than singing)?",
+    "hint": "The vocal core of Hip-Hop, Rap, and Drill.",
+    "polarOpposite": "Melodic singing, ambient spoken words, or purely instrumental",
     "alternativePrompt": "Are the vocals delivering fast rhyming poetry or spoken verses over the beat, like an MC or rapper?"
   },
   {
