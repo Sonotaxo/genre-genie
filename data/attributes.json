@@ -258,10 +258,10 @@
   {
     "id": "sound_supersaws_anthem",
     "category": "sound",
-    "prompt": "Are there huge, soaring walls of bright synthesizer chords that feel like a massive, hands-in-the-air festival anthem?",
-    "hint": "The defining euphoric synthesizer texture of Uplifting Trance and Melodic Dubstep.",
-    "polarOpposite": "Dry, minimal bleeps or organic guitars",
-    "alternativePrompt": "Do massive synth chords spread out across the speakers like a giant wall of light, creating an epic stadium festival vibe?"
+    "prompt": "Does the track feature thick, buzzing electronic chords that swell into a big, emotional melody (the euphoric synth sound typical of festival EDM drops and Uplifting Trance)?",
+    "hint": "Signature sound of Trance, Progressive House, and festival EDM (think Avicii, Swedish House Mafia, or Armin van Buuren). Note: If the track is driven by a simple bassline groove, dark club beats, or vocal snippets without big buzzing chords, answer NO.",
+    "polarOpposite": "Minimal bass grooves, dark repetitive beats, or acoustic instruments",
+    "alternativePrompt": "Are wide, buzzing synths playing rich, triumphant chords that fill the entire track—rather than a stripped-down bass groove or dark club beat?"
   },
   {
     "id": "sound_dub_echoes",
