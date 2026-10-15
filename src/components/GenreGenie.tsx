@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube } from "lucide-react";
+import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
 import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family } from "@/engine/data";
 import { Button } from "@/components/ui/button";
@@ -416,42 +416,141 @@ function Diagnosis({ engine, drill, onDrill, onAgain, onUndo, onWrong }: {
 function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenChange: (b: boolean) => void; engine: AkinatorEngine }) {
   const [search, setSearch] = useState("");
   const [actual, setActual] = useState<string | null>(null);
+  const [audioUrl, setAudioUrl] = useState("");
   const [note, setNote] = useState("");
   const list = GENRES.filter((g) => g.name.toLowerCase().includes(search.toLowerCase()));
+
   const submit = () => {
+    const predictedGenre = engine.ranked()[0]?.genre;
+    const actualName = actual ? GENRES.find((g) => g.id === actual)?.name ?? actual : search.trim();
+    const sessionId = crypto.randomUUID();
+
     const trace = {
-      sessionId: crypto.randomUUID(),
+      sessionId,
       createdAt: new Date().toISOString(),
       answers: engine.answers,
-      predicted: engine.ranked()[0]?.genre.id,
-      actual: actual ?? search,
-      note,
+      predicted: predictedGenre?.id,
+      actual: actual ?? search.trim(),
+      audioUrl: audioUrl.trim() || undefined,
+      note: note.trim() || undefined,
     };
+
+    // Store in localStorage as local backup
     const key = "genre-genie-feedback";
     const prev = JSON.parse(localStorage.getItem(key) ?? "[]");
     localStorage.setItem(key, JSON.stringify([...prev, trace]));
-    toast.success("Thanks for teaching me! Matrix will learn from your feedback.");
+
+    // Build markdown issue body
+    const title = `[Correction] Predicted: ${predictedGenre?.name ?? "Unknown"} vs Actual: ${actualName}`;
+
+    const answerRows = engine.answers
+      .map((a, i) => {
+        const attr = ATTRIBUTES.find((att) => att.id === a.attributeId);
+        const resp = RESPONSES.find((r) => r.value === a.value)?.label ?? String(a.value);
+        const qText = attr ? (a.isAlternative && attr.alternativePrompt ? attr.alternativePrompt : attr.question) : a.attributeId;
+        return `| ${i + 1} | \`${a.attributeId}\` | ${qText} | **${resp}** |`;
+      })
+      .join("\n");
+
+    const body = `### 🎵 Genre Correction Report
+
+- **Predicted Genre**: ${predictedGenre ? `${predictedGenre.name} (${(engine.ranked()[0]!.prob * 100).toFixed(1)}%)` : "None"}
+- **Actual Genre**: **${actualName}**
+- **Audio Sample**: ${audioUrl.trim() ? audioUrl.trim() : "*None provided*"}
+
+---
+
+### 📝 Listener Notes
+${note.trim() ? `> ${note.trim().replace(/\n/g, "\n> ")}` : "*No extra notes provided.*"}
+
+---
+
+### 🔍 Session Diagnostic Trace (${engine.answers.length} questions)
+<details>
+<summary>Click to view asked questions & responses</summary>
+
+| # | Attribute ID | Question Asked | Listener Response |
+|---|---|---|---|
+${answerRows}
+
+\`\`\`json
+${JSON.stringify(trace, null, 2)}
+\`\`\`
+</details>
+
+---
+*Reported from [Genre Genie](https://sonotaxo.github.io/genre-genie/)*
+`;
+
+    const issueUrl = `https://github.com/Sonotaxo/genre-genie/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}&labels=${encodeURIComponent("calibration,feedback")}`;
+
+    window.open(issueUrl, "_blank", "noopener,noreferrer");
+    toast.success("Opening GitHub issue to calibrate the engine. Thank you!");
     onOpenChange(false);
-    setSearch(""); setActual(null); setNote("");
+    setSearch("");
+    setActual(null);
+    setAudioUrl("");
+    setNote("");
   };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>What was the real genre?</DialogTitle>
-          <DialogDescription>Help the engine get smarter.</DialogDescription>
+          <DialogDescription>
+            Help calibrate Genre Genie by opening a GitHub issue with your song and perceptual trace.
+          </DialogDescription>
         </DialogHeader>
-        <Input placeholder="Search genres…" value={search} onChange={(e) => { setSearch(e.target.value); setActual(null); }} />
-        <div className="flex max-h-40 flex-wrap gap-1.5 overflow-y-auto">
-          {list.map((g) => (
-            <button key={g.id} onClick={() => { setActual(g.id); setSearch(g.name); }}
-              className={`rounded-full border px-3 py-1 text-xs ${actual === g.id ? "border-primary bg-primary/20" : "border-border"}`}>
-              {g.name}
-            </button>
-          ))}
+        <div className="space-y-3">
+          <div>
+            <label className="mb-1 block font-mono text-xs text-muted-foreground uppercase tracking-wider">
+              Real Genre <span className="text-destructive">*</span>
+            </label>
+            <Input
+              placeholder="Search or enter genre (e.g. Psy-Trance, Tech House)…"
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setActual(null); }}
+            />
+          </div>
+          <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto">
+            {list.slice(0, 15).map((g) => (
+              <button
+                key={g.id}
+                onClick={() => { setActual(g.id); setSearch(g.name); }}
+                className={`rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
+                  actual === g.id ? "border-primary bg-primary/20 text-primary font-bold" : "border-border hover:border-primary/50"
+                }`}
+              >
+                {g.name}
+              </button>
+            ))}
+          </div>
+          <div>
+            <label className="mb-1 block font-mono text-xs text-muted-foreground uppercase tracking-wider">
+              Audio Sample (optional)
+            </label>
+            <Input
+              placeholder="Link to YouTube, Spotify, SoundCloud, or Bandcamp…"
+              value={audioUrl}
+              onChange={(e) => setAudioUrl(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="mb-1 block font-mono text-xs text-muted-foreground uppercase tracking-wider">
+              What sound gave it away? (optional)
+            </label>
+            <Textarea
+              placeholder="e.g. Rolling bassline, squelchy 303 filter, acoustic upright bass, 808 sub…"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={3}
+            />
+          </div>
+          <Button onClick={submit} disabled={!search.trim()} className="w-full gap-2">
+            <ExternalLink className="size-4" /> Open GitHub Issue
+          </Button>
         </div>
-        <Textarea placeholder="What sound gave it away? (optional)" value={note} onChange={(e) => setNote(e.target.value)} />
-        <Button onClick={submit} disabled={!search.trim()}>Submit</Button>
       </DialogContent>
     </Dialog>
   );
