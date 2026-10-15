@@ -1248,16 +1248,12 @@ function Diagnosis({
   }, [g.id]);
 
   const hallmarks = useMemo(() => {
-    const byCat = new Map<Category, string>();
-    const yes = engine.answers
-      .filter((a) => a.value > 0 && (g.weights[a.attributeId] ?? 0) > 0)
-      .sort((a, b) => (g.weights[b.attributeId] ?? 0) - (g.weights[a.attributeId] ?? 0));
-    for (const a of yes) {
-      const attr = ATTRIBUTES.find((x) => x.id === a.attributeId)!;
-      if (!byCat.has(attr.category)) byCat.set(attr.category, attr.hint);
-    }
-    return [...byCat.entries()];
-  }, [engine, g]);
+    if (!g.sensoryHallmarks) return [];
+    const categories: Category[] = ["pulse", "sound", "atmosphere", "voice"];
+    return categories
+      .filter((cat) => Boolean(g.sensoryHallmarks[cat]))
+      .map((cat) => [cat, g.sensoryHallmarks[cat]] as [Category, string]);
+  }, [g]);
 
   const allSubgenres = useMemo(() => engine.rankedAllSubgenres(), [engine]);
   const topCrossSubgenre = allSubgenres[0];
