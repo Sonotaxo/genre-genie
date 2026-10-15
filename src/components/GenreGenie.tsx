@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink } from "lucide-react";
+import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
 import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family } from "@/engine/data";
 import { Button } from "@/components/ui/button";
@@ -145,7 +145,18 @@ export function GenreGenie() {
         <button onClick={() => setScreen("IDLE")} className="flex items-center gap-2 font-extrabold tracking-tight">
           <Wave className="text-pulse" /> Genre Genie
         </button>
-        <span className="font-mono text-xs text-muted-foreground">v1.0 • ENGINE ONLINE</span>
+        <div className="flex items-center gap-3">
+          <a
+            href="https://github.com/Sonotaxo/genre-genie"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1 font-mono text-xs text-muted-foreground transition hover:border-primary/50 hover:text-foreground active:scale-95"
+          >
+            <Github className="size-3.5" />
+            <span>Open Source on GitHub</span>
+          </a>
+          <span className="hidden font-mono text-xs text-muted-foreground sm:inline">v1.0 • ONLINE</span>
+        </div>
       </header>
 
       {screen === "IDLE" && <Landing onStart={start} />}
@@ -224,10 +235,171 @@ function Landing({ onStart }: { onStart: (f?: Family) => void }) {
           ))}
         </div>
       </div>
-      <p className="mt-16 font-mono text-xs text-muted-foreground">
-        {GENRES.length} Genres Cataloged • {ATTRIBUTES.length} Sensory Attributes • 100% In-Browser Engine
-      </p>
+
+      <SupportedGenresCatalog onStartFamily={(f) => onStart(f)} />
+
+      <div className="mt-16 flex flex-col items-center gap-4 border-t border-border/50 pt-8 text-center">
+        <a
+          href="https://github.com/Sonotaxo/genre-genie"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/80 px-4 py-2 font-mono text-xs font-semibold text-muted-foreground shadow-sm transition hover:border-primary hover:text-foreground active:scale-95"
+        >
+          <Github className="size-4" />
+          <span>Open Source on GitHub</span>
+        </a>
+        <p className="font-mono text-xs text-muted-foreground">
+          {GENRES.length} Genres Cataloged • {ATTRIBUTES.length} Sensory Attributes • 100% In-Browser Engine
+        </p>
+      </div>
     </section>
+  );
+}
+
+function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) => void }) {
+  const [search, setSearch] = useState("");
+
+  const familyGroups = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const macroGenres = GENRES.filter((g) => g.tier === "macro" || !g.parent);
+    const subgenres = GENRES.filter((g) => g.tier === "micro" || g.parent);
+
+    return FAMILIES.map((fam) => {
+      const famMacros = macroGenres.filter((g) => g.family === fam.id);
+
+      const parentGroups = famMacros.map((parent) => {
+        const subs = subgenres.filter((s) => s.parent === parent.id);
+        return { parent, subgenres: subs };
+      });
+
+      if (!q) {
+        return {
+          family: fam,
+          groups: parentGroups,
+          totalCount: parentGroups.reduce((acc, g) => acc + 1 + g.subgenres.length, 0),
+        };
+      }
+
+      const matchingGroups = parentGroups
+        .map(({ parent, subgenres }) => {
+          const parentMatches = parent.name.toLowerCase().includes(q);
+          const matchingSubs = subgenres.filter((s) => s.name.toLowerCase().includes(q));
+          if (parentMatches) {
+            return { parent, subgenres };
+          }
+          if (matchingSubs.length > 0) {
+            return { parent, subgenres: matchingSubs };
+          }
+          return null;
+        })
+        .filter((g): g is NonNullable<typeof g> => g !== null);
+
+      return {
+        family: fam,
+        groups: matchingGroups,
+        totalCount: matchingGroups.reduce((acc, g) => acc + 1 + g.subgenres.length, 0),
+      };
+    }).filter((f) => f.groups.length > 0);
+  }, [search]);
+
+  return (
+    <div className="mt-20 border-t border-border/50 pt-12 text-left">
+      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
+            Supported Genres & Subgenres
+          </h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {GENRES.length} total genres cataloged across {FAMILIES.length} musical families (42 macro genres & 35 subgenres).
+          </p>
+        </div>
+        <div className="relative w-full sm:w-64">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Search genres & subgenres…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-card/60 pl-9 pr-8 text-xs"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {familyGroups.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border py-12 text-center text-muted-foreground">
+          <p className="text-sm">No genres found matching &ldquo;{search}&rdquo;</p>
+          <Button variant="ghost" size="sm" onClick={() => setSearch("")} className="mt-2 text-xs">
+            Clear search
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {familyGroups.map(({ family, groups, totalCount }) => (
+            <div
+              key={family.id}
+              className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/50 p-5 backdrop-blur transition-all duration-200 hover:border-border"
+            >
+              <div>
+                <div className="mb-3 flex items-center justify-between border-b border-border/40 pb-3">
+                  <div className="flex items-center gap-2 font-bold text-sm tracking-tight text-foreground">
+                    <span className="text-base">{family.emoji}</span>
+                    <span>{family.label}</span>
+                    <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
+                      {totalCount}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => onStartFamily(family.id)}
+                    className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground transition-colors hover:text-primary active:scale-95"
+                    title={`Fast-track ${family.label}`}
+                  >
+                    <span>Fast-track</span>
+                    <span>→</span>
+                  </button>
+                </div>
+
+                <div className="space-y-3">
+                  {groups.map(({ parent, subgenres }) => (
+                    <div key={parent.id} className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-semibold text-foreground/90">
+                          {parent.name}
+                        </span>
+                        {subgenres.length > 0 && (
+                          <span className="rounded-full border border-pulse/30 bg-pulse/10 px-1.5 py-0.5 font-mono text-[10px] font-medium text-pulse">
+                            {subgenres.length} subgenres
+                          </span>
+                        )}
+                      </div>
+
+                      {subgenres.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 border-l-2 border-border/60 pl-2">
+                          {subgenres.map((sub) => (
+                            <span
+                              key={sub.id}
+                              className="rounded-md border border-border/60 bg-background/50 px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+                            >
+                              {sub.name}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
