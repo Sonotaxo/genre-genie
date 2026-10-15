@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search } from "lucide-react";
+import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
 import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family } from "@/engine/data";
 import { Button } from "@/components/ui/button";
@@ -218,6 +218,33 @@ export function GenreGenie() {
     force();
   };
 
+  const selectGenreEarly = useCallback((genreId: string) => {
+    const e = engineRef.current;
+    if (!e) return;
+
+    const targetGenre = GENRES.find((g) => g.id === genreId);
+    if (!targetGenre) return;
+
+    if (targetGenre.parent && !drill) {
+      setDrill(targetGenre.parent);
+    }
+
+    const idx = e.candidates.findIndex((c) => c.id === genreId);
+    if (idx !== -1) {
+      e.probs = e.probs.map((_, i) => (i === idx ? 0.96 : 0.04 / Math.max(e.probs.length - 1, 1)));
+    } else {
+      e.candidates = [targetGenre, ...e.candidates.filter((c) => c.id !== targetGenre.id)];
+      e.probs = [0.96, ...e.candidates.slice(1).map(() => 0.04 / Math.max(e.candidates.length - 1, 1))];
+      if (targetGenre.parent) {
+        setDrill(targetGenre.parent);
+      }
+    }
+
+    setScreen("CONVERGED");
+    toast.success(`Identified as ${targetGenre.name}!`);
+    force();
+  }, [drill]);
+
   useEffect(() => {
     if (screen !== "PLAYING") return;
     const onKey = (ev: KeyboardEvent) => {
@@ -262,6 +289,7 @@ export function GenreGenie() {
           setHintOpen={setHintOpen}
           onRespond={respond}
           onUndo={undo}
+          onSelectGenre={selectGenreEarly}
         />
       )}
       {screen === "CONVERGED" && engine && (
@@ -492,19 +520,42 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
 }
 
 function QuestionView({
-  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
+  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo, onSelectGenre,
 }: {
   engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string | undefined; drill: string | null; baseCount: number;
   hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
+  onSelectGenre?: (genreId: string) => void;
 }) {
-  const [showAlt, setShowAlt] = useState(isAlternative);
-  useEffect(() => setShowAlt(isAlternative), [q.id, isAlternative]);
+  const [rephrased, setRephrased] = useState(false);
+  useEffect(() => {
+    setRephrased(false);
+  }, [q.id]);
 
+  const isShowingAlternative = isAlternative || rephrased;
   const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category];
   const meta = CATEGORY_META[q.category];
   const n = engine.questionCount + 1;
   const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
+
+  const ranked = engine.ranked();
+  const topCandidate = ranked[0];
+  const secondCandidate = ranked[1];
+
+  // Early selection threshold:
+  // Allowed when:
+  // 1. At least 4 questions have been answered.
+  // 2. Top candidate has reached at least 35% probability.
+  // 3. One candidate has significantly higher confidence than the others:
+  //    margin >= 20% OR ratio >= 2.0x runner up (e.g. 40.9% vs 13.8%).
+  const canEarlySelect =
+    topCandidate &&
+    engine.questionCount >= 4 &&
+    topCandidate.prob >= 0.35 &&
+    (!secondCandidate ||
+      topCandidate.prob - secondCandidate.prob >= 0.20 ||
+      topCandidate.prob >= secondCandidate.prob * 2.0);
+
   return (
     <section>
       <div className="mb-6 flex items-center gap-4">
@@ -524,9 +575,14 @@ function QuestionView({
         </span>
       </div>
       <div className="mb-4 rounded-2xl border border-border bg-card/60 p-4">
-        <p className="mb-2 font-mono text-xs uppercase tracking-widest text-muted-foreground">Top candidates</p>
+        <div className="mb-2 flex items-center justify-between">
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Top candidates</p>
+          {canEarlySelect && (
+            <span className="font-mono text-[10px] uppercase tracking-wider text-pulse">Leading match identified</span>
+          )}
+        </div>
         <div className="space-y-1.5">
-          {engine.ranked().slice(0, 3).map((r) => (
+          {ranked.slice(0, 3).map((r) => (
             <div key={r.genre.id} className="flex items-center gap-3 text-sm">
               <span className="w-32 truncate font-semibold">{r.genre.name}</span>
               <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
@@ -536,22 +592,58 @@ function QuestionView({
             </div>
           ))}
         </div>
+
+        {canEarlySelect && onSelectGenre && (
+          <div className="mt-3.5 flex flex-col gap-2 rounded-xl border border-pulse/40 bg-pulse/10 p-2.5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-sm">🎯</span>
+              <span className="text-muted-foreground">
+                Spot your genre? Is it <strong className="text-foreground">{topCandidate.genre.name}</strong>?
+              </span>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => onSelectGenre(topCandidate.genre.id)}
+              className="h-7 shrink-0 bg-pulse text-xs font-semibold text-primary-foreground hover:bg-pulse/90 active:scale-95"
+            >
+              <Check className="mr-1 size-3.5" />
+              Yes, that&apos;s it!
+            </Button>
+          </div>
+        )}
       </div>
       {drillName && (
         <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
       )}
       <div className={`animate-slide-in rounded-3xl border ${cat.border} bg-card/80 p-6 backdrop-blur md:p-10`}>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <span className={`inline-flex items-center gap-2 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest`}>
             {meta.emoji} {meta.label}
           </span>
           {q.alternativePrompt && (
-            <button
-              onClick={() => setShowAlt(!showAlt)}
-              className="inline-flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-primary transition active:scale-95"
-            >
-              🔄 {showAlt ? "Original wording" : "Explain differently"}
-            </button>
+            isShowingAlternative ? (
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono text-xs font-semibold text-pulse">🔄 Rephrased</span>
+                {!isAlternative && (
+                  <button
+                    type="button"
+                    onClick={() => setRephrased(false)}
+                    className="font-mono text-xs text-muted-foreground underline hover:text-foreground active:scale-95"
+                  >
+                    (Show original)
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setRephrased(true)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/70 px-2.5 py-1 font-mono text-xs text-muted-foreground transition hover:border-pulse/50 hover:text-foreground active:scale-95"
+              >
+                <HelpCircle className="size-3.5 text-muted-foreground" />
+                <span>Unclear question?</span>
+              </button>
+            )
           )}
         </div>
         {isAlternative && (
@@ -567,7 +659,7 @@ function QuestionView({
           </div>
         )}
         <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
-          {showAlt ? q.alternativePrompt : q.question}
+          {isShowingAlternative ? q.alternativePrompt : q.question}
         </h2>
         <button onClick={() => setHintOpen(!hintOpen)} className="mt-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ChevronDown className={`size-4 transition ${hintOpen ? "rotate-180" : ""}`} /> Hint
@@ -577,7 +669,7 @@ function QuestionView({
           {RESPONSES.map((r, i) => (
             <button
               key={r.label}
-              onClick={() => onRespond(r.value, showAlt || isAlternative)}
+              onClick={() => onRespond(r.value, isShowingAlternative)}
               className={`flex items-center justify-between rounded-xl border px-4 py-4 text-left font-bold transition-transform duration-100 active:scale-95 md:flex-col md:justify-center md:gap-1 md:text-center ${RESP_CLASS[i]}`}
             >
               <span>{r.label}</span>
