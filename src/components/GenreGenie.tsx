@@ -44,7 +44,7 @@ export function GenreGenie() {
   const [, force] = useReducer((x: number) => x + 1, 0);
   const [drill, setDrill] = useState<string | null>(null);
   const [macroAnswers, setMacroAnswers] = useState<Answer[]>([]);
-  const [hintOpen, setHintOpen] = useState(false);
+  const [hintOpen, setHintOpen] = useState(true);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const engine = engineRef.current;
@@ -745,10 +745,49 @@ function QuestionView({
         <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
           {isShowingAlternative ? q.alternativePrompt : q.question}
         </h2>
-        <button onClick={() => setHintOpen(!hintOpen)} className="mt-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          <ChevronDown className={`size-4 transition ${hintOpen ? "rotate-180" : ""}`} /> Hint
-        </button>
-        {hintOpen && <p className="mt-2 text-sm text-muted-foreground">{q.hint}</p>}
+        {hintOpen ? (
+          <div className="mt-5 rounded-2xl border border-border/70 bg-card/60 p-4 text-xs md:text-sm">
+            <div className="flex items-center justify-between border-b border-border/40 pb-2">
+              <span className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                <span>🎧 Clues & Context</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setHintOpen(false)}
+                className="font-mono text-[11px] text-muted-foreground hover:text-foreground transition active:scale-95"
+              >
+                Hide
+              </button>
+            </div>
+            <div className="mt-3 space-y-2.5">
+              {q.hint && (
+                <div className="flex items-start gap-2.5">
+                  <span className="shrink-0 rounded-md bg-pulse/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
+                    💡 Hint
+                  </span>
+                  <span className="leading-relaxed text-foreground/90">{q.hint}</span>
+                </div>
+              )}
+              {q.polarOpposite && (
+                <div className="flex items-start gap-2.5 border-t border-border/40 pt-2.5">
+                  <span className="shrink-0 rounded-md bg-voice/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-voice">
+                    ⚖️ Polar Opposite
+                  </span>
+                  <span className="leading-relaxed text-muted-foreground">{q.polarOpposite}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setHintOpen(true)}
+            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/50 px-3 py-1 font-mono text-xs text-muted-foreground hover:border-border hover:text-foreground active:scale-95 transition"
+          >
+            <ChevronDown className="size-3.5" />
+            <span>Show hint & polar opposite</span>
+          </button>
+        )}
         <div className="mt-8 grid grid-cols-1 gap-2 md:grid-cols-5">
           {RESPONSES.map((r, i) => (
             <button
