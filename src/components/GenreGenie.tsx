@@ -1243,9 +1243,6 @@ function DescriptorQuestionView({
               </p>
               {gainingMap[i] && gainingMap[i].length > 0 && (
                 <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2.5 w-full">
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70 mr-0.5">
-                    Boosts:
-                  </span>
                   {gainingMap[i].map((name) => (
                     <span
                       key={name}
