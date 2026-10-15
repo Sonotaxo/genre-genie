@@ -135,6 +135,28 @@ export class GenreGenieEngine {
     this.retriedIds = new Set(s.retriedIds);
   }
 
+  /**
+   * Recalculates engine state and probabilities from scratch using current answers.
+   * Useful when an answer is corrected or flipped.
+   */
+  recalculate() {
+    this.probs = normalize(this.candidates.map((g) => g.popularity));
+    this.pruned = new Set<string>();
+    this.unsureIds = new Set<string>();
+    this.retriedIds = new Set<string>();
+    this.stack = [];
+
+    const existing = [...this.answers];
+    this.answers = [];
+    for (const a of existing) {
+      this.applyAnswer(a.attributeId, a.value, a.isAlternative ?? false, true);
+    }
+  }
+
+  updateProbabilities() {
+    this.recalculate();
+  }
+
   entropy() {
     return entropy(this.probs);
   }
@@ -240,7 +262,7 @@ export class GenreGenieEngine {
       }
     }
 
-    return { score: total, outlier: worstOutlier };
+    return worstOutlier ? { score: total, outlier: worstOutlier } : { score: total };
   }
 
   nextQuestion(): {
@@ -290,7 +312,13 @@ export class GenreGenieEngine {
         if (!attr || !attr.alternativePrompt) continue;
 
         // Ensure at least 3 questions have been asked since this question was marked unsure
-        const lastIdx = this.answers.findLastIndex((ans) => ans.attributeId === uid);
+        let lastIdx = -1;
+        for (let i = this.answers.length - 1; i >= 0; i--) {
+          if (this.answers[i]!.attributeId === uid) {
+            lastIdx = i;
+            break;
+          }
+        }
         if (lastIdx !== -1 && this.answers.length - 1 - lastIdx < 3) {
           continue; // Cooldown: do not ask immediately
         }

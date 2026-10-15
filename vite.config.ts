@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(() => {
-  const base = process.env.BASE_PATH || (process.env.GITHUB_ACTIONS ? "/genre-genie/" : "/");
+  const base = process.env["BASE_PATH"] || (process.env["GITHUB_ACTIONS"] ? "/genre-genie/" : "/");
 
   return {
     base,

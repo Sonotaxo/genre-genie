@@ -62,12 +62,47 @@ export function GenreGenie() {
     const e = engineRef.current;
     if (!e) return;
     const ans = e.answers.find((a) => a.attributeId === attrId);
-    if (ans) {
-      ans.value = newValue;
-      e.updateProbabilities();
-      force();
+    if (!ans) return;
+
+    ans.value = newValue;
+    e.recalculate();
+
+    if (drill && macroRef.current) {
+      const macroAns = macroRef.current.answers.find((a) => a.attributeId === attrId);
+      if (macroAns) {
+        macroAns.value = newValue;
+        macroRef.current.recalculate();
+        const newMacroTop = macroRef.current.ranked()[0]?.genre;
+        if (newMacroTop && newMacroTop.id !== drill) {
+          // Macro genre changed from the flipped answer!
+          if (hasSubgenres(newMacroTop.id)) {
+            const newDrill = makeDrill(newMacroTop.id, macroRef.current.answers);
+            engineRef.current = newDrill;
+            setDrill(newMacroTop.id);
+            if (!newDrill.isConverged(8 + macroRef.current.answers.length)) {
+              setScreen("PLAYING");
+            }
+          } else {
+            engineRef.current = macroRef.current;
+            setDrill(null);
+            setMacroAnswers([]);
+            if (!macroRef.current.isConverged(25)) {
+              setScreen("PLAYING");
+            }
+          }
+        }
+      }
     }
-  }, []);
+
+    const activeEngine = engineRef.current;
+    const limit = drill ? 8 + macroAnswers.length : 25;
+    if (activeEngine && !activeEngine.isConverged(limit)) {
+      setScreen("PLAYING");
+    }
+
+    toast.success("Recalculated with updated answer!");
+    force();
+  }, [drill, macroAnswers.length]);
 
   const makeDrill = (parent: string, prior: Answer[]) => {
     const e = new AkinatorEngine({ parent, priorAnswers: prior });
@@ -406,7 +441,7 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
 function QuestionView({
   engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
 }: {
-  engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string; drill: string | null; baseCount: number;
+  engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string | undefined; drill: string | null; baseCount: number;
   hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
 }) {
   const [showAlt, setShowAlt] = useState(isAlternative);

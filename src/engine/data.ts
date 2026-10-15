@@ -96,12 +96,12 @@ export const GENRES: Genre[] = genresData.map((g: any) => {
   const rawRow = (matrixData as Record<string, Record<string, number>>)[g.id] || {};
   const row = { ...rawRow };
   if (
-    (row.voice_present === undefined || row.voice_present === 0) &&
-    ((row.voice_clean_melodic ?? 0) > 0.4 ||
-      (row.voice_screaming_growls ?? 0) > 0.4 ||
-      (row.voice_rapping_spoken ?? 0) > 0.4)
+    (row["voice_present"] === undefined || row["voice_present"] === 0) &&
+    (((row["voice_clean_melodic"] ?? 0) > 0.4) ||
+      ((row["voice_screaming_growls"] ?? 0) > 0.4) ||
+      ((row["voice_rapping_spoken"] ?? 0) > 0.4))
   ) {
-    row.voice_present = 0.9;
+    row["voice_present"] = 0.9;
   }
   return {
     id: g.id,

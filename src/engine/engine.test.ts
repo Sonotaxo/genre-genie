@@ -134,6 +134,31 @@ describe("GenreGenieEngine Core Unit Tests", () => {
     expect(tension.outlier?.delta).toBeGreaterThanOrEqual(1.4);
   });
 
+  it("recalculates probabilities when an answer is corrected / flipped", () => {
+    const e = new GenreGenieEngine();
+    const techno = GENRES.find((g) => g.id === "techno")!;
+    e.answer("sound_electronic_dominant", 1);
+    e.answer("pulse_four_on_the_floor", 1);
+    // User mistakenly answered YES to acoustic strings
+    e.answer("sound_acoustic_wood_strings", 1);
+
+    const initialProb = e.ranked().find((r) => r.genre.id === "techno")!.prob;
+    const initialTension = e.computeTension(techno);
+    expect(initialTension.outlier?.attributeId).toBe("sound_acoustic_wood_strings");
+
+    // Correct the answer to NO (-1)
+    const ans = e.answers.find((a) => a.attributeId === "sound_acoustic_wood_strings")!;
+    ans.value = -1;
+    e.recalculate();
+
+    const updatedProb = e.ranked().find((r) => r.genre.id === "techno")!.prob;
+    const updatedTension = e.computeTension(techno);
+
+    // Probability of Techno should increase and outlier should be resolved
+    expect(updatedProb).toBeGreaterThan(initialProb);
+    expect(updatedTension.outlier).toBeUndefined();
+  });
+
   it("recovers from a mistaken answer and correctly identifies the genre", () => {
     const target = GENRES.find((g) => g.id === "techno")!;
     const e = new GenreGenieEngine();
