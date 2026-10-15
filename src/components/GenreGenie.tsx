@@ -27,6 +27,14 @@ const RESP_CLASS = [
   "border-destructive bg-destructive/20 hover:bg-destructive/30 shadow-[0_0_20px_-4px_var(--destructive)]",
 ];
 
+const RESP_BORDER = [
+  "border-pulse",
+  "border-pulse/40",
+  "border-border",
+  "border-destructive/40",
+  "border-destructive",
+];
+
 function Wave({ className = "" }: { className?: string }) {
   return (
     <span className={`inline-flex items-center gap-0.5 h-5 ${className}`}>
@@ -1084,10 +1092,9 @@ function QuestionView({
                     {gaining.map((name) => (
                       <span
                         key={name}
-                        className="inline-flex items-center gap-0.5 rounded-full border border-border/60 bg-background/80 px-2 py-0.5 font-sans text-[10px] font-medium text-foreground/90 shadow-2xs backdrop-blur-xs truncate max-w-[130px]"
+                        className={`inline-flex items-center rounded-full border ${RESP_BORDER[i]} bg-background/30 px-2 py-0.5 font-sans text-[10px] text-muted-foreground truncate max-w-[130px]`}
                         title={`Boosts confidence for ${name}`}
                       >
-                        <span className="font-bold text-pulse">↑</span>
                         <span className="truncate">{name}</span>
                       </span>
                     ))}
@@ -1236,16 +1243,15 @@ function DescriptorQuestionView({
               </p>
               {gainingMap[i] && gainingMap[i].length > 0 && (
                 <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2.5 w-full">
-                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mr-0.5">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/70 mr-0.5">
                     Boosts:
                   </span>
                   {gainingMap[i].map((name) => (
                     <span
                       key={name}
-                      className="inline-flex items-center gap-0.5 rounded-full border border-pulse/30 bg-pulse/10 px-2 py-0.5 font-sans text-[10px] font-medium text-foreground transition group-hover:border-pulse/60"
+                      className="inline-flex items-center rounded-full border border-border/80 bg-background/30 px-2 py-0.5 font-sans text-[10px] text-muted-foreground transition group-hover:border-pulse/50 group-hover:text-foreground"
                       title={`Boosts confidence for ${name}`}
                     >
-                      <span className="font-bold text-pulse">↑</span>
                       <span>{name}</span>
                     </span>
                   ))}
