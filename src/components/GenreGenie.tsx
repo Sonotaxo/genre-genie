@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import { toast } from "sonner";
 import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
+import { DescriptorEngine, type DescriptorQuestion } from "@/engine/descriptor-engine";
 import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family, type Genre } from "@/engine/data";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -37,7 +38,9 @@ function Wave({ className = "" }: { className?: string }) {
 }
 
 export function GenreGenie() {
+  const [engineMode, setEngineMode] = useState<"descriptor" | "standard">("descriptor");
   const engineRef = useRef<AkinatorEngine | null>(null);
+  const descriptorEngineRef = useRef<DescriptorEngine | null>(null);
   const macroRef = useRef<AkinatorEngine | null>(null);
   const autoDrillRef = useRef(false);
   const [screen, setScreen] = useState<Screen>("IDLE");
@@ -67,13 +70,62 @@ export function GenreGenie() {
   const engine = engineRef.current;
   const question = screen === "PLAYING" && engine ? engine.nextQuestion() : null;
 
+  const descriptorEngine = descriptorEngineRef.current;
+  const descriptorQuestion =
+    screen === "PLAYING" && engineMode === "descriptor" && descriptorEngine
+      ? descriptorEngine.nextQuestion()
+      : null;
+
   const start = (family?: Family) => {
+    if (engineMode === "descriptor") {
+      descriptorEngineRef.current = new DescriptorEngine(
+        family ? { genres: GENRES.filter((g) => g.family === family) } : {}
+      );
+    }
     engineRef.current = new AkinatorEngine(family ? { family } : {});
     setDrill(null);
     setMacroAnswers([]);
     setScreen("PLAYING");
     force();
   };
+
+  const respondDescriptor = useCallback((optionId: string) => {
+    const d = descriptorEngineRef.current;
+    const q = d?.nextQuestion();
+    if (!d || !q) return;
+
+    d.answer(q.id, optionId);
+
+    if (d.isConverged()) {
+      setScreen("CONVERGED");
+    }
+    force();
+  }, []);
+
+  const undoDescriptor = useCallback(() => {
+    const d = descriptorEngineRef.current;
+    if (!d) return;
+    d.undo();
+    force();
+  }, []);
+
+  const selectGenreEarlyDescriptor = useCallback((genreId: string) => {
+    const d = descriptorEngineRef.current;
+    if (!d) return;
+    const targetGenre = GENRES.find((g) => g.id === genreId);
+    if (!targetGenre) return;
+
+    const idx = d.candidates.findIndex((c) => c.id === genreId);
+    if (idx !== -1) {
+      d.probs = d.probs.map((_, i) => (i === idx ? 0.96 : 0.04 / Math.max(d.probs.length - 1, 1)));
+    } else {
+      d.candidates = [targetGenre, ...d.candidates.filter((c) => c.id !== targetGenre.id)];
+      d.probs = [0.96, ...d.candidates.slice(1).map(() => 0.04 / Math.max(d.candidates.length - 1, 1))];
+    }
+    setScreen("CONVERGED");
+    toast.success(`Identified as ${targetGenre.name}!`);
+    force();
+  }, []);
 
   const flipAnswer = useCallback((attrId: string, newValue: number) => {
     const e = engineRef.current;
@@ -264,20 +316,60 @@ export function GenreGenie() {
   useEffect(() => {
     if (screen !== "PLAYING") return;
     const onKey = (ev: KeyboardEvent) => {
+      if (engineMode === "descriptor") {
+        const d = descriptorEngineRef.current;
+        const q = d?.nextQuestion();
+        if (!d || !q) return;
+        const n = Number(ev.key);
+        if (!isNaN(n) && n >= 1 && n <= q.options.length) {
+          respondDescriptor(q.options[n - 1]!.id);
+        }
+        return;
+      }
       const n = Number(ev.key);
       if (n >= 1 && n <= 5) respond(RESPONSES[n - 1]!.value, question?.isAlternative ?? false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [screen, respond, question]);
+  }, [screen, respond, respondDescriptor, question, engineMode]);
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 md:py-14">
-      <header className="mb-8 flex items-center justify-between">
+      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <button onClick={() => setScreen("IDLE")} className="flex items-center gap-2 font-extrabold tracking-tight">
           <Wave className="text-pulse" /> Genre Genie
         </button>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-1 rounded-full border border-border bg-card/80 p-0.5 font-mono text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                setEngineMode("descriptor");
+                setScreen("IDLE");
+              }}
+              className={`rounded-full px-2.5 py-1 transition ${
+                engineMode === "descriptor"
+                  ? "bg-pulse text-background font-bold shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              🧪 Descriptors (Spike)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEngineMode("standard");
+                setScreen("IDLE");
+              }}
+              className={`rounded-full px-2.5 py-1 transition ${
+                engineMode === "standard"
+                  ? "bg-muted text-foreground font-bold shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Standard (Yes/No)
+            </button>
+          </div>
           <a
             href="https://github.com/Sonotaxo/genre-genie"
             target="_blank"
@@ -285,13 +377,23 @@ export function GenreGenie() {
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1 font-mono text-xs text-muted-foreground transition hover:border-primary/50 hover:text-foreground active:scale-95"
           >
             <Github className="size-3.5" />
-            <span>Open Source on GitHub</span>
+            <span>GitHub</span>
           </a>
         </div>
       </header>
 
-      {screen === "IDLE" && <Landing onStart={start} />}
-      {screen === "PLAYING" && engine && question && (
+      {screen === "IDLE" && <Landing onStart={start} engineMode={engineMode} />}
+      {screen === "PLAYING" && engineMode === "descriptor" && descriptorEngine && descriptorQuestion && (
+        <DescriptorQuestionView
+          key={descriptorEngine.questionCount}
+          engine={descriptorEngine}
+          q={descriptorQuestion}
+          onRespond={respondDescriptor}
+          onUndo={undoDescriptor}
+          onSelectGenre={selectGenreEarlyDescriptor}
+        />
+      )}
+      {screen === "PLAYING" && engineMode === "standard" && engine && question && (
         <QuestionView
           key={engine.questionCount + (drill ?? "")}
           engine={engine}
@@ -308,19 +410,23 @@ export function GenreGenie() {
           onSelectGenre={selectGenreEarly}
         />
       )}
-      {screen === "CONVERGED" && engine && (
+      {screen === "CONVERGED" && (
         <Diagnosis
-          engine={engine}
-          drill={drill}
-          onDrill={startDrill}
+          engine={(engineMode === "descriptor" ? descriptorEngine : engine)!}
+          drill={engineMode === "descriptor" ? null : drill}
+          onDrill={engineMode === "descriptor" ? () => {} : startDrill}
           onAgain={() => setScreen("IDLE")}
-          onUndo={undo}
+          onUndo={engineMode === "descriptor" ? undoDescriptor : undo}
           onWrong={() => setFeedbackOpen(true)}
           onFlipAnswer={flipAnswer}
         />
       )}
-      {engine && (
-        <FeedbackModal open={feedbackOpen} onOpenChange={setFeedbackOpen} engine={engine} />
+      {(engineMode === "descriptor" ? descriptorEngine : engine) && (
+        <FeedbackModal
+          open={feedbackOpen}
+          onOpenChange={setFeedbackOpen}
+          engine={(engineMode === "descriptor" ? descriptorEngine : engine)!}
+        />
       )}
     </main>
   );
@@ -328,13 +434,26 @@ export function GenreGenie() {
 
 export const AudioAkinator = GenreGenie;
 
-function Landing({ onStart }: { onStart: (f?: Family) => void }) {
+function Landing({
+  onStart,
+  engineMode,
+}: {
+  onStart: (f?: Family) => void;
+  engineMode: "descriptor" | "standard";
+}) {
   // Buttons only work once the page's scripts have loaded; until then show a loading state
   // instead of silently ignoring clicks.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   return (
     <section className="animate-slide-in text-center">
+      {engineMode === "descriptor" && (
+        <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-pulse/40 bg-pulse/10 px-4 py-1.5 text-xs font-semibold text-pulse">
+          <span>🧪 Experiment Active</span>
+          <span>•</span>
+          <span>Sensory Descriptors Mode (Multi-choice sound profiles)</span>
+        </div>
+      )}
       <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
         Think of a song or listen to the music playing.{" "}
         <span className="bg-gradient-to-r from-pulse via-voice to-sound bg-clip-text text-transparent">
@@ -821,6 +940,141 @@ function QuestionView({
   );
 }
 
+function DescriptorQuestionView({
+  engine,
+  q,
+  onRespond,
+  onUndo,
+  onSelectGenre,
+}: {
+  engine: DescriptorEngine;
+  q: DescriptorQuestion;
+  onRespond: (optionId: string) => void;
+  onUndo: () => void;
+  onSelectGenre?: ((genreId: string) => void) | undefined;
+}) {
+  const certainty = Math.round(engine.certainty() * 100);
+  const cat = CAT_CLASS[q.category] ?? CAT_CLASS.sound;
+  const meta = CATEGORY_META[q.category] ?? CATEGORY_META.sound;
+  const n = engine.questionCount + 1;
+
+  const parentCandidates = engine.ranked().filter((r) => r.genre.parent === null);
+  const subCandidates = engine.rankedAllSubgenres();
+
+  const showTwoCards =
+    parentCandidates.length > 0 &&
+    subCandidates.length > 0 &&
+    subCandidates[0]!.prob >= 0.15;
+
+  const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
+  const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
+
+  return (
+    <section>
+      <div className="mb-6 flex items-center gap-4">
+        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo} className="active:scale-95">
+          <ChevronLeft /> Previous
+        </Button>
+        <div className="flex-1">
+          <div className="mb-1 flex justify-between font-mono text-xs text-muted-foreground">
+            <span>CERTAINTY</span>
+            <span>{certainty}%</span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500"
+              style={{ width: `${certainty}%` }}
+            />
+          </div>
+        </div>
+        <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
+          Q{n} of ~8
+        </span>
+      </div>
+
+      {showTwoCards ? (
+        <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+          <CandidateCard
+            title="Parent genres"
+            candidates={parentCandidates}
+            canEarlySelect={canEarlySelectParent}
+            onSelectGenre={onSelectGenre}
+          />
+          <CandidateCard
+            title="Sub-genres"
+            candidates={subCandidates}
+            canEarlySelect={canEarlySelectSub}
+            onSelectGenre={onSelectGenre}
+            showParentTag={true}
+          />
+        </div>
+      ) : (
+        <div className="mb-4">
+          <CandidateCard
+            title="Top candidates"
+            candidates={parentCandidates.length > 0 ? parentCandidates : subCandidates}
+            canEarlySelect={canEarlySelectParent}
+            onSelectGenre={onSelectGenre}
+            showParentTag={false}
+          />
+        </div>
+      )}
+
+      <div className={`animate-slide-in rounded-3xl border ${cat.border} bg-card/80 p-6 backdrop-blur md:p-10`}>
+        <div className="flex items-center justify-between gap-2">
+          <span className={`inline-flex items-center gap-2 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest`}>
+            {meta.emoji} {meta.label}
+          </span>
+          <span className="rounded-full bg-pulse/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-pulse">
+            🧪 Sensory Choice
+          </span>
+        </div>
+
+        <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
+          {q.question}
+        </h2>
+        {q.subtitle && (
+          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+            {q.subtitle}
+          </p>
+        )}
+
+        {q.hint && (
+          <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-border/70 bg-card/60 p-3 text-xs text-muted-foreground">
+            <span className="shrink-0 rounded-md bg-pulse/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
+              💡 Tip
+            </span>
+            <span className="leading-relaxed text-foreground/80">{q.hint}</span>
+          </div>
+        )}
+
+        <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {q.options.map((opt, i) => (
+            <button
+              key={opt.id}
+              onClick={() => onRespond(opt.id)}
+              className="group relative flex flex-col items-start rounded-2xl border border-border/80 bg-card/60 p-5 text-left transition hover:border-pulse hover:bg-card hover:shadow-[0_0_25px_-5px_var(--pulse)] active:scale-[0.98]"
+            >
+              <div className="flex w-full items-center justify-between">
+                <span className="text-2xl transition group-hover:scale-110">{opt.emoji}</span>
+                <kbd className="rounded-md border border-border bg-muted/80 px-2 py-0.5 font-mono text-xs text-muted-foreground group-hover:border-pulse/50 group-hover:text-foreground">
+                  {i + 1}
+                </kbd>
+              </div>
+              <h3 className="mt-3 font-bold text-base text-foreground group-hover:text-pulse transition-colors">
+                {opt.label}
+              </h3>
+              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                {opt.description}
+              </p>
+            </button>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Gauge({ value }: { value: number }) {
   const r = 52, c = 2 * Math.PI * r;
   return (
@@ -841,7 +1095,7 @@ function Gauge({ value }: { value: number }) {
 function Diagnosis({
   engine, drill, onDrill, onAgain, onUndo, onWrong, onFlipAnswer,
 }: {
-  engine: AkinatorEngine; drill: string | null; onDrill: (id: string) => void; onAgain: () => void; onUndo: () => void; onWrong: () => void;
+  engine: AkinatorEngine | DescriptorEngine; drill: string | null; onDrill: (id: string) => void; onAgain: () => void; onUndo: () => void; onWrong: () => void;
   onFlipAnswer: (attrId: string, newValue: number) => void;
 }) {
   const ranked = engine.ranked();
@@ -1026,7 +1280,7 @@ function Diagnosis({
   );
 }
 
-function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenChange: (b: boolean) => void; engine: AkinatorEngine }) {
+function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenChange: (b: boolean) => void; engine: AkinatorEngine | DescriptorEngine }) {
   const [search, setSearch] = useState("");
   const [actual, setActual] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState("");
