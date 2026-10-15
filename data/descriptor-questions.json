@@ -9,8 +9,8 @@
       {
         "id": "slow_meditative",
         "emoji": "🧘",
-        "label": "Slow & Leisurely",
-        "description": "Like meditative breathing, a slow dance, or a calm stroll",
+        "label": "Slow & Leisurely (< 100 BPM)",
+        "description": "Like meditative breathing, a slow dance, or a calm stroll (under 100 BPM)",
         "effects": {
           "pulse_slow_relaxed": 1.0,
           "pulse_tempo_fast": -1.0,
@@ -20,8 +20,8 @@
       {
         "id": "moderate_walking",
         "emoji": "🚶",
-        "label": "Moderate & Steady",
-        "description": "Like an average radio pop song or casual walking pace",
+        "label": "Moderate & Steady (100–125 BPM)",
+        "description": "Like an average radio pop song or casual walking pace (100–125 BPM)",
         "effects": {
           "pulse_slow_relaxed": -0.5,
           "pulse_tempo_fast": -0.5,
@@ -31,8 +31,8 @@
       {
         "id": "fast_club",
         "emoji": "🏃",
-        "label": "Fast, Energetic or Frantic",
-        "description": "Brisk workout pace, club dance floor, or all-out sprint",
+        "label": "Fast & Energetic (125+ BPM)",
+        "description": "Brisk workout pace, club dance floor, or all-out sprint (125+ BPM)",
         "effects": {
           "pulse_tempo_fast": 1.0,
           "pulse_slow_relaxed": -1.0
@@ -303,7 +303,8 @@
         "effects": {
           "voice_present": 1.0,
           "voice_screaming_growls": 1.0,
-          "voice_clean_melodic": -1.0
+          "voice_clean_melodic": -1.0,
+          "voice_autotune_vocoder": -0.8
         }
       },
       {
@@ -313,7 +314,8 @@
         "description": "Noticeable metallic Auto-Tune snaps or vocoder robot voices",
         "effects": {
           "voice_present": 1.0,
-          "voice_autotune_vocoder": 1.0
+          "voice_autotune_vocoder": 1.0,
+          "voice_screaming_growls": -0.8
         }
       },
       {
@@ -324,7 +326,8 @@
         "effects": {
           "voice_present": 1.0,
           "voice_whispered_ethereal": 0.8,
-          "voice_choir_wall": 0.6
+          "voice_choir_wall": 0.6,
+          "voice_screaming_growls": -0.8
         }
       },
       {

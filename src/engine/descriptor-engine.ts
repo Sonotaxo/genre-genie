@@ -275,13 +275,30 @@ export class DescriptorEngine {
     const sum = unnormalized.reduce((a, b) => a + b, 0) || 1;
     const posterior = unnormalized.map((x) => x / sum);
 
+    // Defining positive attributes of this option (e.g. effects >= 0.5)
+    const positiveAttrs = Object.entries(option.effects).filter(([_, val]) => val >= 0.5);
+
     const gains = candidates
-      .map((genre, i) => ({
-        name: genre.name,
-        delta: posterior[i]! - currentProbs[i]!,
-        posteriorProb: posterior[i]!,
-      }))
-      .filter((x) => x.delta > 0.005)
+      .map((genre, i) => {
+        // A genre cannot contradict any strong effect in this option
+        const contradicts = Object.entries(option.effects).some(([attrId, val]) => {
+          const w = genre.weights[attrId] ?? 0;
+          return (val >= 0.5 && w < -0.2) || (val <= -0.5 && w > 0.2);
+        });
+
+        // For options with defining positive attributes, the genre must actually feature at least one of them
+        const supportsPositive =
+          positiveAttrs.length === 0 ||
+          positiveAttrs.some(([attrId]) => (genre.weights[attrId] ?? 0) >= 0.15);
+
+        return {
+          name: genre.name,
+          delta: posterior[i]! - currentProbs[i]!,
+          posteriorProb: posterior[i]!,
+          valid: !contradicts && supportsPositive,
+        };
+      })
+      .filter((x) => x.valid && x.delta > 0.005)
       .sort((a, b) => b.delta - a.delta);
 
     return gains.slice(0, maxCount).map((x) => x.name);

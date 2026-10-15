@@ -104,5 +104,26 @@ describe("DescriptorEngine Unit Tests", () => {
     expect(electronicGaining).toContain("Techno");
     expect(acousticGaining.some((name) => name.includes("Classical") || name.includes("Guitar"))).toBe(true);
   });
+
+  it("does not show contradictory genre chips for vocal style options", () => {
+    const engine = new DescriptorEngine();
+    engine.answer("core_instrumentation", "electronic_synths");
+    engine.answer("rhythm_pattern", "four_on_floor");
+    engine.answer("tempo_pace", "fast_club");
+
+    const q = engine.questions.find((x) => x.id === "vocal_style")!;
+    const screamOpt = q.options.find((o) => o.id === "screaming_growls")!;
+    const autotuneOpt = q.options.find((o) => o.id === "robotic_autotune")!;
+    const whisperOpt = q.options.find((o) => o.id === "whispered_ethereal")!;
+
+    const screamGaining = engine.getGainingGenres(screamOpt, 5);
+    const autotuneGaining = engine.getGainingGenres(autotuneOpt, 5);
+    const whisperGaining = engine.getGainingGenres(whisperOpt, 5);
+
+    // Hypertechno should only be boosted by robotic autotune, never screaming or whispers
+    expect(screamGaining).not.toContain("Hypertechno");
+    expect(whisperGaining).not.toContain("Hypertechno");
+    expect(autotuneGaining).toContain("Hypertechno");
+  });
 });
 

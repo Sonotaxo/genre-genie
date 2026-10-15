@@ -499,12 +499,17 @@ export class GenreGenieEngine {
     const posterior = unnormalized.map((x) => x / sum);
 
     const gains = candidates
-      .map((genre, i) => ({
-        name: genre.name,
-        delta: posterior[i]! - currentProbs[i]!,
-        posteriorProb: posterior[i]!,
-      }))
-      .filter((x) => x.delta > 0.005)
+      .map((genre, i) => {
+        const w = genre.weights[attrId] ?? 0;
+        const contradicts = (value >= 0.5 && w < -0.2) || (value <= -0.5 && w > 0.2);
+        return {
+          name: genre.name,
+          delta: posterior[i]! - currentProbs[i]!,
+          posteriorProb: posterior[i]!,
+          contradicts,
+        };
+      })
+      .filter((x) => !x.contradicts && x.delta > 0.005)
       .sort((a, b) => b.delta - a.delta);
 
     return gains.slice(0, maxCount).map((x) => x.name);
