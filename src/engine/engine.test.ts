@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { AkinatorEngine, likelihood } from "./engine";
+import { GenreGenieEngine, likelihood } from "./engine";
 import { GENRES, ATTRIBUTES } from "./data";
 
-describe("AkinatorEngine Core Unit Tests", () => {
+describe("GenreGenieEngine Core Unit Tests", () => {
   it("clamps likelihood between 0.05 and 0.95", () => {
     expect(likelihood(1, 1)).toBe(0.95);
     expect(likelihood(-1, 1)).toBe(0.05);
@@ -10,7 +10,7 @@ describe("AkinatorEngine Core Unit Tests", () => {
   });
 
   it("undo restores previous probabilities exactly", () => {
-    const e = new AkinatorEngine();
+    const e = new GenreGenieEngine();
     const before = [...e.probs];
     e.answer("sound_electronic_dominant", 1);
     e.undo();
@@ -19,14 +19,14 @@ describe("AkinatorEngine Core Unit Tests", () => {
   });
 
   it("prunes voice questions when there are no vocals", () => {
-    const e = new AkinatorEngine();
+    const e = new GenreGenieEngine();
     e.answer("voice_present", -1);
     expect(e.pruned.has("voice_rapping_spoken")).toBe(true);
     expect(e.pruned.has("voice_screaming_growls")).toBe(true);
   });
 
   it("identifies Techno from typical answers", () => {
-    const e = new AkinatorEngine();
+    const e = new GenreGenieEngine();
     const ans: Record<string, number> = {
       sound_electronic_dominant: 1,
       pulse_four_on_the_floor: 1,
@@ -44,13 +44,13 @@ describe("AkinatorEngine Core Unit Tests", () => {
   });
 
   it("drilldown restricts to subgenres", () => {
-    const e = new AkinatorEngine({ parent: "house" });
+    const e = new GenreGenieEngine({ parent: "house" });
     expect(e.candidates.length).toBeGreaterThan(0);
     expect(e.candidates.every((g) => g.parent === "house")).toBe(true);
   });
 
   it("is clear when one subgenre dominates the prior answers", () => {
-    const e = new AkinatorEngine({
+    const e = new GenreGenieEngine({
       parent: "techno",
       priorAnswers: [
         { attributeId: "sound_acid_303_squelch", value: 1 },
@@ -62,11 +62,11 @@ describe("AkinatorEngine Core Unit Tests", () => {
   });
 
   it("is not clear with no information", () => {
-    expect(new AkinatorEngine({ parent: "house" }).isClear()).toBe(false);
+    expect(new GenreGenieEngine({ parent: "house" }).isClear()).toBe(false);
   });
 });
 
-describe("Audio-Akinator Matrix 100% Convergence Suite", () => {
+describe("Genre Genie Matrix 100% Convergence Suite", () => {
   it("should have all 76 genres and 46 attributes loaded", () => {
     expect(GENRES.length).toBe(76);
     expect(ATTRIBUTES.length).toBe(46);
@@ -79,7 +79,7 @@ describe("Audio-Akinator Matrix 100% Convergence Suite", () => {
     let passedCount = 0;
 
     for (const target of macroGenres) {
-      const engine = new AkinatorEngine();
+      const engine = new GenreGenieEngine();
       let passed = false;
 
       for (let step = 0; step < 25; step++) {
@@ -116,7 +116,7 @@ describe("Audio-Akinator Matrix 100% Convergence Suite", () => {
     let passedCount = 0;
 
     for (const target of microGenres) {
-      const engine = new AkinatorEngine({ parent: target.parent! });
+      const engine = new GenreGenieEngine({ parent: target.parent! });
       let passed = false;
 
       for (let step = 0; step < 25; step++) {

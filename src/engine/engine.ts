@@ -40,7 +40,7 @@ interface Snapshot {
   retriedIds: string[];
 }
 
-export class AkinatorEngine {
+export class GenreGenieEngine {
   candidates: Genre[];
   probs: number[];
   answers: Answer[] = [];
@@ -233,3 +233,6 @@ export class AkinatorEngine {
 export function hasSubgenres(id: string) {
   return GENRES.some((g) => g.parent === id);
 }
+
+export const AkinatorEngine = GenreGenieEngine;
+export type AkinatorEngine = GenreGenieEngine;
