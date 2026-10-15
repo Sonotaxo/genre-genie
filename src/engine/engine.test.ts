@@ -64,6 +64,45 @@ describe("GenreGenieEngine Core Unit Tests", () => {
   it("is not clear with no information", () => {
     expect(new GenreGenieEngine({ parent: "house" }).isClear()).toBe(false);
   });
+
+  it("does not repeat the same question directly after answering 'Don't know'", () => {
+    const e = new GenreGenieEngine();
+    const q1 = e.nextQuestion()!;
+    e.answer(q1.attribute.id, 0); // User answers Don't know (0)
+    const q2 = e.nextQuestion()!;
+    expect(q2.attribute.id).not.toBe(q1.attribute.id);
+
+    e.answer(q2.attribute.id, 0);
+    const q3 = e.nextQuestion()!;
+    expect(q3.attribute.id).not.toBe(q2.attribute.id);
+    expect(q3.attribute.id).not.toBe(q1.attribute.id);
+
+    e.answer(q3.attribute.id, 0);
+    const q4 = e.nextQuestion()!;
+    expect(q4.attribute.id).not.toBe(q3.attribute.id);
+    expect(q4.attribute.id).not.toBe(q2.attribute.id);
+    expect(q4.attribute.id).not.toBe(q1.attribute.id);
+  });
+
+  it("re-prompts unsure questions only with alternativePrompt after a cooldown", () => {
+    const e = new GenreGenieEngine();
+    const q1 = e.nextQuestion()!;
+    e.answer(q1.attribute.id, 0); // unsure
+
+    // Ask 3 more distinct questions
+    for (let i = 0; i < 3; i++) {
+      const q = e.nextQuestion()!;
+      expect(q.attribute.id).not.toBe(q1.attribute.id);
+      e.answer(q.attribute.id, 1);
+    }
+
+    // Now that cooldown has passed, if an alternative question is selected, it must have isAlternative: true
+    const next = e.nextQuestion();
+    if (next && next.attribute.id === q1.attribute.id) {
+      expect(next.isAlternative).toBe(true);
+      expect(next.attribute.alternativePrompt).toBeDefined();
+    }
+  });
 });
 
 describe("Genre Genie Matrix 100% Convergence Suite", () => {

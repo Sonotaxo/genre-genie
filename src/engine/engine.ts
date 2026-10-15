@@ -97,13 +97,13 @@ export class GenreGenieEngine {
     if (record) {
       this.answers.push({ attributeId: attr, value: u, isAlternative });
 
-      if (u === 0 && !isAlternative) {
+      if (isAlternative) {
+        this.retriedIds.add(attr);
+        this.unsureIds.delete(attr);
+      } else if (u === 0) {
         this.unsureIds.add(attr);
       } else {
         this.unsureIds.delete(attr);
-        if (isAlternative) {
-          this.retriedIds.add(attr);
-        }
       }
     }
 
@@ -185,14 +185,25 @@ export class GenreGenieEngine {
       }
     }
 
-    // 2. Unsure Fallback: Re-prompt high-value unsure questions with alternativePrompt
-    if (this.unsureIds.size > 0 && this.answers.length >= 3) {
+    // 2. Unsure Fallback: Re-prompt high-value unsure questions with alternativePrompt LATER,
+    // only after at least 3 other questions have been asked in between (cooldown),
+    // and only when it provides strong differentiating value.
+    if (this.unsureIds.size > 0 && this.answers.length >= 4) {
       for (const uid of this.unsureIds) {
         if (this.retriedIds.has(uid)) continue;
         const attr = this.attributes.find((a) => a.id === uid);
-        if (!attr) continue;
+        if (!attr || !attr.alternativePrompt) continue;
+
+        // Ensure at least 3 questions have been asked since this question was marked unsure
+        const lastIdx = this.answers.findLastIndex((ans) => ans.attributeId === uid);
+        if (lastIdx !== -1 && this.answers.length - 1 - lastIdx < 3) {
+          continue; // Cooldown: do not ask immediately
+        }
+
         const uGain = this.informationGain(uid);
-        if (uGain > Math.max(best?.gain ?? 0, 0.08)) {
+        // Only select alternative prompt if unasked gain is low or uGain is significantly stronger
+        const threshold = best ? Math.max(best.gain * 1.5, 0.08) : 0.05;
+        if (uGain >= threshold) {
           best = { attribute: attr, gain: uGain, isAlternative: true };
           break;
         }

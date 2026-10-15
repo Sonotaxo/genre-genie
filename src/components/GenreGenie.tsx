@@ -69,7 +69,7 @@ export function GenreGenie() {
     const e = engineRef.current;
     const q = e?.nextQuestion();
     if (!e || !q) return;
-    e.answer(q.attribute.id, value, isAlt ?? false);
+    e.answer(q.attribute.id, value, isAlt ?? q.isAlternative ?? false);
     setHintOpen(false);
     if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) {
       const top = e.ranked()[0]!.genre;
@@ -122,11 +122,11 @@ export function GenreGenie() {
     if (screen !== "PLAYING") return;
     const onKey = (ev: KeyboardEvent) => {
       const n = Number(ev.key);
-      if (n >= 1 && n <= 5) respond(RESPONSES[n - 1]!.value);
+      if (n >= 1 && n <= 5) respond(RESPONSES[n - 1]!.value, question?.isAlternative ?? false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [screen, respond]);
+  }, [screen, respond, question]);
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 md:py-14">
@@ -143,6 +143,7 @@ export function GenreGenie() {
           key={engine.questionCount + (drill ?? "")}
           engine={engine}
           q={question.attribute}
+          isAlternative={question.isAlternative ?? false}
           drill={drill}
           baseCount={macroAnswers.length}
           hintOpen={hintOpen}
@@ -217,13 +218,13 @@ function Landing({ onStart }: { onStart: (f?: Family) => void }) {
 }
 
 function QuestionView({
-  engine, q, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
+  engine, q, isAlternative = false, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
 }: {
-  engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; drill: string | null; baseCount: number;
+  engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; drill: string | null; baseCount: number;
   hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
 }) {
-  const [showAlt, setShowAlt] = useState(false);
-  useEffect(() => setShowAlt(false), [q.id]);
+  const [showAlt, setShowAlt] = useState(isAlternative);
+  useEffect(() => setShowAlt(isAlternative), [q.id, isAlternative]);
 
   const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category];
@@ -279,6 +280,12 @@ function QuestionView({
             </button>
           )}
         </div>
+        {isAlternative && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-pulse/40 bg-pulse/10 px-3 py-2 text-xs font-semibold text-pulse">
+            <span>🔄</span>
+            <span>You were unsure about this sound earlier — here is another angle on it:</span>
+          </div>
+        )}
         <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
           {showAlt ? q.alternativePrompt : q.question}
         </h2>
@@ -290,7 +297,7 @@ function QuestionView({
           {RESPONSES.map((r, i) => (
             <button
               key={r.label}
-              onClick={() => onRespond(r.value, showAlt)}
+              onClick={() => onRespond(r.value, showAlt || isAlternative)}
               className={`flex items-center justify-between rounded-xl border px-4 py-4 text-left font-bold transition-transform duration-100 active:scale-95 md:flex-col md:justify-center md:gap-1 md:text-center ${RESP_CLASS[i]}`}
             >
               <span>{r.label}</span>
