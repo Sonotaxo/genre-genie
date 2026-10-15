@@ -190,7 +190,6 @@ export function GenreGenie() {
             <Github className="size-3.5" />
             <span>Open Source on GitHub</span>
           </a>
-          <span className="hidden font-mono text-xs text-muted-foreground sm:inline">v1.0 • ONLINE</span>
         </div>
       </header>
 
