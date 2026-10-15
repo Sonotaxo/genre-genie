@@ -8,6 +8,11 @@ describe("DescriptorEngine Unit Tests", () => {
     expect(engine.candidates.length).toBe(77);
     expect(engine.questionCount).toBe(0);
     expect(engine.canUndo).toBe(false);
+
+    // UX / Dilemma of choice invariant: always at most 4 options per question
+    for (const q of engine.questions) {
+      expect(q.options.length).toBeLessThanOrEqual(4);
+    }
   });
 
   it("prioritizes core grounding questions early", () => {

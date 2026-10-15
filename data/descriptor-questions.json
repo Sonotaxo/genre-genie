@@ -20,7 +20,7 @@
       {
         "id": "moderate_walking",
         "emoji": "🚶",
-        "label": "Moderate & Relaxed",
+        "label": "Moderate & Steady",
         "description": "Like an average radio pop song or casual walking pace",
         "effects": {
           "pulse_slow_relaxed": -0.5,
@@ -31,22 +31,10 @@
       {
         "id": "fast_club",
         "emoji": "🏃",
-        "label": "Fast & Energetic",
-        "description": "Brisk workout pace or club dance floor speed",
+        "label": "Fast, Energetic or Frantic",
+        "description": "Brisk workout pace, club dance floor, or all-out sprint",
         "effects": {
           "pulse_tempo_fast": 1.0,
-          "pulse_slow_relaxed": -1.0,
-          "pulse_hyper_fast": -0.5
-        }
-      },
-      {
-        "id": "hyper_fast_sprint",
-        "emoji": "🏎️",
-        "label": "Frantic & Blistering",
-        "description": "Like a racing car engine or all-out sprint",
-        "effects": {
-          "pulse_hyper_fast": 1.0,
-          "pulse_tempo_fast": 0.5,
           "pulse_slow_relaxed": -1.0
         }
       },
@@ -90,27 +78,32 @@
         }
       },
       {
-        "id": "chopped_amen_break",
-        "emoji": "🌪️",
-        "label": "Ultra-Fast Sliced Drum Rolls",
-        "description": "Frantic, stuttering drum rolls sliced up at high speed (Jungle / Drum & Bass)",
-        "effects": {
-          "sound_amen_break_chopped": 1.0,
-          "pulse_breakbeat_syncopated": 1.0,
-          "pulse_four_on_the_floor": -1.0
-        }
-      },
-      {
         "id": "halftime_sway",
         "emoji": "🛋️",
         "label": "Slow Head-Nod Bounce",
-        "description": "Sluggish half-speed bounce with heavy bass drops (Trap / Dubstep / Hip-Hop)",
+        "description": "Sluggish half-speed bounce with heavy bass drops (Trap / Dubstep / slow Hip-Hop)",
         "effects": {
           "pulse_halftime_sway": 1.0,
           "pulse_four_on_the_floor": -1.0,
           "pulse_free_rubato": -1.0
         }
       },
+      {
+        "id": "rhythm_other",
+        "emoji": "❓",
+        "label": "Other Rhythm / Floating",
+        "description": "Caribbean dance bounce, country chug, or floating without drums",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "specialty_rhythm",
+    "category": "pulse",
+    "question": "Does the rhythm have a distinct dance bounce or speeding chug?",
+    "subtitle": "Notice if the beat matches a specific regional style.",
+    "hint": "Think of Latin dance, island reggae, or country train beats.",
+    "options": [
       {
         "id": "latin_dembow",
         "emoji": "💃",
@@ -142,22 +135,15 @@
         }
       },
       {
-        "id": "free_floating",
-        "emoji": "🌌",
-        "label": "No Steady Beat (Floating)",
-        "description": "Drifting freely without drums or count (ambient soundscape or classical)",
+        "id": "chopped_amen_break",
+        "emoji": "🌪️",
+        "label": "Ultra-Fast Sliced Drum Rolls",
+        "description": "Frantic, stuttering drum rolls sliced up at high speed (Jungle / Drum & Bass)",
         "effects": {
-          "pulse_free_rubato": 1.0,
-          "pulse_four_on_the_floor": -1.0,
-          "pulse_breakbeat_syncopated": -1.0
+          "sound_amen_break_chopped": 1.0,
+          "pulse_breakbeat_syncopated": 1.0,
+          "pulse_four_on_the_floor": -1.0
         }
-      },
-      {
-        "id": "rhythm_unsure",
-        "emoji": "❓",
-        "label": "Other / Not Sure",
-        "description": "A different rhythm or hard to pin down",
-        "effects": {}
       }
     ]
   },
@@ -171,7 +157,7 @@
       {
         "id": "electronic_synths",
         "emoji": "⚡",
-        "label": "Electronic Synths & Digital Beats",
+        "label": "Electronic Synths & Beats",
         "description": "Produced inside computers with synthesizers, digital pads, and samplers",
         "effects": {
           "sound_electronic_dominant": 1.0,
@@ -183,7 +169,7 @@
         "id": "electric_guitars",
         "emoji": "🎸",
         "label": "Amplified Electric Guitars",
-        "description": "Loud electric guitar riffs, screaming solos, or heavy distortion amps",
+        "description": "Loud electric guitar riffs, chords, solos, or heavy distortion amps",
         "effects": {
           "sound_electric_guitars": 1.0,
           "sound_electronic_dominant": -0.8,
@@ -193,7 +179,7 @@
       {
         "id": "acoustic_wooden",
         "emoji": "🎻",
-        "label": "Acoustic Wooden Instruments",
+        "label": "Natural Acoustic Instruments",
         "description": "Grand piano, violins, cello, acoustic guitar, or upright bass",
         "effects": {
           "sound_acoustic_wood_strings": 1.0,
@@ -201,6 +187,22 @@
           "sound_electric_guitars": -0.9
         }
       },
+      {
+        "id": "inst_unsure",
+        "emoji": "❓",
+        "label": "A Blend / Other Instruments",
+        "description": "Horns, hand percussion, country twang, or hard to isolate",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "organic_instruments",
+    "category": "sound",
+    "question": "Do any of these acoustic instruments stand out?",
+    "subtitle": "Listen for signature organic or traditional instruments.",
+    "hint": "Notice if horns, hand drums, or country twang are prominent.",
+    "options": [
       {
         "id": "brass_horns",
         "emoji": "🎷",
@@ -230,10 +232,10 @@
         }
       },
       {
-        "id": "inst_unsure",
+        "id": "organic_none",
         "emoji": "❓",
-        "label": "A Blend / Not Sure",
-        "description": "Multiple styles blended or hard to isolate",
+        "label": "None of These / Standard",
+        "description": "Standard band, electronic sound, or not present",
         "effects": {}
       }
     ]
@@ -242,7 +244,7 @@
     "id": "vocal_delivery",
     "category": "voice",
     "question": "What do the vocals or voices sound like?",
-    "subtitle": "Focus on the way the human voice is delivered.",
+    "subtitle": "Focus on how the human voice is delivered.",
     "hint": "Notice whether there is singing, rapping, or if it is completely instrumental.",
     "options": [
       {
@@ -282,6 +284,24 @@
         }
       },
       {
+        "id": "voice_stylized",
+        "emoji": "✨",
+        "label": "Stylized / Other Vocals",
+        "description": "Harsh screaming, heavy Auto-Tune, whispers, choir, or vocal chops",
+        "effects": {
+          "voice_present": 1.0
+        }
+      }
+    ]
+  },
+  {
+    "id": "vocal_style",
+    "category": "voice",
+    "question": "How are the vocals processed or performed?",
+    "subtitle": "Listen to the special character of the voices.",
+    "hint": "Notice if the voice is screaming, robotic, or ethereal.",
+    "options": [
+      {
         "id": "screaming_growls",
         "emoji": "👹",
         "label": "Aggressive Screams / Growls",
@@ -305,31 +325,20 @@
       {
         "id": "whispered_ethereal",
         "emoji": "👻",
-        "label": "Dreamy Whispers / Floating Voices",
-        "description": "Soft airy whispers or ghostly vocals buried deep in echo",
+        "label": "Dreamy Whispers or Choir",
+        "description": "Soft airy whispers, ghostly vocals in echo, or big choir harmonies",
         "effects": {
           "voice_present": 1.0,
-          "voice_whispered_ethereal": 1.0
+          "voice_whispered_ethereal": 0.8,
+          "voice_choir_wall": 0.6
         }
       },
       {
-        "id": "choir_harmonies",
-        "emoji": "🏛️",
-        "label": "Big Choir / Group Harmonies",
-        "description": "Large opera or gospel choir singing rich multi-voice harmonies",
-        "effects": {
-          "voice_present": 1.0,
-          "voice_choir_wall": 1.0
-        }
-      },
-      {
-        "id": "voice_unsure",
+        "id": "vocal_standard",
         "emoji": "❓",
-        "label": "Short Vocal Snippets / Not Sure",
-        "description": "Repeated vocal chops or words without full verses",
-        "effects": {
-          "voice_present": 0.5
-        }
+        "label": "Natural / None of These",
+        "description": "Standard singing, no heavy vocal effects, or purely instrumental",
+        "effects": {}
       }
     ]
   },
@@ -353,65 +362,31 @@
         "id": "sliding_808_glides",
         "emoji": "🌊",
         "label": "Sliding Low Bass Booms",
-        "description": "Deep bass notes that swoop and slide smoothly up and down in pitch (common in rap/trap)",
+        "description": "Deep bass booms that swoop and slide smoothly up and down in pitch",
         "effects": {
           "sound_sliding_bass_glides": 1.0,
           "sound_deep_subbass": 0.8
         }
       },
       {
-        "id": "snarling_growl",
+        "id": "snarling_acid_growl",
         "emoji": "🤖",
-        "label": "Snarling Robotic Growl",
-        "description": "Aggressive metallic chainsaw buzz or robot monster roar (Dubstep / DnB)",
+        "label": "Growling Chainsaw or Squelch",
+        "description": "Aggressive metallic robot growl or rubbery twisting acid synth bass",
         "effects": {
-          "sound_snarling_neuro_bass": 1.0
+          "sound_snarling_neuro_bass": 0.8,
+          "sound_acid_303_squelch": 0.8
         }
       },
       {
-        "id": "acid_squelch",
-        "emoji": "🧪",
-        "label": "Rubbery Squelching Bass",
-        "description": "Bubbling, whistling electronic bassline that twists and squelches like rubber",
-        "effects": {
-          "sound_acid_303_squelch": 1.0
-        }
-      },
-      {
-        "id": "slap_bass",
+        "id": "bass_acoustic_funky",
         "emoji": "🎸",
-        "label": "Funky Slapped Bass Guitar",
-        "description": "Sharp thumping and popping from slapping electric bass strings with a thumb",
+        "label": "Funky / Acoustic / Standard",
+        "description": "Funky slapped electric bass, acoustic upright, or gentle low end",
         "effects": {
-          "sound_slap_bass_groove": 1.0
+          "sound_slap_bass_groove": 0.7,
+          "sound_snarling_neuro_bass": -1.0
         }
-      },
-      {
-        "id": "galloping_bass",
-        "emoji": "🐎",
-        "label": "Fast Galloping Bassline",
-        "description": "Non-stop rapid 3-note bounce behind every beat (thump-th-th-thump-th-th like a horse)",
-        "effects": {
-          "pulse_galloping_rolling_bass": 1.0
-        }
-      },
-      {
-        "id": "subtle_acoustic_bass",
-        "emoji": "🔈",
-        "label": "Standard / Gentle Low End",
-        "description": "Gentle bass, acoustic upright bass, or non-dominant bass",
-        "effects": {
-          "sound_deep_subbass": -0.4,
-          "sound_snarling_neuro_bass": -1.0,
-          "sound_acid_303_squelch": -1.0
-        }
-      },
-      {
-        "id": "bass_unsure",
-        "emoji": "❓",
-        "label": "Not Sure / In-Between",
-        "description": "Hard to isolate the bass line",
-        "effects": {}
       }
     ]
   },
@@ -435,7 +410,7 @@
       {
         "id": "analog_warmth",
         "emoji": "📻",
-        "label": "Warm & Cozy Vintage Sound",
+        "label": "Warm Vintage Tone",
         "description": "Soft and smooth like playing an old 1970s vinyl record on warm speakers",
         "effects": {
           "sound_analog_warmth": 1.0,
@@ -460,13 +435,6 @@
           "sound_heavy_distortion": 1.0,
           "sound_bright_glossy_clean": -0.8
         }
-      },
-      {
-        "id": "clarity_standard",
-        "emoji": "❓",
-        "label": "Standard / Normal Sound",
-        "description": "Clean, balanced sound without heavy distortion or vintage effects",
-        "effects": {}
       }
     ]
   },
@@ -505,27 +473,14 @@
         }
       },
       {
-        "id": "subtle_pads",
-        "emoji": "☁️",
-        "label": "Soft Background Glow",
-        "description": "Quiet, gentle synth washes or pads floating softly in the background",
-        "effects": {}
-      },
-      {
-        "id": "no_synths",
+        "id": "synth_subtle_none",
         "emoji": "🚫",
-        "label": "No Notable Synthesizers",
-        "description": "Purely real instruments (guitars, piano, acoustic drums) or minimal electronics",
+        "label": "Subtle Glow or No Synths",
+        "description": "Soft background pads, real instruments, or no notable synthesizers",
         "effects": {
-          "sound_electronic_dominant": -0.8
+          "sound_supersaws_anthem": -0.8,
+          "sound_acid_303_squelch": -0.8
         }
-      },
-      {
-        "id": "synth_unsure",
-        "emoji": "❓",
-        "label": "Not Sure / Other",
-        "description": "Hard to tell or standard electronic sounds",
-        "effects": {}
       }
     ]
   },
@@ -568,15 +523,8 @@
       {
         "id": "subtle_soft_tap",
         "emoji": "🪶",
-        "label": "Soft, Subtle or Gentle Beat",
-        "description": "Gentle taps, finger snaps, or quiet acoustic beat",
-        "effects": {}
-      },
-      {
-        "id": "kick_unsure",
-        "emoji": "❓",
-        "label": "Not Sure / Standard",
-        "description": "A standard drum beat or hard to isolate",
+        "label": "Soft Beat / Not Sure",
+        "description": "Gentle taps, finger snaps, minimal beats, or standard drums",
         "effects": {}
       }
     ]
@@ -611,20 +559,11 @@
       {
         "id": "nylon_guitar",
         "emoji": "🪕",
-        "label": "Gentle Nylon Acoustic Guitar",
+        "label": "Gentle Acoustic or Spanish Nylon",
         "description": "Warm, intimate fingerpicking on a Spanish or classical acoustic nylon-string guitar",
         "effects": {
           "sound_nylon_acoustic_guitar": 1.0,
           "sound_acoustic_wood_strings": 0.8
-        }
-      },
-      {
-        "id": "country_twang",
-        "emoji": "🤠",
-        "label": "Twangy Country Slide Guitar",
-        "description": "Crying pedal steel guitar, banjo, or twangy country fiddle",
-        "effects": {
-          "sound_pedal_steel_twang": 1.0
         }
       },
       {
@@ -635,13 +574,6 @@
         "effects": {
           "sound_electric_guitars": -0.9
         }
-      },
-      {
-        "id": "guitar_unsure",
-        "emoji": "❓",
-        "label": "Not Sure / Other",
-        "description": "Unsure or subtle guitar in the background",
-        "effects": {}
       }
     ]
   },
@@ -684,31 +616,15 @@
         }
       },
       {
-        "id": "nostalgic_melancholy",
+        "id": "nostalgic_intimate",
         "emoji": "🌅",
-        "label": "Nostalgic, Dreamy & Bittersweet",
-        "description": "Sentimental longing for the past, sunset drives, or polaroid photos",
+        "label": "Nostalgic, Dreamy or Intimate",
+        "description": "Sentimental longing for the past, quiet bedroom vibe, or sunset memories",
         "effects": {
-          "atmo_nostalgic_melancholy": 1.0,
+          "atmo_nostalgic_melancholy": 0.8,
+          "atmo_intimate_bedroom": 0.8,
           "atmo_violent_aggressive": -1.0
         }
-      },
-      {
-        "id": "intimate_bedroom",
-        "emoji": "🛋️",
-        "label": "Quiet, Intimate & Unplugged",
-        "description": "Played softly and close-up, as if just for you in a quiet room",
-        "effects": {
-          "atmo_intimate_bedroom": 1.0,
-          "atmo_violent_aggressive": -1.0
-        }
-      },
-      {
-        "id": "atmo_unsure",
-        "emoji": "❓",
-        "label": "Neutral / Hard to Say",
-        "description": "Balanced or emotionally neutral",
-        "effects": {}
       }
     ]
   },

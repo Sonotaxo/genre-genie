@@ -453,7 +453,7 @@ export function GenreGenie() {
         const q = d?.nextQuestion();
         if (!d || !q) return;
         const n = Number(ev.key);
-        if (!isNaN(n) && n >= 1 && n <= q.options.length) {
+        if (!isNaN(n) && n >= 1 && n <= Math.min(4, q.options.length)) {
           respondDescriptor(q.options[n - 1]!.id);
         }
         return;
@@ -1182,9 +1182,11 @@ function DescriptorQuestionView({
   const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
   const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
 
+  const visibleOptions = useMemo(() => q.options.slice(0, 4), [q.options]);
+
   const gainingMap = useMemo(
-    () => q.options.map((opt) => engine.getGainingGenres(opt, 3)),
-    [engine, q]
+    () => visibleOptions.map((opt) => engine.getGainingGenres(opt, 3)),
+    [engine, visibleOptions]
   );
 
   return (
@@ -1267,7 +1269,7 @@ function DescriptorQuestionView({
         )}
 
         <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {q.options.map((opt, i) => (
+          {visibleOptions.map((opt, i) => (
             <button
               key={opt.id}
               onClick={() => onRespond(opt.id)}
