@@ -481,6 +481,34 @@ export class GenreGenieEngine {
     const next = this.nextQuestion();
     return !next || next.gain < 0.005;
   }
+
+  /**
+   * Returns top candidate genres (or subgenres when drilling) that gain the most confidence
+   * if the user selects response value `value` for attribute `attrId`.
+   */
+  getGainingGenres(attrId: string, value: number, maxCount = 2): string[] {
+    if (value === 0) return [];
+    const currentProbs = this.probs;
+    const candidates = this.candidates;
+
+    const unnormalized = currentProbs.map((p, i) => {
+      const w = candidates[i]!.weights[attrId] ?? 0;
+      return p * likelihood(value, w);
+    });
+    const sum = unnormalized.reduce((a, b) => a + b, 0) || 1;
+    const posterior = unnormalized.map((x) => x / sum);
+
+    const gains = candidates
+      .map((genre, i) => ({
+        name: genre.name,
+        delta: posterior[i]! - currentProbs[i]!,
+        posteriorProb: posterior[i]!,
+      }))
+      .filter((x) => x.delta > 0.005)
+      .sort((a, b) => b.delta - a.delta);
+
+    return gains.slice(0, maxCount).map((x) => x.name);
+  }
 }
 
 export function hasSubgenres(id: string) {

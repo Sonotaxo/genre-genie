@@ -83,4 +83,18 @@ describe("DescriptorEngine Unit Tests", () => {
     expect(technoFamily.length).toBeGreaterThan(0);
     expect(technoFamily[0]!.prob).toBeGreaterThan(0.15);
   });
+
+  it("calculates gaining genres for descriptor options", () => {
+    const engine = new DescriptorEngine();
+    const q = engine.questions.find((x) => x.id === "core_instrumentation")!;
+    const electronicOpt = q.options.find((o) => o.id === "electronic_synths")!;
+    const acousticOpt = q.options.find((o) => o.id === "acoustic_wooden")!;
+
+    const electronicGaining = engine.getGainingGenres(electronicOpt, 3);
+    const acousticGaining = engine.getGainingGenres(acousticOpt, 3);
+
+    expect(electronicGaining).toContain("Techno");
+    expect(acousticGaining.some((name) => name.includes("Classical") || name.includes("Guitar"))).toBe(true);
+  });
 });
+

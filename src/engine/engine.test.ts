@@ -368,4 +368,16 @@ describe("Genre Genie Matrix 100% Convergence Suite", () => {
 
     expect(passedCount).toBe(microGenres.length);
   });
+
+  it("calculates gaining genres for affirmative and negative answers", () => {
+    const engine = new GenreGenieEngine();
+    const yesGaining = engine.getGainingGenres("pulse_four_on_the_floor", 1.0, 3);
+    const noGaining = engine.getGainingGenres("pulse_four_on_the_floor", -1.0, 3);
+    const unsureGaining = engine.getGainingGenres("pulse_four_on_the_floor", 0, 3);
+
+    expect(yesGaining).toContain("House");
+    expect(yesGaining).toContain("Techno");
+    expect(noGaining).toContain("90s Boom Bap");
+    expect(unsureGaining).toEqual([]);
+  });
 });

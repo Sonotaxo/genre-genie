@@ -916,6 +916,11 @@ function QuestionView({
   const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
   const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
 
+  const gainingMap = useMemo(
+    () => RESPONSES.map((r) => engine.getGainingGenres(q.id, r.value, 2)),
+    [engine, q.id]
+  );
+
   return (
     <section>
       <div className="mb-6 flex items-center gap-4">
@@ -1062,16 +1067,35 @@ function QuestionView({
           </button>
         )}
         <div className="mt-8 grid grid-cols-1 gap-2 md:grid-cols-5">
-          {RESPONSES.map((r, i) => (
-            <button
-              key={r.label}
-              onClick={() => onRespond(r.value, isShowingAlternative)}
-              className={`flex items-center justify-between rounded-xl border px-4 py-4 text-left font-bold transition-transform duration-100 active:scale-95 md:flex-col md:justify-center md:gap-1 md:text-center ${RESP_CLASS[i]}`}
-            >
-              <span>{r.label}</span>
-              <kbd className="font-mono text-xs opacity-60">{i + 1}</kbd>
-            </button>
-          ))}
+          {RESPONSES.map((r, i) => {
+            const gaining = gainingMap[i] ?? [];
+            return (
+              <button
+                key={r.label}
+                onClick={() => onRespond(r.value, isShowingAlternative)}
+                className={`flex flex-col justify-between rounded-xl border p-3.5 text-left transition-transform duration-100 active:scale-95 md:min-h-[105px] md:text-center ${RESP_CLASS[i]}`}
+              >
+                <div className="flex w-full items-center justify-between md:flex-col md:justify-center md:gap-1">
+                  <span className="font-bold text-sm md:text-base">{r.label}</span>
+                  <kbd className="font-mono text-xs opacity-60">{i + 1}</kbd>
+                </div>
+                {gaining.length > 0 && (
+                  <div className="mt-2.5 flex flex-wrap gap-1 md:mt-2 md:justify-center">
+                    {gaining.map((name) => (
+                      <span
+                        key={name}
+                        className="inline-flex items-center gap-0.5 rounded-full border border-border/60 bg-background/80 px-2 py-0.5 font-sans text-[10px] font-medium text-foreground/90 shadow-2xs backdrop-blur-xs truncate max-w-[130px]"
+                        title={`Boosts confidence for ${name}`}
+                      >
+                        <span className="font-bold text-pulse">↑</span>
+                        <span className="truncate">{name}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1106,6 +1130,11 @@ function DescriptorQuestionView({
 
   const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
   const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
+
+  const gainingMap = useMemo(
+    () => q.options.map((opt) => engine.getGainingGenres(opt, 3)),
+    [engine, q]
+  );
 
   return (
     <section>
@@ -1205,6 +1234,23 @@ function DescriptorQuestionView({
               <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                 {opt.description}
               </p>
+              {gainingMap[i] && gainingMap[i].length > 0 && (
+                <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2.5 w-full">
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground mr-0.5">
+                    Boosts:
+                  </span>
+                  {gainingMap[i].map((name) => (
+                    <span
+                      key={name}
+                      className="inline-flex items-center gap-0.5 rounded-full border border-pulse/30 bg-pulse/10 px-2 py-0.5 font-sans text-[10px] font-medium text-foreground transition group-hover:border-pulse/60"
+                      title={`Boosts confidence for ${name}`}
+                    >
+                      <span className="font-bold text-pulse">↑</span>
+                      <span>{name}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
             </button>
           ))}
         </div>

@@ -255,4 +255,35 @@ export class DescriptorEngine {
 
     return false;
   }
+
+  /**
+   * Returns top candidate genres (or subgenres when drilling) that gain the most confidence
+   * if the user selects this descriptor option.
+   */
+  getGainingGenres(option: DescriptorOption, maxCount = 3): string[] {
+    if (Object.keys(option.effects).length === 0) return [];
+    const currentProbs = this.probs;
+    const candidates = this.candidates;
+
+    const unnormalized = currentProbs.map((p, i) => {
+      let l = 1;
+      for (const [attrId, val] of Object.entries(option.effects)) {
+        l *= likelihood(val, candidates[i]!.weights[attrId] ?? 0);
+      }
+      return p * l;
+    });
+    const sum = unnormalized.reduce((a, b) => a + b, 0) || 1;
+    const posterior = unnormalized.map((x) => x / sum);
+
+    const gains = candidates
+      .map((genre, i) => ({
+        name: genre.name,
+        delta: posterior[i]! - currentProbs[i]!,
+        posteriorProb: posterior[i]!,
+      }))
+      .filter((x) => x.delta > 0.005)
+      .sort((a, b) => b.delta - a.delta);
+
+    return gains.slice(0, maxCount).map((x) => x.name);
+  }
 }
