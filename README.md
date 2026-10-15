@@ -83,4 +83,4 @@ This project was inspired by the original [Akinator](https://en.akinator.com/), 
 
 ## 📄 License
 
-This project is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE) — free for personal, educational, and research use. Commercial use, resale, and monetized distribution are strictly prohibited.
+This project is licensed under the [MIT Non-Commercial License](LICENSE) — free for personal, educational, and research use. Commercial use, resale, and monetized distribution are strictly prohibited without prior written permission.

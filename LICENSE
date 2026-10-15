@@ -1,38 +1,27 @@
-PolyForm Noncommercial License 1.0.0
+MIT Non-Commercial License
 
 Copyright (c) 2026 Stephan Schultz (Sonotaxo)
 
-https://polyformproject.org/licenses/noncommercial/1.0.0/
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, subject to the following conditions:
 
-## Acceptance
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
 
-In order to receive this license, you must agree to its rules. The rules of this license are both obligations under that agreement and conditions to your license. You must not do anything with this software that triggers a rule that you cannot or will not follow.
+2. Non-Commercial Use Only: The Software may only be used, copied, modified,
+   merged, published, distributed, or sublicensed for non-commercial purposes.
+   Commercial use, including but not limited to selling the Software, using it as
+   part of a paid product or service, or using it for any purpose intended for or
+   directed towards commercial advantage or monetary compensation, is strictly
+   prohibited without prior express written permission from the copyright holders.
 
-## Copyright License
-
-The licensor grants you a copyright license for the software to do anything you would like with the software, as long as you are not doing it for a commercial purpose.
-
-## Patent License
-
-The licensor grants you a patent license for the software that covers patent claims the licensor has some right to license, to make, use, sell, and import the software, as long as you are not doing it for a commercial purpose.
-
-## Noncommercial Purposes
-
-Any purpose that is not a commercial purpose is a noncommercial purpose.
-
-## Commercial Purposes
-
-A commercial purpose is one primarily intended for or directed towards commercial advantage or monetary compensation.
-
-Commercial purposes include, but are not limited to:
-- Selling or licensing the software, products, or services that include the software
-- Running the software as part of a commercial product, SaaS offering, or paid service
-- Using the software or its datasets to develop commercial software, training datasets, or models intended for commercial resale
-
-## Notices
-
-You must ensure that everyone who gets a copy of any part of this software from you, with or without changes, also receives the license and copyright notice for the software.
-
-## As Is
-
-The software comes as is, without any warranty. As far as the law allows, the licensor is not liable for damages for any reason, nor will the licensor be responsible for any damages.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
