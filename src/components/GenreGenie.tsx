@@ -924,8 +924,12 @@ function QuestionView({
   const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
   const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
 
-  const gainingMap = useMemo(
-    () => RESPONSES.map((r) => engine.getGainingGenres(q.id, r.value, 2)),
+  const gainingYes = useMemo(
+    () => engine.getGainingGenres(q.id, 1.0, 6),
+    [engine, q.id]
+  );
+  const gainingNo = useMemo(
+    () => engine.getGainingGenres(q.id, -1.0, 6),
     [engine, q.id]
   );
 
@@ -1075,35 +1079,75 @@ function QuestionView({
           </button>
         )}
         <div className="mt-8 grid grid-cols-1 gap-2 md:grid-cols-5">
-          {RESPONSES.map((r, i) => {
-            const gaining = gainingMap[i] ?? [];
-            return (
-              <button
-                key={r.label}
-                onClick={() => onRespond(r.value, isShowingAlternative)}
-                className={`flex flex-col justify-between rounded-xl border p-3.5 text-left transition-transform duration-100 active:scale-95 md:min-h-[105px] md:text-center ${RESP_CLASS[i]}`}
-              >
-                <div className="flex w-full items-center justify-between md:flex-col md:justify-center md:gap-1">
-                  <span className="font-bold text-sm md:text-base">{r.label}</span>
-                  <kbd className="font-mono text-xs opacity-60">{i + 1}</kbd>
+          {RESPONSES.map((r, i) => (
+            <button
+              key={r.label}
+              onClick={() => onRespond(r.value, isShowingAlternative)}
+              className={`flex items-center justify-center rounded-xl border p-3.5 text-center font-bold text-sm md:text-base transition-transform duration-100 active:scale-95 md:min-h-[58px] ${RESP_CLASS[i]}`}
+            >
+              <span>{r.label}</span>
+            </button>
+          ))}
+        </div>
+
+        {(gainingYes.length > 0 || gainingNo.length > 0) && (
+          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-5">
+            {/* Affirmative Section (below Yes & Probably) */}
+            <div className="flex flex-col justify-between rounded-2xl border border-pulse/30 bg-pulse/[0.04] p-4 text-left md:col-span-2">
+              <div>
+                <div className="flex items-center gap-2 font-mono text-xs font-semibold text-pulse">
+                  <span className="size-2 rounded-full bg-pulse shadow-[0_0_8px_var(--pulse)]" />
+                  <span>Boosts if Yes / Probably</span>
                 </div>
-                {gaining.length > 0 && (
-                  <div className="mt-2.5 flex flex-wrap gap-1 md:mt-2 md:justify-center">
-                    {gaining.map((name) => (
+                {gainingYes.length > 0 ? (
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                    {gainingYes.map((name) => (
                       <span
                         key={name}
-                        className={`inline-flex items-center rounded-full border ${RESP_BORDER[i]} bg-background/30 px-2 py-0.5 font-sans text-[10px] text-muted-foreground truncate max-w-[130px]`}
+                        className="inline-flex items-center rounded-full border border-pulse/35 bg-pulse/10 px-2.5 py-1 font-sans text-xs font-medium text-pulse shadow-sm"
                         title={`Boosts confidence for ${name}`}
                       >
-                        <span className="truncate">{name}</span>
+                        {name}
                       </span>
                     ))}
                   </div>
+                ) : (
+                  <p className="mt-2 text-xs text-muted-foreground/60 italic">No genres strongly boosted</p>
                 )}
-              </button>
-            );
-          })}
-        </div>
+              </div>
+            </div>
+
+            {/* Center Spacer (below Don't know) */}
+            <div className="hidden md:flex md:col-span-1 md:items-center md:justify-center">
+              <span className="font-mono text-xs text-muted-foreground/30">───</span>
+            </div>
+
+            {/* Negative Section (below Probably Not & No) */}
+            <div className="flex flex-col justify-between rounded-2xl border border-destructive/30 bg-destructive/[0.04] p-4 text-left md:col-span-2">
+              <div>
+                <div className="flex items-center gap-2 font-mono text-xs font-semibold text-destructive">
+                  <span className="size-2 rounded-full bg-destructive shadow-[0_0_8px_var(--destructive)]" />
+                  <span>Boosts if No / Probably Not</span>
+                </div>
+                {gainingNo.length > 0 ? (
+                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                    {gainingNo.map((name) => (
+                      <span
+                        key={name}
+                        className="inline-flex items-center rounded-full border border-destructive/35 bg-destructive/10 px-2.5 py-1 font-sans text-xs font-medium text-destructive shadow-sm"
+                        title={`Boosts confidence for ${name}`}
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-2 text-xs text-muted-foreground/60 italic">No genres strongly boosted</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -1229,11 +1273,8 @@ function DescriptorQuestionView({
               onClick={() => onRespond(opt.id)}
               className="group relative flex flex-col items-start rounded-2xl border border-border/80 bg-card/60 p-5 text-left transition hover:border-pulse hover:bg-card hover:shadow-[0_0_25px_-5px_var(--pulse)] active:scale-[0.98]"
             >
-              <div className="flex w-full items-center justify-between">
+              <div className="flex w-full items-center">
                 <span className="text-2xl transition group-hover:scale-110">{opt.emoji}</span>
-                <kbd className="rounded-md border border-border bg-muted/80 px-2 py-0.5 font-mono text-xs text-muted-foreground group-hover:border-pulse/50 group-hover:text-foreground">
-                  {i + 1}
-                </kbd>
               </div>
               <h3 className="mt-3 font-bold text-base text-foreground group-hover:text-pulse transition-colors">
                 {opt.label}
