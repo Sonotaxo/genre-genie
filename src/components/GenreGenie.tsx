@@ -503,7 +503,7 @@ function QuestionView({
   const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category];
   const meta = CATEGORY_META[q.category];
-  const n = engine.questionCount - (drill ? baseCount : 0) + 1;
+  const n = engine.questionCount + 1;
   const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
   return (
     <section>
@@ -520,7 +520,7 @@ function QuestionView({
           </div>
         </div>
         <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
-          Q{n} of ~{drill ? 5 : 12}
+          Q{n}
         </span>
       </div>
       <div className="mb-4 rounded-2xl border border-border bg-card/60 p-4">
