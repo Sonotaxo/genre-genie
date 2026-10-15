@@ -58,6 +58,17 @@ export function GenreGenie() {
     force();
   };
 
+  const flipAnswer = useCallback((attrId: string, newValue: number) => {
+    const e = engineRef.current;
+    if (!e) return;
+    const ans = e.answers.find((a) => a.attributeId === attrId);
+    if (ans) {
+      ans.value = newValue;
+      e.updateProbabilities();
+      force();
+    }
+  }, []);
+
   const makeDrill = (parent: string, prior: Answer[]) => {
     const e = new AkinatorEngine({ parent, priorAnswers: prior });
     // mark prior answers as asked so we don't repeat them
@@ -71,7 +82,7 @@ export function GenreGenie() {
     if (!e || !q) return;
     e.answer(q.attribute.id, value, isAlt ?? q.isAlternative ?? false);
     setHintOpen(false);
-    if (e.isConverged(drill ? 5 + macroAnswers.length : 15)) {
+    if (e.isConverged(drill ? 8 + macroAnswers.length : 25)) {
       const top = e.ranked()[0]!.genre;
       if (!drill && hasSubgenres(top.id)) {
         const prior = [...e.answers];
@@ -114,7 +125,7 @@ export function GenreGenie() {
     autoDrillRef.current = false;
     engineRef.current = makeDrill(parent, prior);
     setDrill(parent);
-    setScreen(engineRef.current.isConverged(5 + prior.length) ? "CONVERGED" : "PLAYING");
+    setScreen(engineRef.current.isConverged(8 + prior.length) ? "CONVERGED" : "PLAYING");
     force();
   };
 
@@ -144,6 +155,8 @@ export function GenreGenie() {
           engine={engine}
           q={question.attribute}
           isAlternative={question.isAlternative ?? false}
+          isConfirming={question.isConfirming ?? false}
+          suspectName={question.suspectName}
           drill={drill}
           baseCount={macroAnswers.length}
           hintOpen={hintOpen}
@@ -160,6 +173,7 @@ export function GenreGenie() {
           onAgain={() => setScreen("IDLE")}
           onUndo={undo}
           onWrong={() => setFeedbackOpen(true)}
+          onFlipAnswer={flipAnswer}
         />
       )}
       {engine && (
@@ -218,9 +232,9 @@ function Landing({ onStart }: { onStart: (f?: Family) => void }) {
 }
 
 function QuestionView({
-  engine, q, isAlternative = false, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
+  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo,
 }: {
-  engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; drill: string | null; baseCount: number;
+  engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string; drill: string | null; baseCount: number;
   hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
 }) {
   const [showAlt, setShowAlt] = useState(isAlternative);
@@ -246,7 +260,7 @@ function QuestionView({
           </div>
         </div>
         <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
-          Q{n} of ~{drill ? 4 : 12}
+          Q{n} of ~{drill ? 5 : 12}
         </span>
       </div>
       <div className="mb-4 rounded-2xl border border-border bg-card/60 p-4">
@@ -284,6 +298,12 @@ function QuestionView({
           <div className="mt-4 flex items-center gap-2 rounded-xl border border-pulse/40 bg-pulse/10 px-3 py-2 text-xs font-semibold text-pulse">
             <span>🔄</span>
             <span>You were unsure about this sound earlier — here is another angle on it:</span>
+          </div>
+        )}
+        {isConfirming && (
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-500">
+            <span>🎯</span>
+            <span>Zeroing in: Confirming signature {suspectName ? `"${suspectName}"` : "genre"} sound</span>
           </div>
         )}
         <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
@@ -327,12 +347,17 @@ function Gauge({ value }: { value: number }) {
   );
 }
 
-function Diagnosis({ engine, drill, onDrill, onAgain, onUndo, onWrong }: {
+function Diagnosis({
+  engine, drill, onDrill, onAgain, onUndo, onWrong, onFlipAnswer,
+}: {
   engine: AkinatorEngine; drill: string | null; onDrill: (id: string) => void; onAgain: () => void; onUndo: () => void; onWrong: () => void;
+  onFlipAnswer: (attrId: string, newValue: number) => void;
 }) {
   const ranked = engine.ranked();
   const top = ranked[0]!;
   const g = top.genre;
+  const tension = useMemo(() => engine.computeTension(g), [engine, g]);
+
   useEffect(() => {
     confetti({ particleCount: 140, spread: 80, origin: { y: 0.4 }, colors: ["#10b981", "#8b5cf6", "#06b6d4", "#f59e0b"] });
   }, [g.id]);
@@ -375,6 +400,37 @@ function Diagnosis({ engine, drill, onDrill, onAgain, onUndo, onWrong }: {
           </ul>
         )}
       </div>
+
+      {tension.outlier && (
+        <div className="rounded-3xl border border-amber-500/40 bg-amber-500/10 p-5 text-sm">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-1">
+              <p className="flex items-center gap-2 font-semibold text-amber-500">
+                <span>⚠️</span> Unusual answer noticed
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                You answered{" "}
+                <span className="font-bold text-foreground">
+                  &ldquo;{RESPONSES.find((r) => r.value === tension.outlier!.actual)?.label ?? tension.outlier.actual}&rdquo;
+                </span>{" "}
+                for{" "}
+                <span className="italic font-medium text-foreground">
+                  &ldquo;{tension.outlier.attribute.question}&rdquo;
+                </span>
+                . If this track was actually {tension.outlier.expected > 0 ? "YES" : "NO"}, click to recalculate:
+              </p>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => onFlipAnswer(tension.outlier!.attributeId, tension.outlier!.expected > 0 ? 1 : -1)}
+              className="shrink-0 border-amber-500/40 text-amber-500 hover:bg-amber-500/20 active:scale-95"
+            >
+              🔄 Recalculate with {tension.outlier.expected > 0 ? "Yes" : "No"}
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-3xl border border-border bg-card/80 p-6">
         <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Benchmark track</p>

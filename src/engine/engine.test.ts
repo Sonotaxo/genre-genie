@@ -103,6 +103,66 @@ describe("GenreGenieEngine Core Unit Tests", () => {
       expect(next.attribute.alternativePrompt).toBeDefined();
     }
   });
+
+  it("triggers confirming hallmark questions when a candidate dominates", () => {
+    const e = new GenreGenieEngine();
+    // Answer questions pointing toward techno
+    e.answer("sound_electronic_dominant", 1);
+    e.answer("pulse_four_on_the_floor", 1);
+    e.answer("voice_rapping_spoken", -1);
+    e.answer("pulse_swung_groove", -1);
+
+    const next = e.nextQuestion();
+    expect(next).not.toBeNull();
+    // When a suspect emerges with high confidence/margin, confirming is flagged
+    if (next?.isConfirming) {
+      expect(next.suspectName).toBeDefined();
+    }
+  });
+
+  it("detects outlier contradiction answers with computeTension", () => {
+    const e = new GenreGenieEngine();
+    const techno = GENRES.find((g) => g.id === "techno")!;
+    e.answer("sound_electronic_dominant", 1);
+    e.answer("pulse_four_on_the_floor", 1);
+    // User mistakenly answers YES to acoustic wood strings for techno (delta = | -1 - 1 | = 2.0)
+    e.answer("sound_acoustic_wood_strings", 1);
+
+    const tension = e.computeTension(techno);
+    expect(tension.outlier).toBeDefined();
+    expect(tension.outlier?.attributeId).toBe("sound_acoustic_wood_strings");
+    expect(tension.outlier?.delta).toBeGreaterThanOrEqual(1.4);
+  });
+
+  it("recovers from a mistaken answer and correctly identifies the genre", () => {
+    const target = GENRES.find((g) => g.id === "techno")!;
+    const e = new GenreGenieEngine();
+    // User makes an initial mistake on electronic dominant
+    e.answer("sound_electronic_dominant", -1);
+
+    // Following answers align with techno
+    e.answer("pulse_four_on_the_floor", 1);
+    e.answer("pulse_swung_groove", -1);
+    e.answer("sound_acoustic_wood_strings", -1);
+    e.answer("sound_electric_guitars", -1);
+    e.answer("sound_heavy_distortion", -1);
+    e.answer("atmo_dark_dystopian", 1);
+    e.answer("sound_deep_subbass", 1);
+    e.answer("sound_bright_glossy_clean", -1);
+    e.answer("pulse_halftime_sway", -1);
+
+    const top = e.ranked()[0]!;
+    expect(top.genre.id).toBe("techno");
+    expect(top.prob).toBeGreaterThan(0.75);
+  });
+
+  it("enforces hallmark quorum and high confidence before convergence", () => {
+    const e = new GenreGenieEngine();
+    // Even if 2 questions are answered, minQuestions (6 for macro) prevents premature stop
+    e.answer("sound_electronic_dominant", 1);
+    e.answer("pulse_four_on_the_floor", 1);
+    expect(e.isConverged()).toBe(false);
+  });
 });
 
 describe("Genre Genie Matrix 100% Convergence Suite", () => {

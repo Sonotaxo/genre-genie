@@ -172,11 +172,106 @@ export class GenreGenieEngine {
     return h - expected;
   }
 
-  nextQuestion(): { attribute: Attribute; gain: number; isAlternative?: boolean } | null {
-    const asked = new Set(this.answers.map((a) => a.attributeId));
-    let best: { attribute: Attribute; gain: number; isAlternative?: boolean } | null = null;
+  getConfirmedHallmarkDimensions(g: Genre): Set<string> {
+    const dimensions = new Set<string>();
+    for (const ans of this.answers) {
+      if (ans.value < 0.5) continue;
+      const w = this.w(g, ans.attributeId);
+      // Confirmed if strong positive hallmark matched affirmative listener response
+      if (w >= 0.6) {
+        const attr = this.attributes.find((a) => a.id === ans.attributeId);
+        if (attr) dimensions.add(attr.category);
+      }
+    }
+    return dimensions;
+  }
 
-    // 1. Evaluate unasked attributes
+  findConfirmingQuestion(suspect: Genre, runners: Genre[]): { attribute: Attribute; gain: number } | null {
+    const asked = new Set(this.answers.map((a) => a.attributeId));
+    let bestAttr: Attribute | null = null;
+    let bestScore = -1;
+
+    for (const a of this.attributes) {
+      if (asked.has(a.id) || this.pruned.has(a.id)) continue;
+      const wSuspect = this.w(suspect, a.id);
+      const wRunner1 = runners[0] ? this.w(runners[0], a.id) : 0;
+      const wRunner2 = runners[1] ? this.w(runners[1], a.id) : 0;
+      const diff1 = Math.abs(wSuspect - wRunner1);
+      const diff2 = Math.abs(wSuspect - wRunner2);
+
+      const maxWeight = Math.max(Math.abs(wSuspect), Math.abs(wRunner1));
+      if (maxWeight < 0.6 || diff1 < 0.4) continue;
+
+      const score = maxWeight * (diff1 * 1.5 + diff2);
+      if (score > bestScore) {
+        bestScore = score;
+        bestAttr = a;
+      }
+    }
+
+    if (!bestAttr) return null;
+    return { attribute: bestAttr, gain: this.informationGain(bestAttr.id) };
+  }
+
+  computeTension(g: Genre): {
+    score: number;
+    outlier?: { attributeId: string; expected: number; actual: number; delta: number; attribute: Attribute };
+  } {
+    let total = 0;
+    let worstOutlier: { attributeId: string; expected: number; actual: number; delta: number; attribute: Attribute } | undefined;
+
+    for (const ans of this.answers) {
+      if (ans.value === 0) continue;
+      const expected = this.w(g, ans.attributeId);
+      const delta = Math.abs(expected - ans.value);
+      total += delta;
+
+      if (delta >= 1.4 && (!worstOutlier || delta > worstOutlier.delta)) {
+        const attr = this.attributes.find((a) => a.id === ans.attributeId);
+        if (attr) {
+          worstOutlier = {
+            attributeId: ans.attributeId,
+            expected,
+            actual: ans.value,
+            delta,
+            attribute: attr,
+          };
+        }
+      }
+    }
+
+    return { score: total, outlier: worstOutlier };
+  }
+
+  nextQuestion(): {
+    attribute: Attribute;
+    gain: number;
+    isAlternative?: boolean;
+    isConfirming?: boolean;
+    suspectName?: string;
+  } | null {
+    const asked = new Set(this.answers.map((a) => a.attributeId));
+    const ranked = this.ranked();
+    const top = ranked[0];
+    const runner = ranked[1];
+    const margin = runner ? top!.prob - runner.prob : 1.0;
+
+    // 1. Check if we should ask a Confirming / Hallmark Question
+    // Trigger when we have asked at least 4 questions and top candidate is a strong suspect
+    if (this.answers.length >= 4 && top && (top.prob >= 0.50 || margin >= 0.25)) {
+      const confirming = this.findConfirmingQuestion(top.genre, ranked.slice(1, 3).map((r) => r.genre));
+      if (confirming) {
+        return {
+          attribute: confirming.attribute,
+          gain: confirming.gain,
+          isConfirming: true,
+          suspectName: top.genre.name,
+        };
+      }
+    }
+
+    // 2. Standard Information Gain across unasked attributes
+    let best: { attribute: Attribute; gain: number; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string } | null = null;
     for (const a of this.attributes) {
       if (asked.has(a.id) || this.pruned.has(a.id)) continue;
       const gain = this.informationGain(a.id);
@@ -185,7 +280,7 @@ export class GenreGenieEngine {
       }
     }
 
-    // 2. Unsure Fallback: Re-prompt high-value unsure questions with alternativePrompt LATER,
+    // 3. Unsure Fallback: Re-prompt high-value unsure questions with alternativePrompt LATER,
     // only after at least 3 other questions have been asked in between (cooldown),
     // and only when it provides strong differentiating value.
     if (this.unsureIds.size > 0 && this.answers.length >= 4) {
@@ -219,22 +314,34 @@ export class GenreGenieEngine {
       .sort((a, b) => b.prob - a.prob);
   }
 
-  /** True when one candidate clearly dominates. */
+  /** True when one candidate clearly dominates with high confidence. */
   isClear(): boolean {
     if (this.candidates.length <= 1) return true;
     const [a, b] = this.ranked();
-    return a!.prob >= 0.60 || a!.prob - (b?.prob ?? 0) > 0.35;
+    const margin = b ? a!.prob - b.prob : 1.0;
+    return a!.prob >= 0.75 && margin >= 0.40;
   }
 
-  /** Adaptive dynamic convergence without arbitrary hard cutoffs. */
+  /** High-accuracy convergence requiring confidence, decisive margins, and hallmark quorum. */
   isConverged(maxQuestions = 25): boolean {
     if (this.candidates.length <= 1) return true;
     const [a, b] = this.ranked();
     const n = this.questionCount;
+    const margin = b ? a!.prob - b.prob : 1.0;
+    const isMicro = this.candidates.some((c) => c.parent !== null);
+    const minQuestions = isMicro ? 3 : 6;
 
-    if (a!.prob >= 0.60) return true;
-    if (n >= 3 && a!.prob - (b?.prob ?? 0) > 0.35) return true;
     if (n >= maxQuestions) return true;
+
+    if (n >= minQuestions) {
+      const quorum = this.getConfirmedHallmarkDimensions(a!.genre).size >= (isMicro ? 1 : 2);
+
+      // High confidence (>=80% prob, >=45% margin) and quorum verified
+      if (a!.prob >= 0.80 && margin >= 0.45 && quorum) return true;
+
+      // Decisive dominance (>=88% prob, >=55% margin)
+      if (a!.prob >= 0.88 && margin >= 0.55) return true;
+    }
 
     const next = this.nextQuestion();
     return !next || next.gain < 0.005;
