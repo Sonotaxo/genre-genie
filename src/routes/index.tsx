@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { AudioAkinator } from "@/components/AudioAkinator";
+import { GenreGenie } from "@/components/GenreGenie";
 
-const title = "Audio-Akinator — Guess Any Music Genre";
-const description = "Answer simple questions about what you hear and Audio-Akinator identifies the music genre in about 10 taps.";
+const title = "Genre Genie — Guess Any Music Genre";
+const description = "Answer simple questions about what you hear and Genre Genie identifies the music genre in about 10 taps.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,5 +15,5 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: AudioAkinator,
+  component: GenreGenie,
 });
