@@ -2237,6 +2237,43 @@
     "referenceUrl": "https://rateyourmusic.com/genre/hard-techno/"
   },
   {
+    "id": "hypertechno",
+    "name": "Hypertechno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Hyper Techno",
+      "Rave Techno",
+      "Commercial Hard Techno"
+    ],
+    "description": "High-energy commercial techno characterized by rapid 140-155 BPM rolling basslines, prominent vocal hooks, and high-gloss mainstage rave euphoria.",
+    "popularityWeight": 0.75,
+    "benchmarkTracks": [
+      {
+        "artist": "Creeds",
+        "title": "Push Up"
+      },
+      {
+        "artist": "Maddix",
+        "title": "Heute Nacht"
+      },
+      {
+        "artist": "Niklas Dee & Luca-Dante Spadafora",
+        "title": "Mädchen auf dem Pferd (Techno Remix)"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Rapid 140-155 BPM four-on-the-floor beat with rolling offbeat bassline",
+      "sound": "High-gloss electronic production, punchy modern kicks, heavy subbass, and bright rave synths",
+      "voice": "Prominent pitched vocal hooks, fast spoken vocal chops, or autotuned vocal refrains",
+      "atmosphere": "High-voltage festival rave euphoria and contagious mainstage bounce"
+    },
+    "distinctionNotes": "Unlike underground Hard Techno which is dark, violent, and distorted, Hypertechno is glossy, uplifting, and dominated by catchy vocal refrains and eurodance-tinged rave hooks.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/techno/"
+  },
+  {
     "id": "trance",
     "name": "Trance",
     "familyId": "electronic",

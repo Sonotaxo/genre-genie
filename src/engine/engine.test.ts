@@ -166,8 +166,8 @@ describe("GenreGenieEngine Core Unit Tests", () => {
 });
 
 describe("Genre Genie Matrix 100% Convergence Suite", () => {
-  it("should have all 76 genres and 46 attributes loaded", () => {
-    expect(GENRES.length).toBe(76);
+  it("should have all 77 genres and 46 attributes loaded", () => {
+    expect(GENRES.length).toBe(77);
     expect(ATTRIBUTES.length).toBe(46);
   });
 
@@ -208,9 +208,9 @@ describe("Genre Genie Matrix 100% Convergence Suite", () => {
     expect(passedCount).toBe(macroGenres.length);
   });
 
-  it("should achieve 100% convergence across all 34 Micro subgenres within clusters", () => {
+  it("should achieve 100% convergence across all 35 Micro subgenres within clusters", () => {
     const microGenres = GENRES.filter((g) => g.tier === "micro");
-    expect(microGenres.length).toBe(34);
+    expect(microGenres.length).toBe(35);
 
     let passedCount = 0;
 
