@@ -50,6 +50,16 @@ export class GenreGenieEngine {
   private stack: Snapshot[] = [];
   readonly attributes: Attribute[];
 
+  readonly allGenres: Genre[];
+  readonly opts: {
+    family?: Family;
+    parent?: string;
+    priorAnswers?: Answer[];
+    genres?: Genre[];
+    attributes?: Attribute[];
+    allowCrossFamilySubgenres?: boolean;
+  };
+
   constructor(
     opts: {
       family?: Family;
@@ -57,20 +67,34 @@ export class GenreGenieEngine {
       priorAnswers?: Answer[];
       genres?: Genre[];
       attributes?: Attribute[];
+      allowCrossFamilySubgenres?: boolean;
     } = {}
   ) {
+    this.opts = opts;
     const all = opts.genres ?? GENRES;
+    this.allGenres = all;
     this.attributes = opts.attributes ?? ATTRIBUTES;
 
     if (opts.parent) {
-      this.candidates = all.filter((g) => g.parent === opts.parent);
+      if (opts.allowCrossFamilySubgenres === true) {
+        // Prioritize parent's subgenres with 5.0 prior weight, but also include other subgenres (1.0 prior weight)
+        // so subgenres from other macro genres are never completely ruled out!
+        const subgenres = all.filter((g) => g.parent !== null || g.tier === "micro");
+        this.candidates = subgenres;
+        const weights = subgenres.map((g) =>
+          g.parent === opts.parent ? g.popularity * 5.0 : g.popularity * 1.0
+        );
+        this.probs = normalize(weights);
+      } else {
+        this.candidates = all.filter((g) => g.parent === opts.parent);
+        this.probs = normalize(this.candidates.map((g) => g.popularity));
+      }
     } else {
       this.candidates = all.filter(
         (g) => g.parent === null && (!opts.family || g.family === opts.family)
       );
+      this.probs = normalize(this.candidates.map((g) => g.popularity));
     }
-
-    this.probs = normalize(this.candidates.map((g) => g.popularity));
 
     for (const a of opts.priorAnswers ?? []) {
       this.applyAnswer(a.attributeId, a.value, a.isAlternative ?? false, false);
@@ -140,7 +164,14 @@ export class GenreGenieEngine {
    * Useful when an answer is corrected or flipped.
    */
   recalculate() {
-    this.probs = normalize(this.candidates.map((g) => g.popularity));
+    if (this.opts.parent && this.opts.allowCrossFamilySubgenres === true) {
+      const weights = this.candidates.map((g) =>
+        g.parent === this.opts.parent ? g.popularity * 5.0 : g.popularity * 1.0
+      );
+      this.probs = normalize(weights);
+    } else {
+      this.probs = normalize(this.candidates.map((g) => g.popularity));
+    }
     this.pruned = new Set<string>();
     this.unsureIds = new Set<string>();
     this.retriedIds = new Set<string>();
@@ -278,6 +309,29 @@ export class GenreGenieEngine {
     const runner = ranked[1];
     const margin = runner ? top!.prob - runner.prob : 1.0;
 
+    // 0. Macro Grounding Check:
+    // If macro genre is not yet clear early in the session (first 4 questions),
+    // strongly favor fundamental rhythm / pulse and core sonic foundation questions!
+    const hasPulse = this.answers.some(
+      (a) =>
+        a.attributeId === "pulse_four_on_the_floor" ||
+        a.attributeId === "pulse_halftime_sway" ||
+        a.attributeId === "pulse_breakbeat_syncopated"
+    );
+    const isMacroKnown = Boolean(hasPulse && top && (top.prob >= 0.45 || margin >= 0.25));
+
+    const needsMacroGrounding = !this.opts.parent && !isMacroKnown && this.answers.length < 5;
+    const macroGroundingAttrs = new Set([
+      "pulse_four_on_the_floor",
+      "pulse_halftime_sway",
+      "pulse_breakbeat_syncopated",
+      "pulse_tempo_fast",
+      "pulse_slow_relaxed",
+      "sound_electronic_dominant",
+      "sound_electric_guitars",
+      "sound_acoustic_wood_strings",
+    ]);
+
     // 1. Check if we should ask a Confirming / Hallmark Question
     // Trigger when we have asked at least 4 questions and top candidate is a strong suspect
     if (this.answers.length >= 4 && top && (top.prob >= 0.50 || margin >= 0.25)) {
@@ -292,11 +346,14 @@ export class GenreGenieEngine {
       }
     }
 
-    // 2. Standard Information Gain across unasked attributes
+    // 2. Information Gain across unasked attributes (with early macro grounding boost)
     let best: { attribute: Attribute; gain: number; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string } | null = null;
     for (const a of this.attributes) {
       if (asked.has(a.id) || this.pruned.has(a.id)) continue;
-      const gain = this.informationGain(a.id);
+      let gain = this.informationGain(a.id);
+      if (needsMacroGrounding && macroGroundingAttrs.has(a.id)) {
+        gain *= 1.8;
+      }
       if (!best || gain > best.gain) {
         best = { attribute: a, gain, isAlternative: false };
       }
@@ -334,6 +391,26 @@ export class GenreGenieEngine {
     }
 
     return best;
+  }
+
+  /**
+   * Evaluates all 35 micro subgenres across all macro families based on current answers.
+   * Ensures subgenres from other macro genres are never completely ruled out.
+   */
+  rankedAllSubgenres(): { genre: Genre; prob: number }[] {
+    const subgenres = this.allGenres.filter((g) => g.tier === "micro" || g.parent !== null);
+    const initial = normalize(subgenres.map((g) => g.popularity));
+    let probs = [...initial];
+
+    for (const ans of this.answers) {
+      probs = normalize(
+        probs.map((p, i) => p * likelihood(ans.value, subgenres[i]!.weights[ans.attributeId] ?? 0))
+      );
+    }
+
+    return subgenres
+      .map((g, i) => ({ genre: g, prob: probs[i]! }))
+      .sort((a, b) => b.prob - a.prob);
   }
 
   ranked() {

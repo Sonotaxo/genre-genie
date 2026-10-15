@@ -581,6 +581,12 @@ function Diagnosis({
     return [...byCat.entries()];
   }, [engine, g]);
 
+  const allSubgenres = useMemo(() => engine.rankedAllSubgenres(), [engine]);
+  const topCrossSubgenre = allSubgenres[0];
+  const crossSubgenreParent = topCrossSubgenre?.genre.parent
+    ? GENRES.find((x) => x.id === topCrossSubgenre.genre.parent)
+    : null;
+
   const query = encodeURIComponent(`${g.benchmark.artist} ${g.benchmark.title}`);
   const canDrill = !drill && hasSubgenres(g.id);
 
@@ -607,6 +613,36 @@ function Diagnosis({
           </ul>
         )}
       </div>
+
+      {topCrossSubgenre && (!drill || topCrossSubgenre.genre.parent !== drill) && topCrossSubgenre.prob >= 0.20 && (
+        <div className="rounded-3xl border border-sound/40 bg-sound/10 p-5 text-sm">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-1">
+              <p className="flex items-center gap-2 font-semibold text-sound">
+                <span>🎯</span> Top Subgenre Match: {topCrossSubgenre.genre.name}
+              </p>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Across all subgenres, this track strongly matches{" "}
+                <span className="font-bold text-foreground">{topCrossSubgenre.genre.name}</span>
+                {crossSubgenreParent ? (
+                  <> (a subgenre of <span className="font-semibold text-foreground">{crossSubgenreParent.name}</span>)</>
+                ) : null}
+                {" "}with a <span className="font-bold font-mono text-foreground">{Math.round(topCrossSubgenre.prob * 100)}%</span> match.
+              </p>
+            </div>
+            {topCrossSubgenre.genre.parent && topCrossSubgenre.genre.parent !== drill && (
+              <Button
+                size="sm"
+                onClick={() => onDrill(topCrossSubgenre.genre.parent!)}
+                className="shrink-0 bg-sound text-foreground hover:bg-sound/80 active:scale-95"
+              >
+                <Microscope className="size-4 mr-1.5" />
+                Explore {crossSubgenreParent?.name ?? "Family"}
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       {tension.outlier && (
         <div className="rounded-3xl border border-amber-500/40 bg-amber-500/10 p-5 text-sm">
@@ -650,7 +686,9 @@ function Diagnosis({
       </div>
 
       <div className="rounded-3xl border border-border bg-card/80 p-6">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Runner-ups</p>
+        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          {drill ? "Subgenre Runner-ups" : "Runner-ups"}
+        </p>
         <div className="mt-3 space-y-2">
           {ranked.slice(1, 4).map((r) => (
             <div key={r.genre.id} className="flex items-center gap-3 text-sm">
@@ -662,6 +700,34 @@ function Diagnosis({
             </div>
           ))}
         </div>
+
+        {!drill && allSubgenres.length > 0 && (
+          <div className="mt-5 border-t border-border pt-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-3">
+              Leading Subgenres Across All Families
+            </p>
+            <div className="space-y-2">
+              {allSubgenres.slice(0, 3).map((r) => {
+                const parentG = GENRES.find((x) => x.id === r.genre.parent);
+                return (
+                  <div key={r.genre.id} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-foreground">{r.genre.name}</span>
+                      {parentG && (
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                          {parentG.name}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-mono font-bold text-muted-foreground">
+                      {(r.prob * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-wrap gap-2">

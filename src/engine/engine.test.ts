@@ -188,6 +188,61 @@ describe("GenreGenieEngine Core Unit Tests", () => {
     e.answer("pulse_four_on_the_floor", 1);
     expect(e.isConverged()).toBe(false);
   });
+
+  it("prioritizes foundational macro grounding attributes early in session", () => {
+    const e = new GenreGenieEngine();
+    const q1 = e.nextQuestion();
+    expect(q1).toBeDefined();
+
+    // Foundational macro attributes include electronic vs acoustic and pulse rhythms
+    const macroAttrSet = new Set([
+      "pulse_four_on_the_floor",
+      "pulse_halftime_sway",
+      "pulse_breakbeat_syncopated",
+      "pulse_dembow_caribbean",
+      "pulse_train_beat_country",
+      "pulse_tempo_fast",
+      "pulse_tempo_slow",
+      "sound_electronic_dominant",
+      "sound_electric_guitars",
+      "sound_acoustic_wood_strings",
+    ]);
+
+    expect(macroAttrSet.has(q1!.attribute.id)).toBe(true);
+  });
+
+  it("evaluates all subgenres across families with rankedAllSubgenres() without ruling them out", () => {
+    const e = new GenreGenieEngine();
+    // Simulate answers for Tech House (4-on-the-floor, electronic, rapped/spoken vocals, swung groove)
+    e.answer("sound_electronic_dominant", 1);
+    e.answer("pulse_four_on_the_floor", 1);
+    e.answer("voice_rapping_spoken", 1);
+    e.answer("pulse_swung_groove", 1);
+
+    const allSub = e.rankedAllSubgenres();
+    expect(allSub.length).toBe(35); // all 35 subgenres evaluated
+    // Tech House should be the #1 subgenre across all families
+    expect(allSub[0]!.genre.id).toBe("tech_house");
+    expect(allSub[0]!.prob).toBeGreaterThan(0.3);
+  });
+
+  it("supports cross-family subgenre candidates when allowCrossFamilySubgenres is enabled", () => {
+    // Suppose drilldown was initiated on techno, but track is tech house
+    const e = new GenreGenieEngine({
+      parent: "techno",
+      allowCrossFamilySubgenres: true,
+      priorAnswers: [
+        { attributeId: "sound_electronic_dominant", value: 1 },
+        { attributeId: "pulse_four_on_the_floor", value: 1 },
+        { attributeId: "voice_rapping_spoken", value: 1 },
+        { attributeId: "pulse_swung_groove", value: 1 },
+      ],
+    });
+
+    expect(e.candidates.length).toBe(35);
+    // Even under techno drilldown, Tech House can win because it's not ruled out
+    expect(e.ranked()[0]!.genre.id).toBe("tech_house");
+  });
 });
 
 describe("Genre Genie Matrix 100% Convergence Suite", () => {
