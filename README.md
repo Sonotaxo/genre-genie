@@ -1,6 +1,6 @@
 # 🧞 Genre Genie
 
-> Guess any music genre through intuitive, sensory questions — no music theory required.
+> Identify any music genre through intuitive, sensory questions — no music theory required.
 
 **Genre Genie** is an interactive, 20-questions expert identification engine for music genres. Think of a song, listen to a track playing at a club or festival, and answer simple questions about what you perceive in real time. Genre Genie identifies the genre in about 10 taps.
 
@@ -73,11 +73,17 @@ bun test
 bun run build
 ```
 
+## 📚 Contributing New Genres
+
+Want to propose or add a missing music genre or subgenre?
+- **Propose via GitHub**: Open a [New Sub-Genre Proposal](.github/ISSUE_TEMPLATE/new_subgenre.yml) issue with benchmark tracks and sensory hallmarks.
+- **Implement a Sub-Genre**: Read the step-by-step developer and AI agent guide in [`docs/adding-a-subgenre.md`](docs/adding-a-subgenre.md).
+
 ---
 
 ## 🙏 Acknowledgments & Inspiration
 
-This project was inspired by the original [Akinator](https://en.akinator.com/), adapting the classic 20-questions guessing game mechanics to sound perception, acoustic textures, and music genres.
+This project was inspired by the original [Akinator](https://en.akinator.com/), adapting 20-questions inference mechanics to sound perception, acoustic textures, and music genres.
 
 ---
 

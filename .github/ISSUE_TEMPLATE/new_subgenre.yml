@@ -1,0 +1,152 @@
+name: New Sub-Genre Proposal
+description: Propose a missing sub-genre to be added to the Genre Genie catalog
+title: "[Sub-Genre]: "
+labels: ["subgenre-request", "data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping expand Genre Genie's musical taxonomy!
+        Please fill out as much information as possible. This template is designed so that an autonomous AI agent or contributor can immediately implement and test the sub-genre against the Bayesian engine.
+
+  - type: input
+    id: name
+    attributes:
+      label: Sub-Genre Name
+      description: The official display name of the sub-genre.
+      placeholder: "e.g. Future Bass, Hardgroove Techno, Progressive Trance"
+    validations:
+      required: true
+
+  - type: input
+    id: suggested_id
+    attributes:
+      label: Suggested ID (snake_case)
+      description: The unique identifier used in `genres.json` and `matrix.json`.
+      placeholder: "e.g. future_bass, hardgroove_techno, progressive_trance"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: parent_macro
+    attributes:
+      label: Parent Macro Genre
+      description: Select the parent macro genre this sub-genre belongs to.
+      options:
+        - "techno (Techno)"
+        - "house (House)"
+        - "trance (Trance)"
+        - "dubstep (Dubstep)"
+        - "drum_and_bass (Drum & Bass)"
+        - "ambient_downtempo (Ambient / Downtempo)"
+        - "synthwave_outrun (Synthwave / Outrun)"
+        - "hardstyle (Hardstyle)"
+        - "idm_experimental_electronic (IDM / Glitch)"
+        - "amapiano (Amapiano)"
+        - "classic_rock (Classic Rock)"
+        - "indie_rock (Indie Rock)"
+        - "punk_rock (Punk Rock)"
+        - "heavy_metal (Heavy Metal)"
+        - "boom_bap_90s (90s Boom Bap)"
+        - "trap_modern (Modern Trap)"
+        - "contemporary_rnb (Contemporary R&B)"
+        - "funk_classic (Funk)"
+        - "soul_motown (Soul)"
+        - "jazz_modal_bop (Jazz)"
+        - "blues_delta_chicago (Blues)"
+        - "reggae_roots (Reggae)"
+        - "country_traditional (Country)"
+        - "folk_acoustic (Folk / Acoustic)"
+        - "classical_orchestral (Classical)"
+        - "Other / New Macro Family"
+    validations:
+      required: true
+
+  - type: input
+    id: aliases
+    attributes:
+      label: Common Aliases & Regional Names
+      description: Comma-separated list of alternative names, scene nicknames, or slang terms for this genre.
+      placeholder: "e.g. Slow Techno, Ketapop, Schneckno, Slow Tech"
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description & Sonic Identity
+      description: A vivid 2–3 sentence explanation of the sound, production aesthetic, and emotional feel.
+      placeholder: "Deeply hypnotic, leisurely electronic music that bridges the mechanical 4/4 thump and subterranean bass of techno with the relaxed, atmospheric pace of downtempo. Cruising at 90–115 BPM, it crafts a trippy, meditative desert-dancefloor groove..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: benchmark_tracks
+    attributes:
+      label: 3 Benchmark Tracks
+      description: |
+        Provide exactly 3 definitive benchmark tracks (Artist — Title) that quintessential embody this sound.
+        Format:
+        1. Artist Name - Track Title
+        2. Artist Name - Track Title
+        3. Artist Name - Track Title
+      placeholder: |
+        1. Acid Pauli - Nana
+        2. Kerala Dust - Nevada
+        3. Nicolas Jaar - Mi Mujer
+    validations:
+      required: true
+
+  - type: textarea
+    id: hallmarks
+    attributes:
+      label: The 4 Sensory Hallmarks
+      description: |
+        Define the key acoustic characteristics across all four sensory dimensions:
+        - **Pulse**: Tempo (BPM), beat structure (four-on-the-floor, breakbeat, halftime), rhythm feel.
+        - **Sound**: Primary instrumentation, bass character (sub-bass, reese, 808, slap), acoustic textures, distortion.
+        - **Voice**: Vocal presence, vocal style (instrumental, soulful singing, rap, spoken, ethereal chops).
+        - **Atmosphere**: Dominant mood, emotional tone, and acoustic space.
+      placeholder: |
+        - **Pulse**: Steady, unhurried four-on-the-floor club thump cruising at a relaxed tempo (90-115 BPM)
+        - **Sound**: Warm analog synthesizers, deep sub-bass rumbles, organic percussion clicks, shakers, and subtle field recordings
+        - **Voice**: Instrumental or sparse, spoken ethereal fragments and hazy vocal samples drifting in space
+        - **Atmosphere**: Hypnotic, trippy, relaxed, sun-drenched, and deeply immersive
+    validations:
+      required: true
+
+  - type: textarea
+    id: distinction_notes
+    attributes:
+      label: How to Tell It Apart (Distinction Notes)
+      description: |
+        How does a listener tell this genre apart from its closest siblings and parent genre? What is the defining contrast?
+      placeholder: |
+        Unlike standard Techno (125–135+ BPM), Downtempo Techno drops the tempo to 90–115 BPM while maintaining a steady 4/4 club kick. Unlike Ambient/Downtempo, it maintains a relentless, danceable four-on-the-floor club groove.
+    validations:
+      required: true
+
+  - type: textarea
+    id: matrix_hints
+    attributes:
+      label: Key Acoustic Profile & Opposites (Attribute Weights Guidance)
+      description: |
+        Highlight the strongest traits (+1.0), polar opposites (-1.0), and neutral aspects (0.0):
+        - **Must-Have Traits (+1.0 to +0.8)**: (e.g. four_on_the_floor, slow_relaxed, electronic_dominant, deep_subbass)
+        - **Strong Negatives (-1.0 to -0.8)**: (e.g. tempo_fast, electric_guitars, acoustic_wood_strings, heavy_distortion)
+        - **Neutral / Variable (0.0)**: (e.g. swung_groove, dub_echoes, lofi_crackles)
+      placeholder: |
+        - Positive: pulse_four_on_the_floor, pulse_slow_relaxed, sound_electronic_dominant, sound_deep_subbass, sound_analog_warmth
+        - Negative: pulse_tempo_fast, pulse_hyper_fast, sound_acoustic_wood_strings, sound_electric_guitars, sound_heavy_distortion, voice_present
+        - Neutral: pulse_swung_groove, sound_dub_echoes
+    validations:
+      required: false
+
+  - type: input
+    id: reference_url
+    attributes:
+      label: Reference Link
+      description: RateYourMusic, Wikipedia, Ishkur's Guide, or Spotify playlist URL.
+      placeholder: "https://rateyourmusic.com/genre/downtempo/"
+    validations:
+      required: false
