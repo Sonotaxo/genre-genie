@@ -908,7 +908,7 @@ function GenreProfileDialog({
                   className={`rounded-xl border ${CAT_CLASS[cat].border} ${CAT_CLASS[cat].bg} p-3 text-xs`}
                 >
                   <span className={`font-mono text-[10px] font-bold uppercase ${CAT_CLASS[cat].text}`}>
-                    {CATEGORY_META[cat].emoji} {CATEGORY_META[cat].label}
+                    {CATEGORY_META[cat].label}
                   </span>
                   <p className="mt-1 leading-relaxed text-foreground/90">{text}</p>
                 </div>
@@ -919,7 +919,7 @@ function GenreProfileDialog({
           {genre.distinctionNotes && (
             <div className="rounded-xl border border-border bg-muted/30 p-3.5 text-xs">
               <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
-                🧭 How to Tell It Apart
+                How to Tell It Apart
               </p>
               <p className="mt-1 leading-relaxed text-muted-foreground">{genre.distinctionNotes}</p>
             </div>
@@ -1968,7 +1968,7 @@ function Diagnosis({
             {hallmarks.map(([cat, text]) => (
               <li key={cat} className={`rounded-2xl border ${CAT_CLASS[cat].border} ${CAT_CLASS[cat].bg} p-3.5 text-xs sm:text-sm`}>
                 <span className={`font-mono text-[11px] font-bold uppercase ${CAT_CLASS[cat].text}`}>
-                  {CATEGORY_META[cat].emoji} {CATEGORY_META[cat].label}
+                  {CATEGORY_META[cat].label}
                 </span>
                 <p className="mt-1 text-pretty leading-relaxed text-foreground/95">{text}</p>
               </li>
@@ -1977,11 +1977,11 @@ function Diagnosis({
         )}
 
         {g.distinctionNotes && (
-          <div className="mt-4 rounded-2xl border border-sound/30 bg-sound/5 p-3.5 text-left text-xs leading-relaxed text-muted-foreground">
+          <div className="mt-4 rounded-2xl border border-sound/30 bg-sound/5 p-3.5 text-left text-xs sm:text-sm leading-relaxed text-muted-foreground">
             <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-sound">
-              🧭 How to Tell It Apart:{" "}
+              How to Tell It Apart
             </span>
-            <span className="text-pretty text-foreground/90">{g.distinctionNotes}</span>
+            <p className="mt-1 text-pretty leading-relaxed text-foreground/90">{g.distinctionNotes}</p>
           </div>
         )}
       </div>
