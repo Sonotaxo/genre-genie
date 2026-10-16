@@ -40,6 +40,7 @@ export interface Genre {
   tier: "macro" | "micro";
   parent: string | null;
   parentGenreName?: string;
+  aliases: string[];
   popularity: number;
   summary: string;
   benchmark: BenchmarkTrack;
@@ -51,6 +52,7 @@ export interface Genre {
     atmosphere: string;
   };
   distinctionNotes: string;
+  referenceUrl?: string;
   weights: Record<string, number>;
 }
 
@@ -110,12 +112,14 @@ export const GENRES: Genre[] = genresData.map((g: any) => {
     tier: g.tier,
     parent: g.parentGenreId ?? null,
     parentGenreName: g.parentGenreName,
+    aliases: g.aliases ?? [],
     popularity: g.popularityWeight,
     summary: g.description,
     benchmark: g.benchmarkTracks?.[0] ?? { artist: "Unknown", title: "Landmark Track" },
     benchmarkTracks: g.benchmarkTracks ?? [],
     sensoryHallmarks: g.sensoryHallmarks ?? { pulse: "", sound: "", voice: "", atmosphere: "" },
     distinctionNotes: g.distinctionNotes ?? "",
+    referenceUrl: g.referenceUrl,
     weights: row,
   };
 });

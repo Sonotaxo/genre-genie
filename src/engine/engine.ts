@@ -438,8 +438,17 @@ export class GenreGenieEngine {
       );
     }
 
+    const parentsWithSubs = new Set(subgenres.map((sg) => sg.parent).filter(Boolean));
+    const viableSubMass = this.candidates.reduce((sum, c, i) => {
+      if (c.parent !== null || c.tier === "micro" || parentsWithSubs.has(c.id)) {
+        return sum + (this.probs[i] ?? 0);
+      }
+      return sum;
+    }, 0);
+    const scale = Math.min(1, viableSubMass * 2.0);
+
     return subgenres
-      .map((g, i) => ({ genre: g, prob: probs[i]! }))
+      .map((g, i) => ({ genre: g, prob: probs[i]! * scale }))
       .sort((a, b) => b.prob - a.prob);
   }
 

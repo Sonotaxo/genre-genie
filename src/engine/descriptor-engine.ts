@@ -114,27 +114,64 @@ export class DescriptorEngine {
 
   computeTension(g: Genre): {
     score: number;
-    outlier?: { attributeId: string; expected: number; actual: number; delta: number; attribute: any };
+    outlier?: {
+      attributeId: string;
+      expected: number;
+      actual: number;
+      delta: number;
+      attribute: any;
+      descriptorQuestionId?: string;
+      descriptorQuestionText?: string;
+      chosenOptionId?: string;
+      chosenOptionLabel?: string;
+      suggestedOptionId?: string;
+      suggestedOptionLabel?: string;
+    };
   } {
     let total = 0;
     let worstOutlier: any = undefined;
 
-    for (const ans of this.answers) {
-      if (ans.value === 0) continue;
-      const expected = g.weights[ans.attributeId] ?? 0;
-      const delta = Math.abs(expected - ans.value);
-      total += delta;
+    for (const ans of this.descriptorAnswers) {
+      const q = this.questions.find((x) => x.id === ans.questionId);
+      const opt = q?.options.find((o) => o.id === ans.optionId);
+      if (!q || !opt) continue;
 
-      if (delta >= 1.4 && (!worstOutlier || delta > worstOutlier.delta)) {
-        const attr = ATTRIBUTES.find((a) => a.id === ans.attributeId);
-        if (attr) {
-          worstOutlier = {
-            attributeId: ans.attributeId,
-            expected,
-            actual: ans.value,
-            delta,
-            attribute: attr,
-          };
+      const effects = getOptionEffects(q, opt);
+      for (const [attrId, val] of Object.entries(effects)) {
+        if (val === 0) continue;
+        const expected = g.weights[attrId] ?? 0;
+        const delta = Math.abs(expected - val);
+        total += delta;
+
+        if (delta >= 1.4 && (!worstOutlier || delta > worstOutlier.delta)) {
+          const attr = ATTRIBUTES.find((a) => a.id === attrId);
+          if (attr) {
+            // Find which option in q best matches genre g
+            let bestOpt = q.options[3] ?? opt;
+            let bestLike = -1;
+            for (const candidateOpt of q.options) {
+              if (candidateOpt.id === opt.id) continue;
+              const l = optionLikelihoodForGenre(getOptionEffects(q, candidateOpt), g.weights);
+              if (l > bestLike) {
+                bestLike = l;
+                bestOpt = candidateOpt;
+              }
+            }
+
+            worstOutlier = {
+              attributeId: attrId,
+              expected,
+              actual: val,
+              delta,
+              attribute: attr,
+              descriptorQuestionId: q.id,
+              descriptorQuestionText: q.question,
+              chosenOptionId: opt.id,
+              chosenOptionLabel: `${opt.emoji} ${opt.label}`,
+              suggestedOptionId: bestOpt.id,
+              suggestedOptionLabel: `${bestOpt.emoji} ${bestOpt.label}`,
+            };
+          }
         }
       }
     }
@@ -150,6 +187,21 @@ export class DescriptorEngine {
     });
 
     this.applyAnswer(questionId, optionId);
+  }
+
+  updateAnswer(questionId: string, newOptionId: string): boolean {
+    const existing = this.descriptorAnswers.find((a) => a.questionId === questionId);
+    if (!existing) return false;
+
+    this.stack.push({
+      probs: [...this.probs],
+      descriptorAnswers: this.descriptorAnswers.map((a) => ({ ...a })),
+      askedQuestionIds: [...this.askedQuestionIds],
+    });
+
+    existing.optionId = newOptionId;
+    this.recalculate();
+    return true;
   }
 
   private applyAnswer(questionId: string, optionId: string) {
@@ -212,8 +264,19 @@ export class DescriptorEngine {
     const rawSubProbs = subIndices.map((idx) => (idx !== -1 ? this.probs[idx]! : 0));
     const normalized = normalize(rawSubProbs);
 
+    // Scale by the probability mass of subgenres and their parent macro genres so non-subgenre families
+    // (like Rock, Metal, Country, Classical, Folk) don't hallucinate 99% subgenre matches
+    const parentsWithSubs = new Set(subgenres.map((sg) => sg.parent).filter(Boolean));
+    const viableSubMass = this.candidates.reduce((sum, c, i) => {
+      if (c.parent !== null || c.tier === "micro" || parentsWithSubs.has(c.id)) {
+        return sum + (this.probs[i] ?? 0);
+      }
+      return sum;
+    }, 0);
+    const scale = Math.min(1, viableSubMass * 2.0);
+
     return subgenres
-      .map((genre, i) => ({ genre, prob: normalized[i]! }))
+      .map((genre, i) => ({ genre, prob: normalized[i]! * scale }))
       .sort((a, b) => b.prob - a.prob);
   }
 

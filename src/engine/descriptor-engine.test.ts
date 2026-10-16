@@ -272,6 +272,60 @@ describe("DescriptorEngine Unit Tests", () => {
     expect(top3All).toBe(77);
     expect(top1All).toBeGreaterThanOrEqual(70);
   });
+
+  it("does not hallucinate high subgenre probabilities on non-subgenre families (Indie Rock snapshot regression)", () => {
+    const engine = new DescriptorEngine();
+    engine.answer("core_instrumentation", "electric_guitars");
+    engine.answer("rhythm_pattern", "syncopated_breakbeat");
+    engine.answer("tempo_pace", "moderate_walking");
+    engine.answer("vocal_delivery", "clean_melodic_singing");
+    engine.answer("guitar_style", "jangly_guitars");
+    engine.answer("sound_clarity", "bright_glossy");
+
+    const top = engine.ranked()[0]!;
+    expect(top.genre.id).toBe("indie_rock");
+    expect(top.prob).toBeGreaterThan(0.5);
+
+    const allSubs = engine.rankedAllSubgenres();
+    expect(allSubs[0]!.prob).toBeLessThan(0.05);
+  });
+
+  it("computes actionable descriptor outlier suggestions and recalculates via updateAnswer()", async () => {
+    const { GENRES } = await import("./data");
+    const subEngine = new DescriptorEngine({
+      genres: GENRES.filter((g) => g.parent === "ambient_downtempo" || g.id === "ambient_downtempo"),
+      priorDescriptorAnswers: [
+        { questionId: "core_instrumentation", optionId: "electric_guitars" },
+        { questionId: "rhythm_pattern", optionId: "syncopated_breakbeat" },
+        { questionId: "tempo_pace", optionId: "moderate_walking" },
+        { questionId: "vocal_delivery", optionId: "clean_melodic_singing" },
+        { questionId: "guitar_style", optionId: "jangly_guitars" },
+        { questionId: "sound_clarity", optionId: "bright_glossy" },
+      ],
+    });
+
+    const top = subEngine.ranked()[0]!;
+    expect(top.genre.id).toBe("trip_hop_downtempo");
+
+    const tension = subEngine.computeTension(top.genre);
+    expect(tension.outlier).toBeDefined();
+    expect(tension.outlier?.descriptorQuestionId).toBe("core_instrumentation");
+    expect(tension.outlier?.chosenOptionId).toBe("electric_guitars");
+    expect(tension.outlier?.suggestedOptionId).toBe("electronic_synths");
+
+    const updated = subEngine.updateAnswer("core_instrumentation", "electronic_synths");
+    expect(updated).toBe(true);
+    expect(subEngine.descriptorAnswers[0]?.optionId).toBe("electronic_synths");
+
+    // Tension on core_instrumentation should now be resolved
+    const newTension = subEngine.computeTension(subEngine.ranked()[0]!.genre);
+    expect(newTension.outlier?.descriptorQuestionId).not.toBe("core_instrumentation");
+
+    // Undo should restore electric_guitars
+    subEngine.undo();
+    expect(subEngine.descriptorAnswers[0]?.optionId).toBe("electric_guitars");
+  });
 });
+
 
 

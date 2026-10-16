@@ -147,7 +147,68 @@ export function GenreGenie() {
     force();
   }, []);
 
+  const exitDrill = useCallback(() => {
+    if (engineMode === "descriptor") {
+      if (descriptorMacroRef.current) {
+        descriptorEngineRef.current = descriptorMacroRef.current;
+        descriptorMacroRef.current = null;
+      }
+      setDrill(null);
+      setScreen("CONVERGED");
+      toast.info("Returned to overall genre match.");
+      force();
+      return;
+    }
+    if (macroRef.current) {
+      engineRef.current = macroRef.current;
+      setDrill(null);
+      setMacroAnswers([]);
+      setScreen("CONVERGED");
+      toast.info("Returned to overall genre match.");
+      force();
+    }
+  }, [engineMode]);
+
+  const flipDescriptorAnswer = useCallback((questionId: string, newOptionId: string) => {
+    const d = descriptorEngineRef.current;
+    if (!d) return;
+
+    const updated = d.updateAnswer(questionId, newOptionId);
+    if (!updated) return;
+
+    if (drill && descriptorMacroRef.current) {
+      descriptorMacroRef.current.updateAnswer(questionId, newOptionId);
+      const newMacroTop = descriptorMacroRef.current.ranked()[0]?.genre;
+      if (newMacroTop && newMacroTop.id !== drill && newMacroTop.parent !== drill) {
+        // The updated answer points outside the drilled family; return to the full genre pool
+        descriptorEngineRef.current = descriptorMacroRef.current;
+        descriptorMacroRef.current = null;
+        setDrill(null);
+      }
+    }
+
+    const active = descriptorEngineRef.current;
+    const maxQ = drill ? 14 : 10;
+    if (screen === "CONVERGED" && active && !active.isConverged(maxQ) && active.nextQuestion()) {
+      setScreen("PLAYING");
+    }
+
+    toast.success("Recalculated with updated answer!");
+    force();
+  }, [drill, screen]);
+
   const flipAnswer = useCallback((attrId: string, newValue: number) => {
+    if (engineMode === "descriptor") {
+      const d = descriptorEngineRef.current;
+      if (!d) return;
+      const top = d.ranked()[0]?.genre;
+      const tension = top ? d.computeTension(top) : null;
+      if (tension?.outlier?.descriptorQuestionId && tension.outlier.suggestedOptionId) {
+        flipDescriptorAnswer(tension.outlier.descriptorQuestionId, tension.outlier.suggestedOptionId);
+      }
+      return;
+    }
+
     const e = engineRef.current;
     if (!e) return;
     const ans = e.answers.find((a) => a.attributeId === attrId);
@@ -191,7 +252,7 @@ export function GenreGenie() {
 
     toast.success("Recalculated with updated answer!");
     force();
-  }, [drill, macroAnswers.length]);
+  }, [drill, macroAnswers.length, engineMode, flipDescriptorAnswer]);
 
   const makeDrill = (parent: string, prior: Answer[]) => {
     const e = new AkinatorEngine({
@@ -468,6 +529,15 @@ export function GenreGenie() {
   useEffect(() => {
     if (screen !== "PLAYING") return;
     const onKey = (ev: KeyboardEvent) => {
+      const target = ev.target as HTMLElement | null;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) return;
+
+      if (ev.key === "Backspace") {
+        if (engineMode === "descriptor") undoDescriptor();
+        else undo();
+        return;
+      }
+
       if (engineMode === "descriptor") {
         const d = descriptorEngineRef.current;
         const q = d?.nextQuestion();
@@ -483,7 +553,7 @@ export function GenreGenie() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [screen, respond, respondDescriptor, question, engineMode]);
+  }, [screen, respond, respondDescriptor, question, engineMode, undoDescriptor]);
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 md:py-14">
@@ -548,12 +618,14 @@ export function GenreGenie() {
       {screen === "IDLE" && <Landing onStart={start} engineMode={engineMode} />}
       {screen === "PLAYING" && engineMode === "descriptor" && descriptorEngine && descriptorQuestion && (
         <DescriptorQuestionView
-          key={descriptorEngine.questionCount}
+          key={descriptorEngine.questionCount + (drill ?? "")}
           engine={descriptorEngine}
           q={descriptorQuestion}
+          drill={drill}
           onRespond={respondDescriptor}
           onUndo={undoDescriptor}
           onSelectGenre={selectGenreEarlyDescriptor}
+          onChangeDescriptorAnswer={flipDescriptorAnswer}
         />
       )}
       {screen === "PLAYING" && engineMode === "standard" && engine && question && (
@@ -571,6 +643,7 @@ export function GenreGenie() {
           onRespond={respond}
           onUndo={undo}
           onSelectGenre={selectGenreEarly}
+          onFlipAnswer={flipAnswer}
         />
       )}
       {screen === "CONVERGED" && (
@@ -579,10 +652,12 @@ export function GenreGenie() {
           engine={(engineMode === "descriptor" ? descriptorEngine : engine)!}
           drill={drill}
           onDrill={startDrill}
+          onExitDrill={exitDrill}
           onAgain={() => setScreen("IDLE")}
           onUndo={engineMode === "descriptor" ? undoDescriptor : undo}
           onWrong={() => setFeedbackOpen(true)}
           onFlipAnswer={flipAnswer}
+          onChangeDescriptorAnswer={flipDescriptorAnswer}
           onCopyDevSnapshot={copyDevSnapshot}
           isLocalDev={isLocalDev}
         />
@@ -673,8 +748,134 @@ function Landing({
   );
 }
 
+function GenreProfileDialog({
+  genre,
+  open,
+  onOpenChange,
+}: {
+  genre: Genre | null;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
+  if (!genre) return null;
+  const parentGenre = genre.parent ? GENRES.find((x) => x.id === genre.parent) : null;
+  const familyMeta = FAMILIES.find((f) => f.id === genre.family);
+  const hallmarks = (["pulse", "sound", "atmosphere", "voice"] as Category[])
+    .filter((cat) => Boolean(genre.sensoryHallmarks?.[cat]))
+    .map((cat) => [cat, genre.sensoryHallmarks[cat]] as [Category, string]);
+  const tracks = genre.benchmarkTracks?.length ? genre.benchmarkTracks : [genre.benchmark];
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[85vh] max-w-xl overflow-y-auto">
+        <DialogHeader>
+          <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-muted-foreground">
+            {familyMeta && (
+              <span className="rounded-full border border-border bg-muted/60 px-2.5 py-0.5">
+                {familyMeta.emoji} {familyMeta.label}
+              </span>
+            )}
+            {parentGenre && (
+              <span className="rounded-full border border-sound/40 bg-sound/10 px-2.5 py-0.5 text-sound">
+                Subgenre of {parentGenre.name}
+              </span>
+            )}
+          </div>
+          <DialogTitle className="mt-1 text-2xl font-extrabold tracking-tight">
+            {genre.name}
+          </DialogTitle>
+          {genre.aliases && genre.aliases.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Also known as:{" "}
+              <span className="font-medium text-foreground/90">{genre.aliases.join(" • ")}</span>
+            </p>
+          )}
+          <DialogDescription className="pt-1 text-sm leading-relaxed text-foreground/90">
+            {genre.summary}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4 pt-2">
+          {hallmarks.length > 0 && (
+            <div className="grid gap-2 sm:grid-cols-2">
+              {hallmarks.map(([cat, text]) => (
+                <div
+                  key={cat}
+                  className={`rounded-xl border ${CAT_CLASS[cat].border} ${CAT_CLASS[cat].bg} p-3 text-xs`}
+                >
+                  <span className={`font-mono text-[10px] font-bold uppercase ${CAT_CLASS[cat].text}`}>
+                    {CATEGORY_META[cat].emoji} {CATEGORY_META[cat].label}
+                  </span>
+                  <p className="mt-1 leading-relaxed text-foreground/90">{text}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {genre.distinctionNotes && (
+            <div className="rounded-xl border border-border bg-muted/30 p-3.5 text-xs">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
+                🧭 How to Tell It Apart
+              </p>
+              <p className="mt-1 leading-relaxed text-muted-foreground">{genre.distinctionNotes}</p>
+            </div>
+          )}
+
+          <div className="rounded-xl border border-border bg-card/60 p-3.5">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              🎧 Benchmark Tracks ({tracks.length})
+            </p>
+            <div className="mt-2.5 space-y-2">
+              {tracks.map((t, idx) => {
+                const q = encodeURIComponent(`${t.artist} ${t.title}`);
+                return (
+                  <div
+                    key={`${t.artist}-${t.title}-${idx}`}
+                    className="flex flex-col justify-between gap-2 rounded-lg border border-border/60 bg-background/40 p-2.5 text-xs sm:flex-row sm:items-center"
+                  >
+                    <div className="font-semibold text-foreground">
+                      {t.artist} — <span className="italic font-normal text-muted-foreground">{t.title}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <a
+                        href={`https://open.spotify.com/search/${q}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] hover:border-pulse hover:text-pulse transition"
+                      >
+                        Spotify
+                      </a>
+                      <a
+                        href={`https://music.apple.com/search?term=${q}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] hover:border-pulse hover:text-pulse transition"
+                      >
+                        Apple
+                      </a>
+                      <a
+                        href={`https://www.youtube.com/results?search_query=${q}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] hover:border-pulse hover:text-pulse transition"
+                      >
+                        YouTube
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) => void }) {
   const [search, setSearch] = useState("");
+  const [inspectedGenre, setInspectedGenre] = useState<Genre | null>(null);
 
   const familyGroups = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -699,8 +900,14 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
 
       const matchingGroups = parentGroups
         .map(({ parent, subgenres }) => {
-          const parentMatches = parent.name.toLowerCase().includes(q);
-          const matchingSubs = subgenres.filter((s) => s.name.toLowerCase().includes(q));
+          const parentMatches =
+            parent.name.toLowerCase().includes(q) ||
+            parent.aliases?.some((a) => a.toLowerCase().includes(q));
+          const matchingSubs = subgenres.filter(
+            (s) =>
+              s.name.toLowerCase().includes(q) ||
+              s.aliases?.some((a) => a.toLowerCase().includes(q))
+          );
           if (parentMatches) {
             return { parent, subgenres };
           }
@@ -727,13 +934,13 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
             Supported Genres & Subgenres
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            {GENRES.length} total genres cataloged across {FAMILIES.length} musical families (42 macro genres & 35 subgenres).
+            {GENRES.length} total genres cataloged across {FAMILIES.length} musical families. Click any genre to explore its sound profile & benchmark tracks.
           </p>
         </div>
         <div className="relative w-full sm:w-64">
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search genres & subgenres…"
+            placeholder="Search genres, subgenres, aliases…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="bg-card/60 pl-9 pr-8 text-xs"
@@ -786,9 +993,14 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
                   {groups.map(({ parent, subgenres }) => (
                     <div key={parent.id} className="space-y-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-semibold text-foreground/90">
+                        <button
+                          type="button"
+                          onClick={() => setInspectedGenre(parent)}
+                          className="text-left text-xs font-semibold text-foreground/90 underline-offset-4 hover:text-pulse hover:underline active:scale-95 transition"
+                          title={`Explore ${parent.name} sound profile`}
+                        >
                           {parent.name}
-                        </span>
+                        </button>
                         {subgenres.length > 0 && (
                           <span className="rounded-full border border-pulse/30 bg-pulse/10 px-1.5 py-0.5 font-mono text-[10px] font-medium text-pulse">
                             {subgenres.length} subgenres
@@ -799,12 +1011,15 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
                       {subgenres.length > 0 ? (
                         <div className="flex flex-wrap gap-1.5 border-l-2 border-border/60 pl-2">
                           {subgenres.map((sub) => (
-                            <span
+                            <button
                               key={sub.id}
-                              className="rounded-md border border-border/60 bg-background/50 px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:border-border hover:text-foreground"
+                              type="button"
+                              onClick={() => setInspectedGenre(sub)}
+                              className="rounded-md border border-border/60 bg-background/50 px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:border-pulse/60 hover:text-foreground active:scale-95"
+                              title={`Explore ${sub.name} sound profile`}
                             >
                               {sub.name}
-                            </span>
+                            </button>
                           ))}
                         </div>
                       ) : null}
@@ -816,6 +1031,14 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
           ))}
         </div>
       )}
+
+      <GenreProfileDialog
+        genre={inspectedGenre}
+        open={Boolean(inspectedGenre)}
+        onOpenChange={(open) => {
+          if (!open) setInspectedGenre(null);
+        }}
+      />
     </div>
   );
 }
@@ -872,7 +1095,7 @@ function CandidateCard({
                 : null;
             return (
               <div key={r.genre.id} className="flex items-center gap-3 text-sm">
-                <div className="w-36 truncate font-semibold">
+                <div className="w-44 truncate font-semibold" title={r.genre.name}>
                   <span>{r.genre.name}</span>
                   {parentName && (
                     <span className="ml-1 text-[11px] font-normal text-muted-foreground">
@@ -886,7 +1109,7 @@ function CandidateCard({
                     style={{ width: `${Math.min(r.prob * 100, 100)}%` }}
                   />
                 </div>
-                <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+                <span className="w-12 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
               </div>
             );
           })}
@@ -908,12 +1131,202 @@ function checkEarlySelect(
   return top.prob - second.prob >= 0.20 || top.prob >= second.prob * 2.0;
 }
 
+function AnswerTrail({
+  engine,
+  onFlipAnswer,
+  onChangeDescriptorAnswer,
+}: {
+  engine: AkinatorEngine | DescriptorEngine;
+  onFlipAnswer?: ((attrId: string, newValue: number) => void) | undefined;
+  onChangeDescriptorAnswer?: ((questionId: string, newOptionId: string) => void) | undefined;
+}) {
+  const [editingKey, setEditingKey] = useState<string | null>(null);
+
+  if (engine instanceof DescriptorEngine) {
+    const items = engine.descriptorAnswers;
+    if (items.length === 0) return null;
+    const editingQ = editingKey
+      ? engine.questions.find((q) => q.id === editingKey)
+      : null;
+
+    return (
+      <div className="mt-4 rounded-2xl border border-border/70 bg-card/50 p-3.5">
+        <div className="flex items-center justify-between gap-2">
+          <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+            Your Answers So Far ({items.length}) — click any to change
+          </span>
+          {editingKey && (
+            <button
+              type="button"
+              onClick={() => setEditingKey(null)}
+              className="font-mono text-[10px] text-muted-foreground hover:text-foreground"
+            >
+              Close
+            </button>
+          )}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {items.map((ans, idx) => {
+            const qObj = engine.questions.find((q) => q.id === ans.questionId);
+            const optObj = qObj?.options.find((o) => o.id === ans.optionId);
+            const isSelected = editingKey === ans.questionId;
+            return (
+              <button
+                key={ans.questionId}
+                type="button"
+                onClick={() =>
+                  setEditingKey(isSelected ? null : ans.questionId)
+                }
+                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
+                  isSelected
+                    ? "border-pulse bg-pulse/15 text-pulse font-semibold"
+                    : "border-border/80 bg-background/60 text-foreground/90 hover:border-pulse/50"
+                }`}
+                title={`${idx + 1}. ${qObj?.question ?? ans.questionId}: ${optObj?.label ?? ans.optionId} (click to change)`}
+              >
+                <span className="font-mono text-[10px] text-muted-foreground">
+                  {idx + 1}.
+                </span>
+                <span>{optObj?.emoji ?? "🎵"}</span>
+                <span className="max-w-[180px] truncate">{optObj?.label ?? ans.optionId}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {editingQ && onChangeDescriptorAnswer && (
+          <div className="mt-3 rounded-xl border border-pulse/40 bg-background/80 p-3">
+            <p className="text-xs font-semibold text-foreground">
+              Change answer for: <span className="text-pulse">{editingQ.question}</span>
+            </p>
+            <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+              {editingQ.options.slice(0, 4).map((opt) => {
+                const current = items.find((a) => a.questionId === editingQ.id);
+                const isCurrent = current?.optionId === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => {
+                      onChangeDescriptorAnswer(editingQ.id, opt.id);
+                      setEditingKey(null);
+                    }}
+                    className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left text-xs transition active:scale-95 ${
+                      isCurrent
+                        ? "border-pulse bg-pulse/15 font-bold text-pulse"
+                        : "border-border/70 bg-card/60 hover:border-pulse/50"
+                    }`}
+                  >
+                    <span>{opt.emoji}</span>
+                    <span className="truncate">{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const stdAnswers = engine.answers;
+  if (stdAnswers.length === 0) return null;
+  const editingAttr = editingKey
+    ? ATTRIBUTES.find((a) => a.id === editingKey)
+    : null;
+
+  return (
+    <div className="mt-4 rounded-2xl border border-border/70 bg-card/50 p-3.5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          Your Answers So Far ({stdAnswers.length}) — click any to change
+        </span>
+        {editingKey && (
+          <button
+            type="button"
+            onClick={() => setEditingKey(null)}
+            className="font-mono text-[10px] text-muted-foreground hover:text-foreground"
+          >
+            Close
+          </button>
+        )}
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1.5">
+        {stdAnswers.map((ans, idx) => {
+          const attr = ATTRIBUTES.find((a) => a.id === ans.attributeId);
+          const resp = RESPONSES.find((r) => r.value === ans.value);
+          const isSelected = editingKey === ans.attributeId;
+          return (
+            <button
+              key={ans.attributeId}
+              type="button"
+              onClick={() =>
+                setEditingKey(isSelected ? null : ans.attributeId)
+              }
+              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
+                isSelected
+                  ? "border-pulse bg-pulse/15 text-pulse font-semibold"
+                  : "border-border/80 bg-background/60 text-foreground/90 hover:border-pulse/50"
+              }`}
+              title={`${idx + 1}. ${attr?.question ?? ans.attributeId}: ${resp?.label ?? ans.value}`}
+            >
+              <span className="font-mono text-[10px] text-muted-foreground">
+                {idx + 1}.
+              </span>
+              <span className="max-w-[150px] truncate">
+                {attr?.question ?? ans.attributeId}
+              </span>
+              <span className="font-bold text-pulse">
+                {resp?.label ?? ans.value}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      {editingAttr && onFlipAnswer && (
+        <div className="mt-3 rounded-xl border border-pulse/40 bg-background/80 p-3">
+          <p className="text-xs font-semibold text-foreground">
+            Change answer for: <span className="text-pulse">{editingAttr.question}</span>
+          </p>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {RESPONSES.map((r) => {
+              const current = stdAnswers.find(
+                (a) => a.attributeId === editingAttr.id
+              );
+              const isCurrent = current?.value === r.value;
+              return (
+                <button
+                  key={r.label}
+                  type="button"
+                  onClick={() => {
+                    onFlipAnswer(editingAttr.id, r.value);
+                    setEditingKey(null);
+                  }}
+                  className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition active:scale-95 ${
+                    isCurrent
+                      ? "border-pulse bg-pulse/15 text-pulse"
+                      : "border-border/70 bg-card/60 hover:border-pulse/50"
+                  }`}
+                >
+                  {r.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function QuestionView({
-  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo, onSelectGenre,
+  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo, onSelectGenre, onFlipAnswer,
 }: {
   engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string | undefined; drill: string | null; baseCount: number;
   hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
   onSelectGenre?: (genreId: string) => void;
+  onFlipAnswer?: ((attrId: string, newValue: number) => void) | undefined;
 }) {
   const [rephrased, setRephrased] = useState(false);
   useEffect(() => {
@@ -1169,6 +1582,8 @@ function QuestionView({
           </div>
         )}
       </div>
+
+      <AnswerTrail engine={engine} onFlipAnswer={onFlipAnswer} />
     </section>
   );
 }
@@ -1176,25 +1591,32 @@ function QuestionView({
 function DescriptorQuestionView({
   engine,
   q,
+  drill,
   onRespond,
   onUndo,
   onSelectGenre,
+  onChangeDescriptorAnswer,
 }: {
   engine: DescriptorEngine;
   q: DescriptorQuestion;
+  drill?: string | null;
   onRespond: (optionId: string) => void;
   onUndo: () => void;
   onSelectGenre?: ((genreId: string) => void) | undefined;
+  onChangeDescriptorAnswer?: ((questionId: string, newOptionId: string) => void) | undefined;
 }) {
   const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category] ?? CAT_CLASS.sound;
   const meta = CATEGORY_META[q.category] ?? CATEGORY_META.sound;
   const n = engine.questionCount + 1;
+  const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
 
+  const isMicroMode = Boolean(drill);
   const parentCandidates = engine.ranked().filter((r) => r.genre.parent === null);
-  const subCandidates = engine.rankedAllSubgenres();
+  const subCandidates = isMicroMode ? engine.ranked() : engine.rankedAllSubgenres();
 
   const showTwoCards =
+    !isMicroMode &&
     parentCandidates.length > 0 &&
     subCandidates.length > 0 &&
     subCandidates[0]!.prob >= 0.15;
@@ -1212,7 +1634,7 @@ function DescriptorQuestionView({
   return (
     <section>
       <div className="mb-6 flex items-center gap-4">
-        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo} className="active:scale-95">
+        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo && !drill} className="active:scale-95">
           <ChevronLeft /> Previous
         </Button>
         <div className="flex-1">
@@ -1228,7 +1650,7 @@ function DescriptorQuestionView({
           </div>
         </div>
         <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
-          Q{n} of ~8
+          {n <= 8 ? `Q${n} of ~8` : `Q${n} • Deep Dive`}
         </span>
       </div>
 
@@ -1251,13 +1673,17 @@ function DescriptorQuestionView({
       ) : (
         <div className="mb-4">
           <CandidateCard
-            title="Top candidates"
-            candidates={parentCandidates.length > 0 ? parentCandidates : subCandidates}
-            canEarlySelect={canEarlySelectParent}
+            title={isMicroMode ? `Subgenres of ${drillName ?? "Family"}` : "Top candidates"}
+            candidates={isMicroMode ? subCandidates : parentCandidates.length > 0 ? parentCandidates : subCandidates}
+            canEarlySelect={isMicroMode ? canEarlySelectSub : canEarlySelectParent}
             onSelectGenre={onSelectGenre}
-            showParentTag={false}
+            showParentTag={isMicroMode}
           />
         </div>
+      )}
+
+      {drillName && (
+        <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
       )}
 
       <div className={`animate-slide-in rounded-3xl border ${cat.border} bg-card/80 p-6 backdrop-blur md:p-10`}>
@@ -1321,6 +1747,8 @@ function DescriptorQuestionView({
           ))}
         </div>
       </div>
+
+      <AnswerTrail engine={engine} onChangeDescriptorAnswer={onChangeDescriptorAnswer} />
     </section>
   );
 }
@@ -1343,21 +1771,31 @@ function Gauge({ value }: { value: number }) {
 }
 
 function Diagnosis({
-  engine, drill, onDrill, onAgain, onUndo, onWrong, onFlipAnswer, onCopyDevSnapshot, isLocalDev,
+  engine, drill, onDrill, onExitDrill, onAgain, onUndo, onWrong, onFlipAnswer, onChangeDescriptorAnswer, onCopyDevSnapshot, isLocalDev,
 }: {
-  engine: AkinatorEngine | DescriptorEngine; drill: string | null; onDrill: (id: string) => void; onAgain: () => void; onUndo: () => void; onWrong: () => void;
+  engine: AkinatorEngine | DescriptorEngine; drill: string | null; onDrill: (id: string) => void; onExitDrill?: () => void; onAgain: () => void; onUndo: () => void; onWrong: () => void;
   onFlipAnswer: (attrId: string, newValue: number) => void;
+  onChangeDescriptorAnswer?: (questionId: string, newOptionId: string) => void;
   onCopyDevSnapshot?: () => void;
   isLocalDev?: boolean;
 }) {
   const ranked = engine.ranked();
-  const top = ranked[0]!;
-  const g = top.genre;
+  const [selectedGenreId, setSelectedGenreId] = useState<string | null>(null);
+  const activeEntry = useMemo(
+    () => (selectedGenreId ? ranked.find((r) => r.genre.id === selectedGenreId) ?? ranked[0]! : ranked[0]!),
+    [ranked, selectedGenreId]
+  );
+  const g = activeEntry.genre;
   const tension = useMemo(() => engine.computeTension(g), [engine, g]);
+  const drillGenreName = drill ? GENRES.find((x) => x.id === drill)?.name ?? drill : null;
+
+  useEffect(() => {
+    setSelectedGenreId(null);
+  }, [ranked[0]?.genre.id]);
 
   useEffect(() => {
     confetti({ particleCount: 140, spread: 80, origin: { y: 0.4 }, colors: ["#10b981", "#8b5cf6", "#06b6d4", "#f59e0b"] });
-  }, [g.id]);
+  }, [ranked[0]?.genre.id]);
 
   const hallmarks = useMemo(() => {
     if (!g.sensoryHallmarks) return [];
@@ -1373,18 +1811,48 @@ function Diagnosis({
     ? GENRES.find((x) => x.id === topCrossSubgenre.genre.parent)
     : null;
 
-  const query = encodeURIComponent(`${g.benchmark.artist} ${g.benchmark.title}`);
+  const tracks = g.benchmarkTracks?.length ? g.benchmarkTracks : [g.benchmark];
   const canDrill = !drill && hasSubgenres(g.id);
 
   return (
     <section className="animate-slide-in space-y-5">
       <div className="rounded-3xl border border-pulse/40 bg-card/80 p-6 backdrop-blur md:p-10">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Diagnosis complete • {engine.questionCount} questions</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {selectedGenreId && selectedGenreId !== ranked[0]?.genre.id
+              ? `Inspecting runner-up • Top match: ${ranked[0]?.genre.name}`
+              : `Diagnosis complete • ${engine.questionCount} questions`}
+          </p>
+          {selectedGenreId && selectedGenreId !== ranked[0]?.genre.id && (
+            <button
+              type="button"
+              onClick={() => setSelectedGenreId(null)}
+              className="rounded-full border border-pulse/40 bg-pulse/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-pulse hover:bg-pulse/20"
+            >
+              ↩ Back to #1 ({ranked[0]?.genre.name})
+            </button>
+          )}
+        </div>
         <div className="mt-4 flex flex-col items-start gap-6 md:flex-row md:items-center">
-          <Gauge value={top.prob} />
+          <Gauge value={activeEntry.prob} />
           <div>
             {g.parent && <p className="font-mono text-xs uppercase tracking-widest text-sound">Subgenre of {GENRES.find((x) => x.id === g.parent)?.name ?? g.parent}</p>}
             <h2 className="bg-gradient-to-r from-pulse to-voice bg-clip-text text-5xl font-extrabold tracking-tight text-transparent md:text-6xl">{g.name}</h2>
+            {g.aliases && g.aliases.length > 0 && (
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  Also known as:
+                </span>
+                {g.aliases.map((alias) => (
+                  <span
+                    key={alias}
+                    className="rounded-full border border-border/80 bg-background/60 px-2 py-0.5 text-xs text-muted-foreground"
+                  >
+                    {alias}
+                  </span>
+                ))}
+              </div>
+            )}
             <p className="mt-3 max-w-xl text-muted-foreground">{g.summary}</p>
           </div>
         </div>
@@ -1398,9 +1866,17 @@ function Diagnosis({
             ))}
           </ul>
         )}
+        {g.distinctionNotes && (
+          <div className="mt-4 rounded-2xl border border-sound/30 bg-sound/5 p-4 text-xs leading-relaxed text-muted-foreground">
+            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-sound">
+              🧭 How to Tell It Apart:{" "}
+            </span>
+            <span className="text-foreground/90">{g.distinctionNotes}</span>
+          </div>
+        )}
       </div>
 
-      {topCrossSubgenre && (!drill || topCrossSubgenre.genre.parent !== drill) && topCrossSubgenre.prob >= 0.20 && (
+      {topCrossSubgenre && (!drill || topCrossSubgenre.genre.parent !== drill) && topCrossSubgenre.prob >= 0.25 && (
         <div className="rounded-3xl border border-sound/40 bg-sound/10 p-5 text-sm">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
@@ -1437,57 +1913,156 @@ function Diagnosis({
               <p className="flex items-center gap-2 font-semibold text-amber-500">
                 <span>⚠️</span> Unusual answer noticed
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                You answered{" "}
-                <span className="font-bold text-foreground">
-                  &ldquo;{RESPONSES.find((r) => r.value === tension.outlier!.actual)?.label ?? tension.outlier.actual}&rdquo;
-                </span>{" "}
-                for{" "}
-                <span className="italic font-medium text-foreground">
-                  &ldquo;{tension.outlier.attribute.question}&rdquo;
-                </span>
-                . If this track was actually {tension.outlier.expected > 0 ? "YES" : "NO"}, click to recalculate:
-              </p>
+              {"descriptorQuestionId" in tension.outlier && tension.outlier.descriptorQuestionId ? (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  You selected{" "}
+                  <span className="font-bold text-foreground">
+                    &ldquo;{tension.outlier.chosenOptionLabel}&rdquo;
+                  </span>{" "}
+                  for{" "}
+                  <span className="italic font-medium text-foreground">
+                    &ldquo;{tension.outlier.descriptorQuestionText}&rdquo;
+                  </span>
+                  , which conflicts with typical <span className="font-semibold text-foreground">{g.name}</span> tracks.
+                </p>
+              ) : (
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  You answered{" "}
+                  <span className="font-bold text-foreground">
+                    &ldquo;{RESPONSES.find((r) => r.value === tension.outlier!.actual)?.label ?? tension.outlier.actual}&rdquo;
+                  </span>{" "}
+                  for{" "}
+                  <span className="italic font-medium text-foreground">
+                    &ldquo;{tension.outlier.attribute.question}&rdquo;
+                  </span>
+                  . If this track was actually {tension.outlier.expected > 0 ? "YES" : "NO"}, click to recalculate:
+                </p>
+              )}
             </div>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onFlipAnswer(tension.outlier!.attributeId, tension.outlier!.expected > 0 ? 1 : -1)}
-              className="shrink-0 border-amber-500/40 text-amber-500 hover:bg-amber-500/20 active:scale-95"
-            >
-              🔄 Recalculate with {tension.outlier.expected > 0 ? "Yes" : "No"}
-            </Button>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              {"descriptorQuestionId" in tension.outlier &&
+              tension.outlier.descriptorQuestionId &&
+              tension.outlier.suggestedOptionId &&
+              onChangeDescriptorAnswer ? (
+                (() => {
+                  const qId = tension.outlier.descriptorQuestionId;
+                  const sId = tension.outlier.suggestedOptionId;
+                  return (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onChangeDescriptorAnswer(qId, sId)}
+                      className="border-amber-500/40 text-amber-500 hover:bg-amber-500/20 active:scale-95"
+                    >
+                      🔄 Switch to &ldquo;{tension.outlier.suggestedOptionLabel}&rdquo;
+                    </Button>
+                  );
+                })()
+              ) : (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    onFlipAnswer(
+                      tension.outlier!.attributeId,
+                      tension.outlier!.expected > 0 ? 1 : -1
+                    )
+                  }
+                  className="border-amber-500/40 text-amber-500 hover:bg-amber-500/20 active:scale-95"
+                >
+                  🔄 Recalculate with {tension.outlier.expected > 0 ? "Yes" : "No"}
+                </Button>
+              )}
+              {drill && onExitDrill && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onExitDrill}
+                  className="border-sound/40 text-sound hover:bg-sound/20 active:scale-95"
+                >
+                  ↩️ Exit {drillGenreName}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       )}
 
       <div className="rounded-3xl border border-border bg-card/80 p-6">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">Benchmark track</p>
-        <p className="mt-2 text-xl font-extrabold">{g.benchmark.artist} — <span className="italic">{g.benchmark.title}</span></p>
-        <div className="mt-4 flex flex-wrap gap-2">
-          <Button variant="secondary" asChild><a href={`https://open.spotify.com/search/${query}`} target="_blank" rel="noreferrer"><Music2 /> Spotify</a></Button>
-          <Button variant="secondary" asChild><a href={`https://music.apple.com/search?term=${query}`} target="_blank" rel="noreferrer"><Music2 /> Apple Music</a></Button>
-          <Button variant="secondary" asChild><a href={`https://www.youtube.com/results?search_query=${query}`} target="_blank" rel="noreferrer"><Youtube /> YouTube</a></Button>
+        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          Benchmark {tracks.length > 1 ? `Tracks (${tracks.length})` : "Track"}
+        </p>
+        <div className="mt-3 space-y-2.5">
+          {tracks.map((t, idx) => {
+            const qStr = encodeURIComponent(`${t.artist} ${t.title}`);
+            return (
+              <div
+                key={`${t.artist}-${t.title}-${idx}`}
+                className="flex flex-col justify-between gap-2 rounded-2xl border border-border/70 bg-background/50 p-3.5 sm:flex-row sm:items-center"
+              >
+                <div>
+                  <span className="font-bold text-foreground">{t.artist}</span>
+                  <span className="text-muted-foreground"> — </span>
+                  <span className="italic text-foreground/90">{t.title}</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <Button size="sm" variant="secondary" asChild>
+                    <a href={`https://open.spotify.com/search/${qStr}`} target="_blank" rel="noreferrer">
+                      <Music2 className="size-3.5" /> Spotify
+                    </a>
+                  </Button>
+                  <Button size="sm" variant="secondary" asChild>
+                    <a href={`https://music.apple.com/search?term=${qStr}`} target="_blank" rel="noreferrer">
+                      <Music2 className="size-3.5" /> Apple Music
+                    </a>
+                  </Button>
+                  <Button size="sm" variant="secondary" asChild>
+                    <a href={`https://www.youtube.com/results?search_query=${qStr}`} target="_blank" rel="noreferrer">
+                      <Youtube className="size-3.5" /> YouTube
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
       <div className="rounded-3xl border border-border bg-card/80 p-6">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          {drill ? "Subgenre Runner-ups" : "Runner-ups"}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+            {drill ? "Subgenre Runner-ups" : "Runner-ups"} (click any to compare)
+          </p>
+        </div>
         <div className="mt-3 space-y-2">
-          {ranked.slice(1, 4).map((r) => (
-            <div key={r.genre.id} className="flex items-center gap-3 text-sm">
-              <span className="w-36 truncate font-semibold">{r.genre.name}</span>
-              <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                <div className="h-full bg-sound" style={{ width: `${r.prob * 100}%` }} />
-              </div>
-              <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
-            </div>
-          ))}
+          {ranked.slice(1, 4).map((r) => {
+            const isSelected = selectedGenreId === r.genre.id;
+            return (
+              <button
+                key={r.genre.id}
+                type="button"
+                onClick={() =>
+                  setSelectedGenreId(isSelected ? null : r.genre.id)
+                }
+                className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm transition active:scale-[0.99] ${
+                  isSelected
+                    ? "border-pulse bg-pulse/10"
+                    : "border-transparent hover:border-border hover:bg-background/50"
+                }`}
+              >
+                <span className="w-40 truncate font-semibold text-foreground">
+                  {r.genre.name}
+                </span>
+                <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                  <div className="h-full bg-sound" style={{ width: `${r.prob * 100}%` }} />
+                </div>
+                <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+              </button>
+            );
+          })}
         </div>
 
-        {!drill && allSubgenres.length > 0 && (
+        {!drill && allSubgenres.length > 0 && (allSubgenres[0]?.prob ?? 0) >= 0.08 && (
           <div className="mt-5 border-t border-border pt-4">
             <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-3">
               Leading Subgenres Across All Families
@@ -1500,9 +2075,14 @@ function Diagnosis({
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-foreground">{r.genre.name}</span>
                       {parentG && (
-                        <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                          {parentG.name}
-                        </span>
+                        <button
+                          type="button"
+                          onClick={() => onDrill(parentG.id)}
+                          className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground hover:bg-sound/20 hover:text-sound transition"
+                          title={`Explore ${parentG.name} subgenres`}
+                        >
+                          {parentG.name} ↗
+                        </button>
                       )}
                     </div>
                     <span className="font-mono font-bold text-muted-foreground">
@@ -1516,9 +2096,20 @@ function Diagnosis({
         )}
       </div>
 
+      <AnswerTrail
+        engine={engine}
+        onFlipAnswer={onFlipAnswer}
+        onChangeDescriptorAnswer={onChangeDescriptorAnswer}
+      />
+
       <div className="flex flex-wrap gap-2">
         {canDrill && (
           <Button onClick={() => onDrill(g.id)} className="bg-sound text-foreground hover:bg-sound/80 active:scale-95"><Microscope /> Pinpoint Exact Subgenre</Button>
+        )}
+        {drill && onExitDrill && (
+          <Button variant="outline" onClick={onExitDrill} className="border-sound/50 text-sound hover:bg-sound/15 active:scale-95">
+            <ChevronLeft /> Back to All Genres
+          </Button>
         )}
         {isLocalDev && onCopyDevSnapshot && (
           <Button
@@ -1548,11 +2139,13 @@ function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenCh
     const predictedGenre = engine.ranked()[0]?.genre;
     const actualName = actual ? GENRES.find((g) => g.id === actual)?.name ?? actual : search.trim();
     const sessionId = crypto.randomUUID();
+    const isDescriptor = engine instanceof DescriptorEngine;
 
     const trace = {
       sessionId,
       createdAt: new Date().toISOString(),
-      answers: engine.answers,
+      mode: isDescriptor ? "descriptor" : "standard",
+      answers: isDescriptor ? engine.descriptorAnswers : engine.answers,
       predicted: predictedGenre?.id,
       actual: actual ?? search.trim(),
       audioUrl: audioUrl.trim() || undefined,
@@ -1567,18 +2160,33 @@ function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenCh
     // Build markdown issue body
     const title = `[Correction] Predicted: ${predictedGenre?.name ?? "Unknown"} vs Actual: ${actualName}`;
 
-    // Format compact answer rows (attribute ID + answer) to stay safely within URL limits
     const maxUrlAnswers = 35;
-    const displayedAnswers = engine.answers.slice(0, maxUrlAnswers);
-    const answerRows = displayedAnswers
-      .map((a, i) => {
-        const resp = RESPONSES.find((r) => r.value === a.value)?.label ?? String(a.value);
-        return `| ${i + 1} | \`${a.attributeId}\` | **${resp}** |`;
-      })
-      .join("\n");
+    let answerRows = "";
+    let totalCount = 0;
 
-    const overflowNote = engine.answers.length > maxUrlAnswers
-      ? `\n\n*... and ${engine.answers.length - maxUrlAnswers} more questions (full list copied to clipboard).*`
+    if (isDescriptor) {
+      totalCount = engine.descriptorAnswers.length;
+      answerRows = engine.descriptorAnswers
+        .slice(0, maxUrlAnswers)
+        .map((a, i) => {
+          const qObj = engine.questions.find((q) => q.id === a.questionId);
+          const optObj = qObj?.options.find((o) => o.id === a.optionId);
+          return `| ${i + 1} | \`${a.questionId}\` | **${optObj?.label ?? a.optionId}** (${optObj?.emoji ?? ""}) |`;
+        })
+        .join("\n");
+    } else {
+      totalCount = engine.answers.length;
+      answerRows = engine.answers
+        .slice(0, maxUrlAnswers)
+        .map((a, i) => {
+          const resp = RESPONSES.find((r) => r.value === a.value)?.label ?? String(a.value);
+          return `| ${i + 1} | \`${a.attributeId}\` | **${resp}** |`;
+        })
+        .join("\n");
+    }
+
+    const overflowNote = totalCount > maxUrlAnswers
+      ? `\n\n*... and ${totalCount - maxUrlAnswers} more questions (full list copied to clipboard).*`
       : "";
 
     // Safely trim note if extraordinarily long to prevent URL length overflow
@@ -1588,6 +2196,7 @@ function FeedbackModal({ open, onOpenChange, engine }: { open: boolean; onOpenCh
 
 - **Predicted Genre**: ${predictedGenre ? `${predictedGenre.name} (${(engine.ranked()[0]!.prob * 100).toFixed(1)}%)` : "None"}
 - **Actual Genre**: **${actualName}**
+- **Engine Mode**: \`${isDescriptor ? "descriptor" : "standard"}\`
 - **Audio Sample**: ${audioUrl.trim() ? audioUrl.trim() : "*None provided*"}
 
 ---
@@ -1597,11 +2206,11 @@ ${safeNote ? `> ${safeNote.replace(/\n/g, "\n> ")}` : "*No extra notes provided.
 
 ---
 
-### 🔍 Session Diagnostic Trace (${engine.answers.length} questions)
+### 🔍 Session Diagnostic Trace (${totalCount} questions)
 <details open>
 <summary>View question responses</summary>
 
-| # | Attribute | Listener Response |
+| # | Question / Attribute | Listener Response |
 |---|---|---|
 ${answerRows}
 </details>${overflowNote}
@@ -1688,3 +2297,4 @@ ${answerRows}
     </Dialog>
   );
 }
+
