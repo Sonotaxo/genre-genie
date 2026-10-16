@@ -49,6 +49,7 @@ export function GenreGenie() {
   const [engineMode, setEngineMode] = useState<"descriptor" | "standard">("descriptor");
   const engineRef = useRef<AkinatorEngine | null>(null);
   const descriptorEngineRef = useRef<DescriptorEngine | null>(null);
+  const descriptorMacroRef = useRef<DescriptorEngine | null>(null);
   const macroRef = useRef<AkinatorEngine | null>(null);
   const autoDrillRef = useRef(false);
   const [screen, setScreen] = useState<Screen>("IDLE");
@@ -89,6 +90,7 @@ export function GenreGenie() {
       descriptorEngineRef.current = new DescriptorEngine(
         family ? { genres: GENRES.filter((g) => g.family === family) } : {}
       );
+      descriptorMacroRef.current = null;
     }
     engineRef.current = new AkinatorEngine(family ? { family } : {});
     setDrill(null);
@@ -104,18 +106,28 @@ export function GenreGenie() {
 
     d.answer(q.id, optionId);
 
-    if (d.isConverged()) {
+    const maxQ = drill ? 14 : 10;
+    if (d.isConverged(maxQ) || !d.nextQuestion()) {
       setScreen("CONVERGED");
     }
     force();
-  }, []);
+  }, [drill]);
 
   const undoDescriptor = useCallback(() => {
     const d = descriptorEngineRef.current;
     if (!d) return;
+    if (drill && !d.canUndo && descriptorMacroRef.current) {
+      descriptorEngineRef.current = descriptorMacroRef.current;
+      descriptorMacroRef.current = null;
+      setDrill(null);
+      setScreen("CONVERGED");
+      force();
+      return;
+    }
     d.undo();
+    setScreen("PLAYING");
     force();
-  }, []);
+  }, [drill]);
 
   const selectGenreEarlyDescriptor = useCallback((genreId: string) => {
     const d = descriptorEngineRef.current;
@@ -287,12 +299,20 @@ export function GenreGenie() {
     if (engineMode === "descriptor") {
       const d = descriptorEngineRef.current;
       if (!d) return;
+      descriptorMacroRef.current = d;
       const subEngine = new DescriptorEngine({
         genres: GENRES.filter((g) => g.parent === parent || g.id === parent),
+        priorDescriptorAnswers: [...d.descriptorAnswers],
       });
       descriptorEngineRef.current = subEngine;
       setDrill(parent);
-      setScreen("PLAYING");
+      const nextQ = subEngine.nextQuestion();
+      if (nextQ && !subEngine.isConverged(Math.min(4 + d.questionCount, 14))) {
+        setScreen("PLAYING");
+      } else {
+        setScreen("CONVERGED");
+        toast.info(`Pinpointed to ${subEngine.ranked()[0]?.genre.name}`);
+      }
       force();
       return;
     }

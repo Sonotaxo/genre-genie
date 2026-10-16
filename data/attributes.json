@@ -329,7 +329,7 @@
   },
   {
     "id": "atmo_dark_dystopian",
-    "category": "atmo",
+    "category": "atmosphere",
     "prompt": "Does the music feel dark, gloomy, menacing, or creepy (like the soundtrack to a horror or dark sci-fi movie)?",
     "hint": "Heard in Industrial Techno, Neurofunk, Dark Ambient, Black Metal, and UK Drill.",
     "polarOpposite": "Joyous, sunny, bright, or celebratory music",
@@ -337,7 +337,7 @@
   },
   {
     "id": "atmo_sunny_uplifting",
-    "category": "atmo",
+    "category": "atmosphere",
     "prompt": "Does the music feel sunny, happy, joyous, or celebratory (a warm, uplifting, feel-good vibe)?",
     "hint": "Heard in House, Disco, Uplifting Trance, Afrobeats, and Pop.",
     "polarOpposite": "Dark, brooding, melancholic, or aggressive mood",
@@ -345,7 +345,7 @@
   },
   {
     "id": "atmo_nostalgic_melancholy",
-    "category": "atmo",
+    "category": "atmosphere",
     "prompt": "Does the song feel nostalgic, dreamy, or bittersweet (like a fond memory from the past or watching a sunset)?",
     "hint": "Heard in Synthwave, Chillwave, Vaporwave, and Mid-West Emo.",
     "polarOpposite": "Aggressive club adrenaline or neutral background utility",
@@ -353,7 +353,7 @@
   },
   {
     "id": "atmo_intimate_bedroom",
-    "category": "atmo",
+    "category": "atmosphere",
     "prompt": "Does the music feel quiet, close-up, and personal (like someone playing acoustic guitar softly right next to you in a small room)?",
     "hint": "Heard in Acoustic Singer-Songwriter, Neoclassical piano, and Lo-Fi study beats.",
     "polarOpposite": "Massive stadium, echoing concert hall, or festival space",
@@ -361,7 +361,7 @@
   },
   {
     "id": "atmo_violent_aggressive",
-    "category": "atmo",
+    "category": "atmosphere",
     "prompt": "Is the energy intense, chaotic, and aggressive (music that makes you want to smash things, mosh, or drive at 200 km/h)?",
     "hint": "Found in Thrash Metal, Breakcore, Gabber, and Hardcore Punk.",
     "polarOpposite": "Gentle, relaxing, or meditative soundscapes",

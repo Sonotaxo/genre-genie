@@ -166,8 +166,8 @@
         "title": "Anti War Dub"
       },
       {
-        "artist": "Burial",
-        "title": "Archangel"
+        "artist": "Rusko",
+        "title": "Cockney Thug"
       }
     ],
     "sensoryHallmarks": {
@@ -296,7 +296,7 @@
       "Modern Tech House"
     ],
     "description": "Lean, muscular club music that blends the clean, punchy drive of house with the cold, sterile percussion of techno. It features short, catchy bass loops and snappy drum hits designed to produce an unceasing, addictive physical groove.",
-    "popularityWeight": 0.6,
+    "popularityWeight": 0.75,
     "benchmarkTracks": [
       {
         "artist": "Green Velvet",
@@ -2248,7 +2248,7 @@
       "Commercial Hard Techno"
     ],
     "description": "High-energy commercial techno characterized by rapid 140-155 BPM rolling basslines, prominent vocal hooks, and high-gloss mainstage rave euphoria.",
-    "popularityWeight": 0.75,
+    "popularityWeight": 0.45,
     "benchmarkTracks": [
       {
         "artist": "Creeds",
@@ -2421,14 +2421,15 @@
     "name": "UK Garage / Future Garage",
     "familyId": "electronic",
     "tier": "micro",
-    "parentGenreId": "dubstep",
+    "parentGenreId": "house",
     "aliases": [
       "2-Step",
       "Future Garage",
-      "UKG"
+      "UKG",
+      "Garage House"
     ],
     "description": "Sensual, swinging urban electronic music featuring syncopated skipping 2-step beats, warm pitched vocal chops, and deep rubbery bass.",
-    "popularityWeight": 0.7,
+    "popularityWeight": 0.65,
     "benchmarkTracks": [
       {
         "artist": "Burial",
@@ -2450,7 +2451,7 @@
       "atmosphere": "Nocturnal, rainy, urban, reflective, and deeply soulful"
     },
     "distinctionNotes": "Unlike four-on-the-floor House, UK Garage uses a syncopated, skipping 2-step rhythm where the second kick drum is displaced.",
-    "parentGenreName": "Electronic Dance Music",
+    "parentGenreName": "Garage House",
     "referenceUrl": "https://rateyourmusic.com/genre/uk-garage/"
   },
   {
@@ -2509,7 +2510,7 @@
       },
       {
         "artist": "Boards of Canada",
-        "title": "Dayvan Cowboy"
+        "title": "Roygbiv"
       },
       {
         "artist": "Autechre",

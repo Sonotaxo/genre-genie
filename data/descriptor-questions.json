@@ -1,48 +1,49 @@
 [
   {
-    "id": "tempo_pace",
-    "category": "pulse",
-    "question": "How does the speed or tempo of the music feel?",
-    "subtitle": "Focus on the overall speed of the beat or pulse.",
-    "hint": "Compare it to daily activities like walking, jogging, or driving.",
+    "id": "core_instrumentation",
+    "category": "sound",
+    "question": "What instruments mainly drive the sound?",
+    "subtitle": "Listen to the dominant sound sources across the track.",
+    "hint": "Look for synthesizers vs real amplified guitars or wooden acoustic instruments.",
     "options": [
       {
-        "id": "slow_meditative",
-        "emoji": "🧘",
-        "label": "Slow & Leisurely (< 100 BPM)",
-        "description": "Like meditative breathing, a slow dance, or a calm stroll (under 100 BPM)",
+        "id": "electronic_synths",
+        "emoji": "⚡",
+        "label": "Electronic Synths & Beats",
+        "description": "Produced inside computers with synthesizers, digital drum pads, and samplers",
         "effects": {
-          "pulse_slow_relaxed": 1.0,
-          "pulse_tempo_fast": -1.0,
-          "pulse_hyper_fast": -1.0
+          "sound_electronic_dominant": 1,
+          "sound_acoustic_wood_strings": -0.9,
+          "sound_electric_guitars": -0.6
         }
       },
       {
-        "id": "moderate_walking",
-        "emoji": "🚶",
-        "label": "Moderate & Steady (100–125 BPM)",
-        "description": "Like an average radio pop song or casual walking pace (100–125 BPM)",
+        "id": "electric_guitars",
+        "emoji": "🎸",
+        "label": "Amplified Electric Guitars",
+        "description": "Loud electric guitar riffs, chords, solos, or overdriven rock/metal amps",
         "effects": {
-          "pulse_slow_relaxed": -0.5,
-          "pulse_tempo_fast": -0.5,
-          "pulse_hyper_fast": -1.0
+          "sound_electric_guitars": 1,
+          "sound_electronic_dominant": -0.8,
+          "sound_acoustic_wood_strings": -0.7
         }
       },
       {
-        "id": "fast_club",
-        "emoji": "🏃",
-        "label": "Fast & Energetic (125+ BPM)",
-        "description": "Brisk workout pace, club dance floor, or all-out sprint (125+ BPM)",
+        "id": "acoustic_wooden",
+        "emoji": "🎻",
+        "label": "Natural Acoustic Instruments",
+        "description": "Grand piano, violins, cello, acoustic guitar, brass, or upright bass",
         "effects": {
-          "pulse_tempo_fast": 1.0,
-          "pulse_slow_relaxed": -1.0
+          "sound_acoustic_wood_strings": 1,
+          "sound_electronic_dominant": -0.9,
+          "sound_electric_guitars": -0.8
         }
       },
       {
-        "id": "tempo_unsure",
+        "id": "inst_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "Floating without a clear pulse, or hard to tell",
+        "description": "A balanced blend of electronic and live instruments, or hard to tell",
         "effects": {}
       }
     ]
@@ -52,7 +53,7 @@
     "category": "pulse",
     "question": "How is the drumbeat or rhythm structured?",
     "subtitle": "Listen to the kick drum and overall beat pattern.",
-    "hint": "Notice whether the drum hits steadily on every beat, rolls freely, or has a dance bounce.",
+    "hint": "Notice whether the drum hits steadily on every beat, skips/rolls, or has a slow bounce.",
     "options": [
       {
         "id": "four_on_floor",
@@ -60,178 +61,134 @@
         "label": "Steady Club Thump (1-2-3-4)",
         "description": "Hypnotic, steady bass drum thumping on every single beat (thump-thump-thump-thump)",
         "effects": {
-          "pulse_four_on_the_floor": 1.0,
-          "pulse_breakbeat_syncopated": -1.0,
-          "pulse_halftime_sway": -1.0,
-          "pulse_free_rubato": -1.0
+          "pulse_four_on_the_floor": 1,
+          "pulse_breakbeat_syncopated": -0.9,
+          "pulse_halftime_sway": -0.9,
+          "pulse_free_rubato": -0.9
         }
       },
       {
         "id": "syncopated_breakbeat",
         "emoji": "🥁",
-        "label": "Lively, Bouncing Drum Beats",
-        "description": "Scattered, energetic drum rolls like a funk drummer or classic hip-hop groove",
+        "label": "Lively, Skipping or Broken Beats",
+        "description": "Scattered, energetic drum rolls, 2-step shuffle, or funky syncopated groove",
         "effects": {
-          "pulse_breakbeat_syncopated": 1.0,
-          "pulse_four_on_the_floor": -1.0,
-          "pulse_free_rubato": -1.0
+          "pulse_breakbeat_syncopated": 1,
+          "pulse_four_on_the_floor": -0.8,
+          "pulse_free_rubato": -0.9
         }
       },
       {
         "id": "halftime_sway",
         "emoji": "🛋️",
         "label": "Slow Head-Nod Bounce",
-        "description": "Sluggish half-speed bounce with heavy bass drops (Trap / Dubstep / slow Hip-Hop)",
+        "description": "Sluggish half-speed bounce with heavy bass drops (Trap / Dubstep / Hip-Hop)",
         "effects": {
-          "pulse_halftime_sway": 1.0,
-          "pulse_four_on_the_floor": -1.0,
-          "pulse_free_rubato": -1.0
+          "pulse_halftime_sway": 1,
+          "pulse_four_on_the_floor": -0.9,
+          "pulse_free_rubato": -0.9
         }
       },
       {
         "id": "rhythm_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "Different rhythm, floating freely, or hard to tell",
+        "description": "Standard rock/pop beat, drumless floating music, or hard to tell",
         "effects": {}
       }
     ]
   },
   {
-    "id": "specialty_rhythm",
+    "id": "tempo_pace",
     "category": "pulse",
-    "question": "Does the rhythm have a distinct dance bounce or speeding chug?",
-    "subtitle": "Notice if the beat matches a specific regional style.",
-    "hint": "Think of Latin dance, island reggae, or country train beats.",
+    "question": "How does the speed or tempo of the music feel?",
+    "subtitle": "Focus on the overall speed of the beat or pulse.",
+    "hint": "Compare it to daily activities like walking, jogging, or sprinting.",
     "options": [
       {
-        "id": "latin_dembow",
-        "emoji": "💃",
-        "label": "Latin Dance Bounce",
-        "description": "Bouncy Caribbean rhythm ('boom... cha-boom-cha' heard in Reggaeton)",
+        "id": "slow_meditative",
+        "emoji": "🧘",
+        "label": "Slow & Leisurely (< 100 BPM)",
+        "description": "Like meditative breathing, a slow dance, or a calm stroll (under 100 BPM)",
         "effects": {
-          "pulse_dembow_caribbean": 1.0,
-          "pulse_four_on_the_floor": -0.5
+          "pulse_slow_relaxed": 1,
+          "pulse_tempo_fast": -0.9,
+          "pulse_hyper_fast": -1
         }
       },
       {
-        "id": "reggae_skank",
-        "emoji": "🌴",
-        "label": "Relaxed Island / Reggae Beat",
-        "description": "Chords chopping sharply on the off-beats with a relaxed sunny pulse",
+        "id": "moderate_walking",
+        "emoji": "🚶",
+        "label": "Moderate & Steady (100–125 BPM)",
+        "description": "Like an average radio pop song or brisk walking pace (100–125 BPM)",
         "effects": {
-          "pulse_reggae_one_drop": 1.0,
-          "pulse_four_on_the_floor": -1.0
+          "pulse_slow_relaxed": -0.6,
+          "pulse_tempo_fast": -0.4,
+          "pulse_hyper_fast": -1
         }
       },
       {
-        "id": "train_country",
-        "emoji": "🚂",
-        "label": "Speeding Train Chug",
-        "description": "Fast country chugging rhythm (chugga-chugga-chugga)",
+        "id": "fast_club",
+        "emoji": "🏃",
+        "label": "Fast & Energetic (125+ BPM)",
+        "description": "Brisk workout pace, club dance floor, or all-out sprint (125+ BPM)",
         "effects": {
-          "pulse_train_beat_country": 1.0,
-          "pulse_four_on_the_floor": -1.0
+          "pulse_tempo_fast": 1,
+          "pulse_slow_relaxed": -0.9
         }
       },
       {
-        "id": "specialty_unsure",
+        "id": "tempo_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "Standard drum beat, no specialty rhythm, or unsure",
+        "description": "Floating without a clear pulse, changing speeds, or hard to tell",
         "effects": {}
       }
     ]
   },
   {
-    "id": "core_instrumentation",
-    "category": "sound",
-    "question": "What instruments mainly drive the sound?",
-    "subtitle": "Listen to the dominant sound sources across the track.",
-    "hint": "Look for synthesizers vs real amplified or wooden instruments.",
+    "id": "fast_pulse_drive",
+    "category": "pulse",
+    "question": "How intense or rapid is the fast rhythm?",
+    "subtitle": "Listen to whether the beat is a standard dance pace or an extreme sprint.",
+    "hint": "Notice if it sprints past 150 BPM, gallops like a motor, or slices drum rolls.",
     "options": [
       {
-        "id": "electronic_synths",
-        "emoji": "⚡",
-        "label": "Electronic Synths & Beats",
-        "description": "Produced inside computers with synthesizers, digital pads, and samplers",
+        "id": "hyper_fast_sprint",
+        "emoji": "🚀",
+        "label": "Blistering Sprint (150+ BPM)",
+        "description": "Frantic, high-velocity speed that feels like a full sprint or high-speed chase",
         "effects": {
-          "sound_electronic_dominant": 1.0,
-          "sound_acoustic_wood_strings": -1.0,
-          "sound_electric_guitars": -0.6
+          "pulse_hyper_fast": 1,
+          "pulse_tempo_fast": 0.8,
+          "pulse_galloping_rolling_bass": -0.4
         }
       },
       {
-        "id": "electric_guitars",
-        "emoji": "🎸",
-        "label": "Amplified Electric Guitars",
-        "description": "Loud electric guitar riffs, chords, solos, or heavy distortion amps",
+        "id": "galloping_rolling",
+        "emoji": "🐎",
+        "label": "Relentless Galloping Bassline",
+        "description": "Fast 3-note bass roll humming non-stop behind every beat (Psytrance / Heavy Metal)",
         "effects": {
-          "sound_electric_guitars": 1.0,
-          "sound_electronic_dominant": -0.8,
-          "sound_acoustic_wood_strings": -0.8
+          "pulse_galloping_rolling_bass": 1,
+          "pulse_tempo_fast": 0.8
         }
       },
       {
-        "id": "acoustic_wooden",
-        "emoji": "🎻",
-        "label": "Natural Acoustic Instruments",
-        "description": "Grand piano, violins, cello, acoustic guitar, or upright bass",
+        "id": "chopped_amen_drums",
+        "emoji": "🥁",
+        "label": "Sliced, Stuttering Drum Breaks",
+        "description": "Rapidly chopped acoustic drum rolls and crashing cymbals (Jungle / Drum & Bass)",
         "effects": {
-          "sound_acoustic_wood_strings": 1.0,
-          "sound_electronic_dominant": -1.0,
-          "sound_electric_guitars": -0.9
+          "sound_amen_break_chopped": 1,
+          "pulse_breakbeat_syncopated": 0.8
         }
       },
       {
-        "id": "inst_unsure",
+        "id": "fast_drive_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "A balanced blend of instruments, other instruments, or hard to isolate",
-        "effects": {}
-      }
-    ]
-  },
-  {
-    "id": "organic_instruments",
-    "category": "sound",
-    "question": "Do any of these acoustic instruments stand out?",
-    "subtitle": "Listen for signature organic or traditional instruments.",
-    "hint": "Notice if horns, hand drums, or country twang are prominent.",
-    "options": [
-      {
-        "id": "brass_horns",
-        "emoji": "🎷",
-        "label": "Horns & Brass Section",
-        "description": "Trumpets, saxophones, or big band brass blasts",
-        "effects": {
-          "sound_brass_horns": 1.0
-        }
-      },
-      {
-        "id": "hand_drums",
-        "emoji": "🪘",
-        "label": "Acoustic Hand Drums",
-        "description": "Congas, bongos, wooden log drums, or shakers (Afro / Latin percussion)",
-        "effects": {
-          "sound_polyrhythmic_percussion": 1.0
-        }
-      },
-      {
-        "id": "country_twang",
-        "emoji": "🤠",
-        "label": "Southern Country Twang",
-        "description": "Weeping pedal steel guitar, banjo, or country fiddle",
-        "effects": {
-          "sound_pedal_steel_twang": 1.0,
-          "sound_electronic_dominant": -1.0
-        }
-      },
-      {
-        "id": "organic_unsure",
-        "emoji": "❓",
-        "label": "Don't Know / Neither",
-        "description": "Standard band instruments, electronic sounds, or none of these",
+        "description": "Steady club/rock tempo (120–135 BPM) without extreme sprint speed",
         "effects": {}
       }
     ]
@@ -241,18 +198,18 @@
     "category": "voice",
     "question": "What do the vocals or voices sound like?",
     "subtitle": "Focus on how the human voice is delivered.",
-    "hint": "Notice whether there is singing, rapping, or if it is completely instrumental.",
+    "hint": "Notice whether there is singing, rapping/spoken words, or if it is instrumental.",
     "options": [
       {
         "id": "purely_instrumental",
         "emoji": "🚫",
         "label": "Purely Instrumental",
-        "description": "No human singing or vocal performances at all",
+        "description": "No human singing or vocal performances (or only tiny rare snippets)",
         "effects": {
-          "voice_present": -1.0,
-          "voice_clean_melodic": -1.0,
-          "voice_rapping_spoken": -1.0,
-          "voice_screaming_growls": -1.0
+          "voice_present": -1,
+          "voice_clean_melodic": -1,
+          "voice_rapping_spoken": -1,
+          "voice_screaming_growls": -1
         }
       },
       {
@@ -261,29 +218,29 @@
         "label": "Clear Melodic Singing",
         "description": "Tuneful vocal melodies, pop hooks, or soulful singing",
         "effects": {
-          "voice_present": 1.0,
-          "voice_clean_melodic": 1.0,
-          "voice_screaming_growls": -1.0,
+          "voice_present": 1,
+          "voice_clean_melodic": 1,
+          "voice_screaming_growls": -0.9,
           "voice_rapping_spoken": -0.6
         }
       },
       {
         "id": "rapping_spoken",
         "emoji": "🗣️",
-        "label": "Rhythmic Rhyming / Rapping",
-        "description": "Fast-talking spoken verses or rhyming over the beat (Hip-Hop / Rap)",
+        "label": "Rhythmic Rhyming or Spoken Hooks",
+        "description": "Rapped verses, MC chants, or spoken club one-liners over the beat",
         "effects": {
-          "voice_present": 1.0,
-          "voice_rapping_spoken": 1.0,
-          "voice_clean_melodic": -0.6,
-          "voice_screaming_growls": -1.0
+          "voice_present": 1,
+          "voice_rapping_spoken": 1,
+          "voice_clean_melodic": -0.5,
+          "voice_screaming_growls": -0.9
         }
       },
       {
         "id": "voice_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "Repeated vocal snippets, unusual vocal delivery, or not sure",
+        "description": "Other vocal delivery (like harsh screams) or hard to tell",
         "effects": {}
       }
     ]
@@ -292,8 +249,8 @@
     "id": "vocal_style",
     "category": "voice",
     "question": "How are the vocals processed or performed?",
-    "subtitle": "Listen to the special character of the voices.",
-    "hint": "Notice if the voice is screaming, robotic, or ethereal.",
+    "subtitle": "Listen to the special character or effect on the voices.",
+    "hint": "Notice if the voice is screaming, robotic/Auto-Tuned, or soft whispers.",
     "options": [
       {
         "id": "screaming_growls",
@@ -301,9 +258,8 @@
         "label": "Aggressive Screams / Growls",
         "description": "Throat-shredding screams or deep guttural monster growls (Metal / Hardcore)",
         "effects": {
-          "voice_present": 1.0,
-          "voice_screaming_growls": 1.0,
-          "voice_clean_melodic": -1.0,
+          "voice_present": 1,
+          "voice_screaming_growls": 1,
           "voice_autotune_vocoder": -0.8
         }
       },
@@ -311,22 +267,21 @@
         "id": "robotic_autotune",
         "emoji": "🤖",
         "label": "Robotic / Auto-Tuned",
-        "description": "Noticeable metallic Auto-Tune snaps or vocoder robot voices",
+        "description": "Noticeable metallic Auto-Tune pitch snaps or vocoder robot voices",
         "effects": {
-          "voice_present": 1.0,
-          "voice_autotune_vocoder": 1.0,
+          "voice_present": 1,
+          "voice_autotune_vocoder": 1,
           "voice_screaming_growls": -0.8
         }
       },
       {
         "id": "whispered_ethereal",
         "emoji": "👻",
-        "label": "Dreamy Whispers or Choir",
-        "description": "Soft airy whispers, ghostly vocals in echo, or big choir harmonies",
+        "label": "Soft, Dreamy Whispers",
+        "description": "Intimate airy whispers or ghostly vocals floating deep in echo",
         "effects": {
-          "voice_present": 1.0,
-          "voice_whispered_ethereal": 0.8,
-          "voice_choir_wall": 0.6,
+          "voice_present": 1,
+          "voice_whispered_ethereal": 1,
           "voice_screaming_growls": -0.8
         }
       },
@@ -334,232 +289,7 @@
         "id": "vocal_style_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "Normal natural singing without these effects, or purely instrumental",
-        "effects": {}
-      }
-    ]
-  },
-  {
-    "id": "bass_character",
-    "category": "sound",
-    "question": "What does the bass sound like?",
-    "subtitle": "Listen closely to the lowest frequencies.",
-    "hint": "Notice if the bass is deep, buzzing, sliding, or funky.",
-    "options": [
-      {
-        "id": "deep_subbass",
-        "emoji": "🔊",
-        "label": "Deep Rumbly Sub-Bass",
-        "description": "Ultra-low rumble that shakes your chest, car, or headphones",
-        "effects": {
-          "sound_deep_subbass": 1.0
-        }
-      },
-      {
-        "id": "sliding_808_glides",
-        "emoji": "🌊",
-        "label": "Sliding Low Bass Booms",
-        "description": "Deep bass booms that swoop and slide smoothly up and down in pitch",
-        "effects": {
-          "sound_sliding_bass_glides": 1.0,
-          "sound_deep_subbass": 0.8
-        }
-      },
-      {
-        "id": "snarling_acid_growl",
-        "emoji": "🤖",
-        "label": "Growling Chainsaw or Squelch",
-        "description": "Aggressive metallic robot growl or rubbery twisting acid synth bass",
-        "effects": {
-          "sound_snarling_neuro_bass": 0.8,
-          "sound_acid_303_squelch": 0.8
-        }
-      },
-      {
-        "id": "bass_unsure",
-        "emoji": "❓",
-        "label": "Don't Know / Neither",
-        "description": "Gentle natural bass, non-dominant low end, or hard to tell",
-        "effects": {}
-      }
-    ]
-  },
-  {
-    "id": "sound_clarity",
-    "category": "sound",
-    "question": "How clean, warm, or gritty does the sound feel?",
-    "subtitle": "Listen to the overall studio finish and clarity.",
-    "hint": "Notice if it feels sparkling and crisp, cozy like vinyl, or dirty and distorted.",
-    "options": [
-      {
-        "id": "bright_glossy",
-        "emoji": "✨",
-        "label": "Sparkling Clean & Modern",
-        "description": "Super crisp, bright radio production with zero grit or dirt",
-        "effects": {
-          "sound_bright_glossy_clean": 1.0,
-          "sound_heavy_distortion": -0.8
-        }
-      },
-      {
-        "id": "lofi_crackles",
-        "emoji": "📼",
-        "label": "Dusty Lo-Fi / Vintage Warmth",
-        "description": "Noticeable needle crackles, tape cassette hiss, or warm cozy record player sound",
-        "effects": {
-          "sound_lofi_crackles": 1.0,
-          "sound_analog_warmth": 0.8
-        }
-      },
-      {
-        "id": "heavy_distortion",
-        "emoji": "💥",
-        "label": "Raw, Gritty & Distorted",
-        "description": "Abrasive crunchy fuzz, roaring overdrive, or blown-out speakers",
-        "effects": {
-          "sound_heavy_distortion": 1.0,
-          "sound_bright_glossy_clean": -0.8
-        }
-      },
-      {
-        "id": "clarity_unsure",
-        "emoji": "❓",
-        "label": "Don't Know / Neither",
-        "description": "Standard, balanced sound without notable grit or vintage crackle",
-        "effects": {}
-      }
-    ]
-  },
-  {
-    "id": "synth_character",
-    "category": "sound",
-    "question": "If synthesizers are playing, how do they stand out?",
-    "subtitle": "Listen to the dominant electronic melodies, chords, or effects.",
-    "hint": "Notice whether they soar like an anthem, squelch, or aren't present.",
-    "options": [
-      {
-        "id": "supersaws_anthem",
-        "emoji": "🎆",
-        "label": "Massive Festival Anthem Chords",
-        "description": "Huge, buzzing walls of synths swelling into an epic stadium drop (EDM / Trance)",
-        "effects": {
-          "sound_supersaws_anthem": 1.0
-        }
-      },
-      {
-        "id": "acid_squelch",
-        "emoji": "🧪",
-        "label": "Twisting, Rubbery Squelches",
-        "description": "Bubbling, whistling electronic synth lines that warp and squeak (classic rave sound)",
-        "effects": {
-          "sound_acid_303_squelch": 1.0
-        }
-      },
-      {
-        "id": "dub_echoes",
-        "emoji": "🌌",
-        "label": "Cavernous Space Echoes",
-        "description": "Synth stabs or chords echoing repeatedly into deep space like in a huge cave",
-        "effects": {
-          "sound_dub_echoes": 1.0
-        }
-      },
-      {
-        "id": "synth_unsure",
-        "emoji": "❓",
-        "label": "Don't Know / Neither",
-        "description": "Subtle background pads, real acoustic instruments, or no synths",
-        "effects": {}
-      }
-    ]
-  },
-  {
-    "id": "drum_kick_character",
-    "category": "sound",
-    "question": "How does the main drum beat or bass kick hit?",
-    "subtitle": "Listen to the heavy low thump that drives the beat.",
-    "hint": "Is it a heavy distorted rave punch, a crisp club thump, or a real wooden drum set?",
-    "options": [
-      {
-        "id": "hardstyle_kick",
-        "emoji": "🔨",
-        "label": "Pounding Distorted Rave Kick",
-        "description": "Heavy screaming punch followed by an earth-shattering buzzing bass roar (Hardstyle / Gabber)",
-        "effects": {
-          "sound_distorted_hardstyle_kick": 1.0,
-          "sound_heavy_distortion": 0.8
-        }
-      },
-      {
-        "id": "solid_club_kick",
-        "emoji": "🟢",
-        "label": "Crisp, Solid Club Thump",
-        "description": "Clean, punchy low kick that keeps the dance floor moving without harsh distortion",
-        "effects": {
-          "pulse_four_on_the_floor": 0.8
-        }
-      },
-      {
-        "id": "acoustic_drum_kit",
-        "emoji": "🥁",
-        "label": "Natural Wooden Drum Kit",
-        "description": "An organic acoustic drum set played with drumsticks by a human drummer",
-        "effects": {
-          "sound_acoustic_wood_strings": 0.6,
-          "sound_electronic_dominant": -0.6
-        }
-      },
-      {
-        "id": "kick_unsure",
-        "emoji": "❓",
-        "label": "Don't Know / Neither",
-        "description": "Soft gentle tap, standard drum beat, or not sure",
-        "effects": {}
-      }
-    ]
-  },
-  {
-    "id": "guitar_style",
-    "category": "sound",
-    "question": "If guitars are playing, what do they sound like?",
-    "subtitle": "Focus on the sound and style of the guitars.",
-    "hint": "Are they bright and ringing, loud and screaming, or gentle acoustic?",
-    "options": [
-      {
-        "id": "jangly_guitars",
-        "emoji": "🎸",
-        "label": "Bright, Chiming Indie Guitars",
-        "description": "Clean or slightly gritty ringing guitars that sparkle (90s indie / alternative rock)",
-        "effects": {
-          "sound_jangly_indie_guitars": 1.0,
-          "sound_electric_guitars": 0.8
-        }
-      },
-      {
-        "id": "distorted_rock_riffs",
-        "emoji": "⚡",
-        "label": "Roaring Distorted Rock Riffs",
-        "description": "Loud, heavy electric guitar power chords or screaming solos through an overdriven amp",
-        "effects": {
-          "sound_electric_guitars": 1.0,
-          "sound_heavy_distortion": 0.8
-        }
-      },
-      {
-        "id": "nylon_guitar",
-        "emoji": "🪕",
-        "label": "Gentle Acoustic or Spanish Nylon",
-        "description": "Warm, intimate fingerpicking on a Spanish or classical acoustic nylon-string guitar",
-        "effects": {
-          "sound_nylon_acoustic_guitar": 1.0,
-          "sound_acoustic_wood_strings": 0.8
-        }
-      },
-      {
-        "id": "guitar_unsure",
-        "emoji": "❓",
-        "label": "Don't Know / Neither",
-        "description": "No guitars in this song, or hard to tell",
+        "description": "Natural human singing/rapping without these extreme effects",
         "effects": {}
       }
     ]
@@ -569,27 +299,27 @@
     "category": "atmosphere",
     "question": "What emotional mood or atmosphere dominates the music?",
     "subtitle": "Focus on the overall feeling the music creates.",
-    "hint": "Consider whether the vibe is feel-good, sinister, or nostalgic.",
+    "hint": "Consider whether the vibe is bright and feel-good, dark and sinister, or chaotic rage.",
     "options": [
       {
         "id": "sunny_uplifting",
         "emoji": "☀️",
         "label": "Sunny, Joyous & Feel-Good",
-        "description": "Bright, celebratory, and optimistic party energy that makes you smile",
+        "description": "Bright, celebratory, and optimistic energy that makes you smile",
         "effects": {
-          "atmo_sunny_uplifting": 1.0,
-          "atmo_dark_dystopian": -1.0,
-          "atmo_violent_aggressive": -1.0
+          "atmo_sunny_uplifting": 1,
+          "atmo_dark_dystopian": -0.9,
+          "atmo_violent_aggressive": -0.9
         }
       },
       {
         "id": "dark_dystopian",
         "emoji": "🌑",
         "label": "Dark, Moody & Menacing",
-        "description": "Sinister, creepy, or gloomy vibe like a thriller movie or dark warehouse",
+        "description": "Sinister, creepy, or gloomy vibe like a thriller film or dark warehouse",
         "effects": {
-          "atmo_dark_dystopian": 1.0,
-          "atmo_sunny_uplifting": -1.0
+          "atmo_dark_dystopian": 1,
+          "atmo_sunny_uplifting": -0.9
         }
       },
       {
@@ -598,15 +328,59 @@
         "label": "Aggressive, Furious & Chaotic",
         "description": "High-adrenaline rage that makes you want to smash things or mosh",
         "effects": {
-          "atmo_violent_aggressive": 1.0,
-          "atmo_sunny_uplifting": -1.0
+          "atmo_violent_aggressive": 1,
+          "atmo_sunny_uplifting": -0.9
         }
       },
       {
         "id": "atmo_unsure",
         "emoji": "❓",
         "label": "Don't Know / Neither",
-        "description": "Neutral emotional vibe, bittersweet nostalgic, or hard to tell",
+        "description": "Dreamy, nostalgic, cozy, or neutral club energy",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "emotional_scale",
+    "category": "atmosphere",
+    "question": "Does the track have a nostalgic, cozy, or grand choral feel?",
+    "subtitle": "Listen to the emotional space and intimacy of the recording.",
+    "hint": "Notice if it feels like a nostalgic memory, a quiet bedroom, or a grand choir.",
+    "options": [
+      {
+        "id": "nostalgic_melancholy",
+        "emoji": "🌅",
+        "label": "Nostalgic, Dreamy & Bittersweet",
+        "description": "Sentimental longing like an 80s neon sunset, old polaroids, or fond memories",
+        "effects": {
+          "atmo_nostalgic_melancholy": 1
+        }
+      },
+      {
+        "id": "intimate_bedroom",
+        "emoji": "🕯️",
+        "label": "Quiet, Close-Up & Intimate",
+        "description": "Cozy, personal living-room or bedroom vibe played softly right next to you",
+        "effects": {
+          "atmo_intimate_bedroom": 1,
+          "atmo_violent_aggressive": -0.8
+        }
+      },
+      {
+        "id": "choir_harmonies",
+        "emoji": "🏛️",
+        "label": "Grand Choir or Group Harmonies",
+        "description": "A large group of voices, church/gospel choir, or operatic chorus singing together",
+        "effects": {
+          "voice_choir_wall": 1
+        }
+      },
+      {
+        "id": "scale_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Standard studio/club energy without these specific vibes",
         "effects": {}
       }
     ]
@@ -616,24 +390,24 @@
     "category": "pulse",
     "question": "How does the groove or motion make your body move?",
     "subtitle": "Notice the physical sensation of the rhythm.",
-    "hint": "Notice whether it has a playful bounce or a stiff march.",
+    "hint": "Notice whether it has a playful bounce, a rigid machine march, or crushing breakdowns.",
     "options": [
       {
         "id": "swung_shuffle",
         "emoji": "🕺",
         "label": "Bouncy Swing or Shuffle",
-        "description": "Loose groove with a playful skip that makes you sway side-to-side",
+        "description": "Loose groove with a playful skip that makes you sway or snap your fingers",
         "effects": {
-          "pulse_swung_groove": 1.0
+          "pulse_swung_groove": 1
         }
       },
       {
         "id": "straight_march",
         "emoji": "🤖",
         "label": "Straight Robotic March",
-        "description": "Rigid, steady metronome pulse marching strictly on the grid",
+        "description": "Rigid, mechanical metronome pulse marching strictly on the grid",
         "effects": {
-          "pulse_swung_groove": -1.0
+          "pulse_swung_groove": -1
         }
       },
       {
@@ -642,7 +416,7 @@
         "label": "Sudden Crushing Breakdowns",
         "description": "Music abruptly slams to a halt into a slow, crushing head-banging stomp",
         "effects": {
-          "pulse_heavy_breakdown": 1.0
+          "pulse_heavy_breakdown": 1
         }
       },
       {
@@ -650,6 +424,366 @@
         "emoji": "❓",
         "label": "Don't Know / Neither",
         "description": "Standard rhythmic flow, or hard to tell",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "sound_clarity",
+    "category": "sound",
+    "question": "How clean, distorted, or dusty does the audio feel?",
+    "subtitle": "Listen to the overall studio finish and surface texture.",
+    "hint": "Notice if it feels sparkling crisp, raw and overdriven, or dusty with vinyl crackle.",
+    "options": [
+      {
+        "id": "bright_glossy",
+        "emoji": "✨",
+        "label": "Sparkling Clean & Glossy",
+        "description": "Super crisp, bright modern studio or radio polish with zero grit",
+        "effects": {
+          "sound_bright_glossy_clean": 1,
+          "sound_heavy_distortion": -0.7
+        }
+      },
+      {
+        "id": "heavy_distortion",
+        "emoji": "💥",
+        "label": "Raw, Gritty & Distorted",
+        "description": "Abrasive crunchy fuzz, roaring overdrive, or blown-out speaker distortion",
+        "effects": {
+          "sound_heavy_distortion": 1,
+          "sound_bright_glossy_clean": -0.7
+        }
+      },
+      {
+        "id": "lofi_crackles",
+        "emoji": "📼",
+        "label": "Dusty Vinyl Crackle or Retro 8-Bit",
+        "description": "Noticeable record needle crackles, cassette tape hiss, or retro video-game bleeps",
+        "effects": {
+          "sound_lofi_crackles": 1
+        }
+      },
+      {
+        "id": "clarity_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Balanced studio sound without extreme gloss, distortion, or crackle",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "bass_character",
+    "category": "sound",
+    "question": "Does the bassline have one of these signature styles?",
+    "subtitle": "Listen closely to how the bass moves and growls.",
+    "hint": "Notice if the bass slides in pitch, growls like a robot/chainsaw, or slaps funkily.",
+    "options": [
+      {
+        "id": "sliding_808_glides",
+        "emoji": "🌊",
+        "label": "Sliding 808 Bass Glides",
+        "description": "Deep bass booms that swoop and slide smoothly up and down in pitch (Trap / Drill / Amapiano)",
+        "effects": {
+          "sound_sliding_bass_glides": 1,
+          "sound_deep_subbass": 0.7
+        }
+      },
+      {
+        "id": "snarling_neuro_growl",
+        "emoji": "🤖",
+        "label": "Growling Chainsaw / Wobble Bass",
+        "description": "Aggressive metallic robot growls or heavy morphing bass wobbles (Dubstep / Bass House / Neurofunk)",
+        "effects": {
+          "sound_snarling_neuro_bass": 1,
+          "sound_deep_subbass": 0.7
+        }
+      },
+      {
+        "id": "slap_bass_funk",
+        "emoji": "🎸",
+        "label": "Funky Thumb-Slap Bass Guitar",
+        "description": "Bouncy electric bass guitar where strings are slapped and popped with a sharp groove",
+        "effects": {
+          "sound_slap_bass_groove": 1
+        }
+      },
+      {
+        "id": "bass_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Steady bassline, natural acoustic bass, or none of these special bass styles",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "synth_character",
+    "category": "sound",
+    "question": "If synthesizers or studio effects stand out, how do they sound?",
+    "subtitle": "Listen to the dominant electronic melodies, chords, or space echoes.",
+    "hint": "Notice whether synths soar like a festival anthem, squelch like acid, or echo in deep space.",
+    "options": [
+      {
+        "id": "supersaws_anthem",
+        "emoji": "🎆",
+        "label": "Massive Festival Anthem Chords",
+        "description": "Huge, buzzing walls of synths swelling into an epic hands-in-the-air drop (EDM / Trance)",
+        "effects": {
+          "sound_supersaws_anthem": 1
+        }
+      },
+      {
+        "id": "acid_squelch",
+        "emoji": "🧪",
+        "label": "Twisting, Rubbery Acid Squelches",
+        "description": "Bubbling, whistling electronic 303 synth lines that warp and squeak (Acid rave sound)",
+        "effects": {
+          "sound_acid_303_squelch": 1
+        }
+      },
+      {
+        "id": "dub_echoes",
+        "emoji": "🌌",
+        "label": "Cavernous Dub Space Echoes",
+        "description": "Chords or drum hits bouncing repeatedly into deep space with long delay trails",
+        "effects": {
+          "sound_dub_echoes": 1
+        }
+      },
+      {
+        "id": "synth_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Standard synth melodies, subtle pads, or no synthesizers",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "drum_kick_character",
+    "category": "sound",
+    "question": "How does the low end or drum foundation feel?",
+    "subtitle": "Focus on the weight of the kick drum and bass warmth.",
+    "hint": "Is it a distorted rave kick, a chest-shaking sub-bass rumble, or warm vintage analog?",
+    "options": [
+      {
+        "id": "hardstyle_kick",
+        "emoji": "🔨",
+        "label": "Pounding Distorted Rave Kick",
+        "description": "High-pitched punch followed by an earth-shattering distorted bass roar (Hardstyle / Gabber)",
+        "effects": {
+          "sound_distorted_hardstyle_kick": 1,
+          "sound_heavy_distortion": 0.7
+        }
+      },
+      {
+        "id": "deep_subbass_rumble",
+        "emoji": "🔊",
+        "label": "Chest-Shaking Sub-Bass Rumble",
+        "description": "Ultra-low bass frequencies that physically shake your chest, car, or subwoofer",
+        "effects": {
+          "sound_deep_subbass": 1
+        }
+      },
+      {
+        "id": "warm_analog_tone",
+        "emoji": "🛋️",
+        "label": "Cozy, Warm Analog / Vinyl Tone",
+        "description": "Smooth, rounded 1970s vinyl warmth or mellow Rhodes electric piano glow",
+        "effects": {
+          "sound_analog_warmth": 1
+        }
+      },
+      {
+        "id": "kick_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Standard punchy drums without extreme sub-bass or distorted rave kicks",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "guitar_style",
+    "category": "sound",
+    "question": "If guitars are playing, what do they sound like?",
+    "subtitle": "Focus on the sound and style of the guitars.",
+    "hint": "Are they bright and chiming, loud and roaring, or gentle nylon acoustic?",
+    "options": [
+      {
+        "id": "jangly_guitars",
+        "emoji": "🎸",
+        "label": "Bright, Chiming Indie Guitars",
+        "description": "Clean or slightly gritty ringing electric guitars that sparkle (Indie / Alternative Rock)",
+        "effects": {
+          "sound_jangly_indie_guitars": 1,
+          "sound_electric_guitars": 0.8
+        }
+      },
+      {
+        "id": "distorted_rock_riffs",
+        "emoji": "⚡",
+        "label": "Roaring Distorted Rock/Metal Riffs",
+        "description": "Loud, heavy electric guitar power chords or screaming solos through an overdriven amp",
+        "effects": {
+          "sound_electric_guitars": 1,
+          "sound_heavy_distortion": 0.8
+        }
+      },
+      {
+        "id": "nylon_guitar",
+        "emoji": "🪕",
+        "label": "Gentle Spanish / Nylon Fingerpicking",
+        "description": "Warm, intimate fingerpicking on a Spanish or classical nylon-string guitar",
+        "effects": {
+          "sound_nylon_acoustic_guitar": 1,
+          "sound_acoustic_wood_strings": 0.8
+        }
+      },
+      {
+        "id": "guitar_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "No guitars in this song, or a different guitar style",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "organic_instruments",
+    "category": "sound",
+    "question": "Do any of these traditional or acoustic instruments stand out?",
+    "subtitle": "Listen for signature horns, hand percussion, or country twang.",
+    "hint": "Notice if brass horns, Afro/Latin hand drums, or country steel guitar are prominent.",
+    "options": [
+      {
+        "id": "brass_horns",
+        "emoji": "🎷",
+        "label": "Horns & Brass Section",
+        "description": "Trumpets, saxophones, or big band brass blasts (Jazz / Soul / Funk / Salsa)",
+        "effects": {
+          "sound_brass_horns": 1
+        }
+      },
+      {
+        "id": "hand_drums",
+        "emoji": "🪘",
+        "label": "Congas, Bongos or Hand Percussion",
+        "description": "Organic hand drums, shakers, or wooden log drums interlocking beneath the beat",
+        "effects": {
+          "sound_polyrhythmic_percussion": 1
+        }
+      },
+      {
+        "id": "country_twang",
+        "emoji": "🤠",
+        "label": "Southern Country Twang",
+        "description": "Weeping pedal steel guitar, banjo, or country fiddle",
+        "effects": {
+          "sound_pedal_steel_twang": 1,
+          "sound_electronic_dominant": -0.9
+        }
+      },
+      {
+        "id": "organic_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "None of these instruments are present, or hard to tell",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "specialty_rhythm",
+    "category": "pulse",
+    "question": "Does the rhythm match one of these signature regional or freeform styles?",
+    "subtitle": "Notice if the beat is Latin, Jamaican, Country, or completely drumless.",
+    "hint": "Think of Reggaeton, island Reggae, Country train beats, or drumless ambient/classical.",
+    "options": [
+      {
+        "id": "latin_dembow",
+        "emoji": "💃",
+        "label": "Latin Reggaeton Bounce",
+        "description": "Bouncy Caribbean rhythm ('boom... cha-boom-cha' heard in Reggaeton)",
+        "effects": {
+          "pulse_dembow_caribbean": 1,
+          "pulse_four_on_the_floor": -0.5
+        }
+      },
+      {
+        "id": "reggae_skank",
+        "emoji": "🌴",
+        "label": "Relaxed Island / Reggae Off-Beat",
+        "description": "Chords chopping sharply on the off-beats with a laid-back Jamaican sway",
+        "effects": {
+          "pulse_reggae_one_drop": 1,
+          "pulse_four_on_the_floor": -0.9
+        }
+      },
+      {
+        "id": "train_or_free",
+        "emoji": "🚂",
+        "label": "Speeding Country Train Beat",
+        "description": "Fast snare brushes chugging like a steam locomotive (chugga-chugga-chugga)",
+        "effects": {
+          "pulse_train_beat_country": 1,
+          "pulse_four_on_the_floor": -0.9
+        }
+      },
+      {
+        "id": "specialty_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Standard club/rock/hip-hop beat, or none of these regional rhythms",
+        "effects": {}
+      }
+    ]
+  },
+  {
+    "id": "meter_breathing",
+    "category": "pulse",
+    "question": "Does the music float freely without a steady beat or drum kit?",
+    "subtitle": "Listen for whether you can tap your foot to a steady clockwork pulse.",
+    "hint": "Classical orchestras, solo piano, and ambient soundscapes often breathe freely without drums.",
+    "options": [
+      {
+        "id": "free_rubato",
+        "emoji": "☁️",
+        "label": "Drumless & Freely Floating",
+        "description": "Drifting soundscapes or human-led tempo with no steady drum beat to count along with",
+        "effects": {
+          "pulse_free_rubato": 1,
+          "pulse_four_on_the_floor": -0.9,
+          "pulse_breakbeat_syncopated": -0.9
+        }
+      },
+      {
+        "id": "slow_gentle_pulse",
+        "emoji": "🌊",
+        "label": "Gentle, Cushioned Slow Beat",
+        "description": "Unhurried, soft rhythmic pulse that sways gently without aggressive drums",
+        "effects": {
+          "pulse_slow_relaxed": 0.9,
+          "pulse_free_rubato": -0.6,
+          "atmo_violent_aggressive": -0.9
+        }
+      },
+      {
+        "id": "driving_metronome",
+        "emoji": "⏱️",
+        "label": "Locked, Driving Drum Beat",
+        "description": "Clear, unmistakable drums or electronic beat keeping strict time throughout",
+        "effects": {
+          "pulse_free_rubato": -1
+        }
+      },
+      {
+        "id": "meter_unsure",
+        "emoji": "❓",
+        "label": "Don't Know / Neither",
+        "description": "Beat comes and goes, or hard to tell",
         "effects": {}
       }
     ]

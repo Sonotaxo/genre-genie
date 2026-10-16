@@ -35,6 +35,32 @@ function normalize(p: number[]): number[] {
   return p.map((x) => x / s);
 }
 
+function getOptionEffects(q: DescriptorQuestion, opt: DescriptorOption): Record<string, number> {
+  if (Object.keys(opt.effects).length > 0) {
+    return opt.effects;
+  }
+  // Option 4 ("Don't Know / Neither"): infer mild negative (-0.55) on the defining positive attributes (val >= 0.9) of Options 1..3
+  const implicit: Record<string, number> = {};
+  for (const other of q.options.slice(0, 3)) {
+    for (const [attr, val] of Object.entries(other.effects)) {
+      if (val >= 0.9 && attr !== "voice_present") {
+        implicit[attr] = -0.55;
+      }
+    }
+  }
+  return implicit;
+}
+
+function optionLikelihoodForGenre(effects: Record<string, number>, gWeights: Record<string, number>): number {
+  const entries = Object.entries(effects);
+  if (entries.length === 0) return 0.5;
+  let prod = 1;
+  for (const [attr, val] of entries) {
+    prod *= likelihood(val, gWeights[attr] ?? 0);
+  }
+  return Math.pow(prod, 1.5 / entries.length);
+}
+
 export class DescriptorEngine {
   readonly allGenres: Genre[];
   readonly questions: DescriptorQuestion[];
@@ -44,11 +70,23 @@ export class DescriptorEngine {
   askedQuestionIds = new Set<string>();
   private stack: Snapshot[] = [];
 
-  constructor(opts: { genres?: Genre[]; questions?: DescriptorQuestion[] } = {}) {
+  constructor(
+    opts: {
+      genres?: Genre[];
+      questions?: DescriptorQuestion[];
+      priorDescriptorAnswers?: DescriptorAnswer[];
+    } = {}
+  ) {
     this.allGenres = opts.genres ?? GENRES;
     this.candidates = [...this.allGenres];
     this.questions = (opts.questions ?? (descriptorQuestionsData as any)) as DescriptorQuestion[];
     this.probs = normalize(this.candidates.map((g) => g.popularity));
+
+    if (opts.priorDescriptorAnswers) {
+      for (const ans of opts.priorDescriptorAnswers) {
+        this.applyAnswer(ans.questionId, ans.optionId);
+      }
+    }
   }
 
   get questionCount() {
@@ -64,8 +102,9 @@ export class DescriptorEngine {
     for (const ans of this.descriptorAnswers) {
       const q = this.questions.find((x) => x.id === ans.questionId);
       const opt = q?.options.find((o) => o.id === ans.optionId);
-      if (opt) {
-        for (const [attrId, val] of Object.entries(opt.effects)) {
+      if (q && opt) {
+        const effects = getOptionEffects(q, opt);
+        for (const [attrId, val] of Object.entries(effects)) {
           list.push({ attributeId: attrId, value: val });
         }
       }
@@ -122,8 +161,9 @@ export class DescriptorEngine {
     this.descriptorAnswers.push({ questionId, optionId });
     this.askedQuestionIds.add(questionId);
 
+    const effects = getOptionEffects(q, opt);
     // Apply attribute effect multipliers for the chosen sensory option
-    for (const [attrId, val] of Object.entries(opt.effects)) {
+    for (const [attrId, val] of Object.entries(effects)) {
       this.probs = normalize(
         this.probs.map((p, i) => {
           const w = this.candidates[i]!.weights[attrId] ?? 0;
@@ -177,42 +217,110 @@ export class DescriptorEngine {
       .sort((a, b) => b.prob - a.prob);
   }
 
+  private isPruned(q: DescriptorQuestion): boolean {
+    const ansMap = new Map(this.descriptorAnswers.map((a) => [a.questionId, a.optionId]));
+    // 1. Don't ask vocal_style before vocal_delivery, or if purely_instrumental was chosen
+    if (q.id === "vocal_style") {
+      const vd = ansMap.get("vocal_delivery");
+      if (!vd || vd === "purely_instrumental") return true;
+    }
+    // 2. Don't ask guitar_style if electronic_synths was chosen
+    if (q.id === "guitar_style") {
+      const ci = ansMap.get("core_instrumentation");
+      if (ci === "electronic_synths") return true;
+    }
+    // 3. Don't ask synth_character if acoustic_wooden or electric_guitars was chosen
+    if (q.id === "synth_character") {
+      const ci = ansMap.get("core_instrumentation");
+      if (ci === "acoustic_wooden" || ci === "electric_guitars") return true;
+    }
+    // 4. Don't ask fast_pulse_drive if slow_meditative or moderate_walking was chosen
+    if (q.id === "fast_pulse_drive") {
+      const tp = ansMap.get("tempo_pace");
+      if (tp === "slow_meditative" || tp === "moderate_walking") return true;
+    }
+    // 5. Don't ask meter_breathing if a clear drum beat or fast club tempo was chosen
+    if (q.id === "meter_breathing") {
+      const rp = ansMap.get("rhythm_pattern");
+      const tp = ansMap.get("tempo_pace");
+      if (
+        rp === "four_on_floor" ||
+        rp === "syncopated_breakbeat" ||
+        rp === "halftime_sway" ||
+        tp === "fast_club"
+      ) {
+        return true;
+      }
+    }
+    // 6. Don't ask specialty_rhythm if four_on_floor was chosen
+    if (q.id === "specialty_rhythm") {
+      const rp = ansMap.get("rhythm_pattern");
+      if (rp === "four_on_floor") return true;
+    }
+    return false;
+  }
+
   /**
-   * Information Gain for a multi-choice descriptor question:
-   * IG(Q) = H(current) - sum_k [ P(Option_k) * H(posterior_k) ]
+   * Information Gain for a 4-option descriptor question across the normalized 4-branch partition:
+   * IG(Q) = H(current) - sum_{k=0..3} [ P(Option_k) * H(posterior_k) ]
    */
   informationGain(question: DescriptorQuestion): number {
     const currentH = entropy(this.probs);
-    let expectedH = 0;
+    const numOpts = question.options.length;
+    const branchProbs = new Array<number>(numOpts).fill(0);
+    const branchPosteriors: number[][] = [];
 
-    for (const opt of question.options) {
-      if (Object.keys(opt.effects).length === 0) continue; // Unsure option
+    const optEffects = question.options.map((o) => getOptionEffects(question, o));
+    const rawLikes: number[][] = this.candidates.map((g) =>
+      optEffects.map((eff) => optionLikelihoodForGenre(eff, g.weights))
+    );
 
-      // Compute likelihood of this option across candidates
-      const optionLikelihoods = this.candidates.map((g) => {
-        let l = 1;
-        for (const [attrId, val] of Object.entries(opt.effects)) {
-          const w = g.weights[attrId] ?? 0;
-          l *= likelihood(val, w);
-        }
-        return l;
-      });
-
-      const pOption = this.probs.reduce((sum, p, i) => sum + p * optionLikelihoods[i]!, 0);
-      if (pOption <= 1e-6) continue;
-
-      const posterior = normalize(this.probs.map((p, i) => p * optionLikelihoods[i]!));
-      expectedH += pOption * entropy(posterior);
+    for (let k = 0; k < numOpts; k++) {
+      const unnorm = this.probs.map((p, i) => p * rawLikes[i]![k]!);
+      const sum = unnorm.reduce((a, b) => a + b, 0);
+      branchProbs[k] = sum;
+      branchPosteriors[k] = normalize(unnorm);
     }
 
-    return Math.max(0, currentH - expectedH);
+    const totalBranchP = branchProbs.reduce((a, b) => a + b, 0) || 1;
+    let expectedH = 0;
+    for (let k = 0; k < numOpts; k++) {
+      expectedH += (branchProbs[k]! / totalBranchP) * entropy(branchPosteriors[k]!);
+    }
+
+    // Deprioritize questions where >85% of probability mass falls into Option 4 ("Neither")
+    const activeMass =
+      branchProbs.slice(0, Math.min(3, numOpts)).reduce((a, b) => a + b, 0) / totalBranchP;
+    let baseGain = Math.max(0, (currentH - expectedH) * Math.min(1, activeMass * 1.6));
+
+    // Top-5 contender disambiguation bonus
+    const top5 = this.ranked().slice(0, 5);
+    let splitsTop5 = false;
+    for (const opt of question.options.slice(0, 3)) {
+      for (const [attr, val] of Object.entries(opt.effects)) {
+        if (val >= 0.8) {
+          const hasHigh = top5.some((r) => (r.genre.weights[attr] ?? 0) >= 0.75 && r.prob >= 0.04);
+          const hasLow = top5.some((r) => (r.genre.weights[attr] ?? 0) <= 0.1 && r.prob >= 0.04);
+          if (hasHigh && hasLow) {
+            splitsTop5 = true;
+            break;
+          }
+        }
+      }
+      if (splitsTop5) break;
+    }
+    if (splitsTop5) {
+      baseGain *= 1.35;
+    }
+
+    return baseGain;
   }
 
   nextQuestion(): DescriptorQuestion | null {
-    const remaining = this.questions.filter((q) => !this.askedQuestionIds.has(q.id));
+    const remaining = this.questions.filter((q) => !this.askedQuestionIds.has(q.id) && !this.isPruned(q));
     if (remaining.length === 0) return null;
 
-    // Grounding priority for the first 3 questions
+    // Grounding priority for the first 4 questions
     if (this.questionCount === 0) {
       const q = remaining.find((x) => x.id === "core_instrumentation");
       if (q) return q;
@@ -223,6 +331,10 @@ export class DescriptorEngine {
     }
     if (this.questionCount === 2) {
       const q = remaining.find((x) => x.id === "tempo_pace");
+      if (q) return q;
+    }
+    if (this.questionCount === 3) {
+      const q = remaining.find((x) => x.id === "vocal_delivery");
       if (q) return q;
     }
 
@@ -241,7 +353,7 @@ export class DescriptorEngine {
     return bestQ;
   }
 
-  isConverged(maxQuestions = 8): boolean {
+  isConverged(maxQuestions = 10): boolean {
     if (this.questionCount >= maxQuestions) return true;
     if (this.questionCount < 4) return false;
 
