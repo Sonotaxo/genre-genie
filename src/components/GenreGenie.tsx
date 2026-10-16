@@ -620,35 +620,38 @@ export function GenreGenie() {
                 </span>
               )}
               {activeTopLeader && (
-                <div className="flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-2.5 py-1 text-xs backdrop-blur">
-                  <span className="max-w-[95px] truncate font-medium text-foreground sm:max-w-[180px]">
-                    {activeTopLeader.genre.name}
-                  </span>
-                  <span className="font-mono text-[11px] font-bold text-pulse">
-                    {Math.round(activeTopLeader.prob * 100)}%
-                  </span>
-                </div>
+                earlySelectTarget ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (engineMode === "descriptor") {
+                        selectGenreEarlyDescriptor(earlySelectTarget.genre.id);
+                      } else {
+                        selectGenreEarly(earlySelectTarget.genre.id);
+                      }
+                    }}
+                    className="group inline-flex items-center gap-1.5 rounded-full border border-pulse/80 bg-pulse px-3 py-1 text-xs font-bold text-primary-foreground shadow-[0_0_20px_-4px_var(--pulse)] transition hover:bg-pulse/90 active:scale-95"
+                    title={`Confirm ${earlySelectTarget.genre.name}`}
+                  >
+                    <Check className="size-3.5 stroke-[2.5]" />
+                    <span className="max-w-[120px] truncate sm:max-w-[180px]">
+                      {earlySelectTarget.genre.name}
+                    </span>
+                    <span className="font-mono text-[11px] opacity-90">
+                      {Math.round(earlySelectTarget.prob * 100)}%
+                    </span>
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-2.5 py-1 text-xs backdrop-blur">
+                    <span className="max-w-[120px] truncate font-medium text-foreground sm:max-w-[180px]">
+                      {activeTopLeader.genre.name}
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-pulse">
+                      {Math.round(activeTopLeader.prob * 100)}%
+                    </span>
+                  </div>
+                )
               )}
-              {earlySelectTarget && (
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    if (engineMode === "descriptor") {
-                      selectGenreEarlyDescriptor(earlySelectTarget.genre.id);
-                    } else {
-                      selectGenreEarly(earlySelectTarget.genre.id);
-                    }
-                  }}
-                  className="h-7 bg-pulse px-2.5 text-xs font-bold text-primary-foreground shadow-sm hover:bg-pulse/90 active:scale-95"
-                >
-                  <Check className="mr-1 size-3.5" />
-                  <span className="hidden sm:inline">It&apos;s {earlySelectTarget.genre.name}!</span>
-                  <span className="sm:hidden">Confirm</span>
-                </Button>
-              )}
-              <span className="rounded-full border border-border/80 bg-card/60 px-2.5 py-1 font-mono text-xs text-muted-foreground">
-                Q{(activeEngine?.questionCount ?? 0) + 1}
-              </span>
             </div>
           ) : (
             <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
