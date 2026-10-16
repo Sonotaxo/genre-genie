@@ -653,6 +653,19 @@ export function GenreGenie() {
                 )
               )}
             </div>
+          ) : screen === "CONVERGED" ? (
+            <div className="flex items-center gap-2">
+              <a
+                href="https://github.com/Sonotaxo/genre-genie"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-2.5 py-1 font-mono text-xs text-muted-foreground backdrop-blur transition hover:border-primary/50 hover:text-foreground active:scale-95 sm:px-3"
+                title="View on GitHub"
+              >
+                <Github className="size-3.5" />
+                <span>GitHub</span>
+              </a>
+            </div>
           ) : (
             <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
               <span className="rounded-full border border-border/70 bg-card/60 px-2.5 py-1">
