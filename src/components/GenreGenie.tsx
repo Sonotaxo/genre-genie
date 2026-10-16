@@ -1909,6 +1909,7 @@ function Diagnosis({
 
   const tracks = g.benchmarkTracks?.length ? g.benchmarkTracks : [g.benchmark];
   const canDrill = !drill && hasSubgenres(g.id);
+  const isDisplayedSubgenre = Boolean(g.parent || g.tier === "micro");
 
   return (
     <section className="animate-slide-in space-y-4 sm:space-y-5">
@@ -2029,7 +2030,7 @@ function Diagnosis({
         )}
       </div>
 
-      {topCrossSubgenre && (!drill || topCrossSubgenre.genre.parent !== drill) && topCrossSubgenre.prob >= 0.25 && (
+      {!isDisplayedSubgenre && !drill && topCrossSubgenre && topCrossSubgenre.genre.id !== g.id && topCrossSubgenre.prob >= 0.25 && (
         <div className="rounded-3xl border border-sound/40 bg-sound/10 p-4 text-sm sm:p-5">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
