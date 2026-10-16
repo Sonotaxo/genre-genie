@@ -220,7 +220,7 @@ describe("GenreGenieEngine Core Unit Tests", () => {
     e.answer("pulse_swung_groove", 1);
 
     const allSub = e.rankedAllSubgenres();
-    expect(allSub.length).toBe(35); // all 35 subgenres evaluated
+    expect(allSub.length).toBe(36); // all 36 subgenres evaluated
     // Tech House should be the #1 subgenre across all families
     expect(allSub[0]!.genre.id).toBe("tech_house");
     expect(allSub[0]!.prob).toBeGreaterThan(0.3);
@@ -239,7 +239,7 @@ describe("GenreGenieEngine Core Unit Tests", () => {
       ],
     });
 
-    expect(e.candidates.length).toBe(35);
+    expect(e.candidates.length).toBe(36);
     // Even under techno drilldown, Tech House can win because it's not ruled out
     expect(e.ranked()[0]!.genre.id).toBe("tech_house");
   });
@@ -290,8 +290,8 @@ describe("GenreGenieEngine Core Unit Tests", () => {
 });
 
 describe("Genre Genie Matrix 100% Convergence Suite", () => {
-  it("should have all 77 genres and 46 attributes loaded", () => {
-    expect(GENRES.length).toBe(77);
+  it("should have all 78 genres and 46 attributes loaded", () => {
+    expect(GENRES.length).toBe(78);
     expect(ATTRIBUTES.length).toBe(46);
   });
 
@@ -332,9 +332,9 @@ describe("Genre Genie Matrix 100% Convergence Suite", () => {
     expect(passedCount).toBe(macroGenres.length);
   });
 
-  it("should achieve 100% convergence across all 35 Micro subgenres within clusters", () => {
+  it("should achieve 100% convergence across all 36 Micro subgenres within clusters", () => {
     const microGenres = GENRES.filter((g) => g.tier === "micro");
-    expect(microGenres.length).toBe(35);
+    expect(microGenres.length).toBe(36);
 
     let passedCount = 0;
 

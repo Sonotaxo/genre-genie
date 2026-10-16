@@ -2274,6 +2274,45 @@
     "referenceUrl": "https://rateyourmusic.com/genre/techno/"
   },
   {
+    "id": "downtempo_techno",
+    "name": "Downtempo Techno",
+    "familyId": "electronic",
+    "tier": "micro",
+    "parentGenreId": "techno",
+    "aliases": [
+      "Slow Techno",
+      "Ketapop",
+      "Schneckno",
+      "Slow Tech",
+      "Midtempo Techno"
+    ],
+    "description": "Deeply hypnotic, leisurely electronic music that bridges the mechanical 4/4 thump and subterranean bass of techno with the relaxed, atmospheric pace of downtempo. Cruising at 90–115 BPM, it crafts a trippy, meditative desert-dancefloor groove using warm analog synthesizers, subtle percussion clicks, and organic field recordings.",
+    "popularityWeight": 0.5,
+    "benchmarkTracks": [
+      {
+        "artist": "Acid Pauli",
+        "title": "Nana"
+      },
+      {
+        "artist": "Kerala Dust",
+        "title": "Nevada"
+      },
+      {
+        "artist": "Nicolas Jaar",
+        "title": "Mi Mujer"
+      }
+    ],
+    "sensoryHallmarks": {
+      "pulse": "Steady, unhurried four-on-the-floor club thump cruising at a relaxed tempo (90-115 BPM)",
+      "sound": "Warm analog synthesizers, deep sub-bass rumbles, organic percussion clicks, shakers, and subtle field recordings",
+      "voice": "Instrumental or sparse, spoken ethereal fragments and hazy vocal samples drifting in space",
+      "atmosphere": "Hypnotic, trippy, relaxed, sun-drenched, and deeply immersive"
+    },
+    "distinctionNotes": "Unlike standard Techno, which drives relentlessly at 125–135+ BPM, Downtempo Techno drops the tempo to 90–115 BPM while maintaining a steady 4/4 club kick and hypnotic underground groove.",
+    "parentGenreName": "Techno",
+    "referenceUrl": "https://rateyourmusic.com/genre/downtempo/"
+  },
+  {
     "id": "trance",
     "name": "Trance",
     "familyId": "electronic",

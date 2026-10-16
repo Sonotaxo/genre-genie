@@ -5,7 +5,7 @@ describe("DescriptorEngine Unit Tests", () => {
   it("initializes properly with all genres and descriptor questions", () => {
     const engine = new DescriptorEngine();
     expect(engine.questions.length).toBeGreaterThanOrEqual(8);
-    expect(engine.candidates.length).toBe(77);
+    expect(engine.candidates.length).toBe(78);
     expect(engine.questionCount).toBe(0);
     expect(engine.canUndo).toBe(false);
 
@@ -219,7 +219,7 @@ describe("DescriptorEngine Unit Tests", () => {
     expect(nextQ?.id).not.toBe("core_instrumentation");
   });
 
-  it("achieves 100% Top-1 Macro and 100% Top-3 All-77 convergence across all genres", async () => {
+  it("achieves 100% Top-1 Macro and 100% Top-3 All-78 convergence across all genres", async () => {
     const { GENRES } = await import("./data");
     const { likelihood } = await import("./engine");
 
@@ -269,7 +269,7 @@ describe("DescriptorEngine Unit Tests", () => {
     }
 
     expect(top1Macro).toBe(42);
-    expect(top3All).toBe(77);
+    expect(top3All).toBe(78);
     expect(top1All).toBeGreaterThanOrEqual(70);
   });
 
