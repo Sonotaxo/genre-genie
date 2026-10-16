@@ -56,25 +56,7 @@ export function GenreGenie() {
   const [, force] = useReducer((x: number) => x + 1, 0);
   const [drill, setDrill] = useState<string | null>(null);
   const [macroAnswers, setMacroAnswers] = useState<Answer[]>([]);
-  const [hintOpen, setHintOpen] = useState(() => {
-    if (typeof window === "undefined") return true;
-    try {
-      const saved = localStorage.getItem("genre_genie_show_hints");
-      return saved !== null ? saved === "true" : true;
-    } catch {
-      return true;
-    }
-  });
   const [feedbackOpen, setFeedbackOpen] = useState(false);
-
-  const handleSetHintOpen = useCallback((open: boolean) => {
-    setHintOpen(open);
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("genre_genie_show_hints", String(open));
-      } catch {}
-    }
-  }, []);
 
   const engine = engineRef.current;
   const question = screen === "PLAYING" && engine ? engine.nextQuestion() : null;
@@ -571,6 +553,26 @@ export function GenreGenie() {
       ? "var(--voice)"
       : "var(--atmos)";
 
+  const activeEngine = engineMode === "descriptor" ? descriptorEngine : engine;
+  const activeCertainty = activeEngine ? Math.round(activeEngine.certainty() * 100) : 0;
+  const activeRanked = activeEngine ? activeEngine.ranked() : [];
+  const activeTopLeader = activeEngine && activeEngine.questionCount >= 1 ? activeRanked[0] : undefined;
+  const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
+
+  const isMicroMode = Boolean(drill);
+  const activeSubCandidates = activeEngine
+    ? (isMicroMode ? activeEngine.ranked() : activeEngine.rankedAllSubgenres())
+    : [];
+  const canEarlySelectSub = activeEngine ? checkEarlySelect(activeSubCandidates, activeEngine.questionCount) : false;
+  const canEarlySelectParent = activeEngine
+    ? checkEarlySelect(activeRanked.filter((r) => r.genre.parent === null), activeEngine.questionCount)
+    : false;
+  const earlySelectTarget = canEarlySelectSub
+    ? activeSubCandidates[0]
+    : canEarlySelectParent
+    ? activeRanked.find((r) => r.genre.parent === null)
+    : null;
+
   return (
     <main className="relative mx-auto max-w-4xl px-3.5 py-4 sm:px-6 sm:py-8 md:py-12">
       <div
@@ -581,69 +583,90 @@ export function GenreGenie() {
         }}
       />
 
-      <header className="mb-4 flex items-center justify-between gap-2 sm:mb-8">
-        <button
-          onClick={() => setScreen("IDLE")}
-          className="flex items-center gap-2 text-base font-extrabold tracking-tight transition hover:opacity-90 active:scale-95 sm:text-lg"
-        >
-          <Wave className="text-pulse" />
-          <span>Genre Genie</span>
-        </button>
-        <div className="flex items-center gap-1.5 sm:gap-2">
-          <div className="flex items-center gap-0.5 rounded-full border border-border/80 bg-card/80 p-0.5 font-mono text-[11px] backdrop-blur sm:text-xs">
+      <header className="mb-4 sm:mb-6">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            {screen === "PLAYING" && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={engineMode === "descriptor" ? undoDescriptor : undo}
+                disabled={
+                  engineMode === "descriptor"
+                    ? !descriptorEngine?.canUndo && !drill
+                    : !engine?.canUndo && !drill
+                }
+                className="h-8 -ml-2 px-2 text-xs text-muted-foreground hover:text-foreground active:scale-95 disabled:opacity-30"
+                title="Previous question"
+              >
+                <ChevronLeft className="size-4" />
+                <span className="hidden sm:inline">Back</span>
+              </Button>
+            )}
             <button
-              type="button"
-              onClick={() => {
-                setEngineMode("descriptor");
-                setScreen("IDLE");
-              }}
-              className={`rounded-full px-2.5 py-1 transition ${
-                engineMode === "descriptor"
-                  ? "bg-pulse font-bold text-background shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+              onClick={() => setScreen("IDLE")}
+              className="flex items-center gap-2 text-base font-extrabold tracking-tight transition hover:opacity-90 active:scale-95 sm:text-lg"
             >
-              🧪 <span className="hidden sm:inline">Descriptors</span>
-              <span className="sm:hidden">Sensory</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setEngineMode("standard");
-                setScreen("IDLE");
-              }}
-              className={`rounded-full px-2.5 py-1 transition ${
-                engineMode === "standard"
-                  ? "bg-muted font-bold text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <span className="hidden sm:inline">Standard (Yes/No)</span>
-              <span className="sm:hidden">Yes/No</span>
+              <Wave className="text-pulse" />
+              <span>Genre Genie</span>
             </button>
           </div>
-          {isLocalDev && (
-            <button
-              type="button"
-              onClick={copyDevSnapshot}
-              className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20 active:scale-95"
-              title="Copy full diagnostic session snapshot to clipboard for AI debugging"
-            >
-              <Bug className="size-3.5" />
-              <span className="hidden md:inline">Dev Copy State</span>
-            </button>
+
+          {screen === "PLAYING" ? (
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {drillName && (
+                <span className="hidden sm:inline-flex items-center rounded-full border border-sound/40 bg-sound/15 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-sound">
+                  🔬 {drillName}
+                </span>
+              )}
+              {activeTopLeader && (
+                <div className="flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-2.5 py-1 text-xs backdrop-blur">
+                  <span className="max-w-[95px] truncate font-medium text-foreground sm:max-w-[180px]">
+                    {activeTopLeader.genre.name}
+                  </span>
+                  <span className="font-mono text-[11px] font-bold text-pulse">
+                    {Math.round(activeTopLeader.prob * 100)}%
+                  </span>
+                </div>
+              )}
+              {earlySelectTarget && (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if (engineMode === "descriptor") {
+                      selectGenreEarlyDescriptor(earlySelectTarget.genre.id);
+                    } else {
+                      selectGenreEarly(earlySelectTarget.genre.id);
+                    }
+                  }}
+                  className="h-7 bg-pulse px-2.5 text-xs font-bold text-primary-foreground shadow-sm hover:bg-pulse/90 active:scale-95"
+                >
+                  <Check className="mr-1 size-3.5" />
+                  <span className="hidden sm:inline">It&apos;s {earlySelectTarget.genre.name}!</span>
+                  <span className="sm:hidden">Confirm</span>
+                </Button>
+              )}
+              <span className="rounded-full border border-border/80 bg-card/60 px-2.5 py-1 font-mono text-xs text-muted-foreground">
+                Q{(activeEngine?.questionCount ?? 0) + 1}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+              <span className="rounded-full border border-border/70 bg-card/60 px-2.5 py-1">
+                {GENRES.length} Genres
+              </span>
+            </div>
           )}
-          <a
-            href="https://github.com/Sonotaxo/genre-genie"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-2.5 py-1 font-mono text-xs text-muted-foreground backdrop-blur transition hover:border-primary/50 hover:text-foreground active:scale-95 sm:px-3"
-            title="View on GitHub"
-          >
-            <Github className="size-3.5" />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
         </div>
+
+        {screen === "PLAYING" && (
+          <div className="mt-2.5 h-1.5 w-full overflow-hidden rounded-full bg-muted/60">
+            <div
+              className="h-full bg-gradient-to-r from-pulse via-voice to-sound transition-all duration-500"
+              style={{ width: `${activeCertainty}%` }}
+            />
+          </div>
+        )}
       </header>
 
       {screen === "IDLE" && <Landing onStart={start} engineMode={engineMode} />}
@@ -669,8 +692,6 @@ export function GenreGenie() {
           suspectName={question.suspectName}
           drill={drill}
           baseCount={macroAnswers.length}
-          hintOpen={hintOpen}
-          setHintOpen={handleSetHintOpen}
           onRespond={respond}
           onUndo={undo}
           onSelectGenre={selectGenreEarly}
@@ -700,6 +721,69 @@ export function GenreGenie() {
           engine={(engineMode === "descriptor" ? descriptorEngine : engine)!}
         />
       )}
+
+      {/* Persistent App Footer with Mode Switch & GitHub */}
+      <footer className="mt-14 flex flex-col items-center gap-3.5 border-t border-border/40 pt-7 text-center sm:mt-16 sm:pt-8">
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="flex items-center gap-0.5 rounded-full border border-border/80 bg-card/80 p-0.5 font-mono text-xs backdrop-blur">
+            <button
+              type="button"
+              onClick={() => {
+                setEngineMode("descriptor");
+                setScreen("IDLE");
+              }}
+              className={`rounded-full px-3 py-1 transition ${
+                engineMode === "descriptor"
+                  ? "bg-pulse font-bold text-background shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              🎧 Sensory Descriptors
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setEngineMode("standard");
+                setScreen("IDLE");
+              }}
+              className={`rounded-full px-3 py-1 transition ${
+                engineMode === "standard"
+                  ? "bg-muted font-bold text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              🎛️ Standard (Yes/No)
+            </button>
+          </div>
+
+          {isLocalDev && (
+            <button
+              type="button"
+              onClick={copyDevSnapshot}
+              className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 px-3 py-1 font-mono text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20 active:scale-95"
+              title="Copy full diagnostic session snapshot to clipboard"
+            >
+              <Bug className="size-3.5" />
+              <span>Dev Copy State</span>
+            </button>
+          )}
+
+          <a
+            href="https://github.com/Sonotaxo/genre-genie"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-3 py-1 font-mono text-xs text-muted-foreground backdrop-blur transition hover:border-primary/50 hover:text-foreground active:scale-95"
+            title="View on GitHub"
+          >
+            <Github className="size-3.5" />
+            <span>GitHub</span>
+          </a>
+        </div>
+
+        <p className="font-mono text-[11px] text-muted-foreground">
+          {GENRES.length} Genres Cataloged • {ATTRIBUTES.length} Sensory Attributes • 100% In-Browser Engine
+        </p>
+      </footer>
     </main>
   );
 }
@@ -761,21 +845,6 @@ function Landing({
       </div>
 
       <SupportedGenresCatalog onStartFamily={(f) => onStart(f)} />
-
-      <div className="mt-14 flex flex-col items-center gap-3 border-t border-border/50 pt-8 text-center sm:mt-16">
-        <a
-          href="https://github.com/Sonotaxo/genre-genie"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-xl border border-border bg-card/80 px-4 py-2 font-mono text-xs font-semibold text-muted-foreground shadow-sm transition hover:border-primary hover:text-foreground active:scale-95"
-        >
-          <Github className="size-4" />
-          <span>Open Source on GitHub</span>
-        </a>
-        <p className="font-mono text-[11px] text-muted-foreground sm:text-xs">
-          {GENRES.length} Genres Cataloged • {ATTRIBUTES.length} Sensory Attributes • 100% In-Browser Engine
-        </p>
-      </div>
     </section>
   );
 }
@@ -1400,56 +1469,6 @@ function AnswerTrail({
   );
 }
 
-function LiveLeaderStrip({
-  topCandidate,
-  drillName,
-  earlySelectTarget,
-  onSelectGenre,
-}: {
-  topCandidate?: { genre: Genre; prob: number } | undefined;
-  drillName?: string | null | undefined;
-  earlySelectTarget?: { genre: Genre; prob: number } | null | undefined;
-  onSelectGenre?: ((genreId: string) => void) | undefined;
-}) {
-  if (!topCandidate && !drillName) return null;
-
-  return (
-    <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border/70 bg-card/60 px-3 py-2 text-xs backdrop-blur">
-      <div className="flex flex-wrap items-center gap-2 min-w-0">
-        {drillName && (
-          <span className="inline-flex items-center gap-1 rounded-full border border-sound/40 bg-sound/15 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-sound">
-            🔬 {drillName}
-          </span>
-        )}
-        {topCandidate && (
-          <div className="flex items-center gap-1.5 truncate">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
-              Leading:
-            </span>
-            <span className="truncate font-bold text-foreground">
-              {topCandidate.genre.name}
-            </span>
-            <span className="font-mono text-[11px] font-semibold text-pulse">
-              {Math.round(topCandidate.prob * 100)}%
-            </span>
-          </div>
-        )}
-      </div>
-
-      {earlySelectTarget && onSelectGenre && (
-        <Button
-          size="sm"
-          onClick={() => onSelectGenre(earlySelectTarget.genre.id)}
-          className="h-7 shrink-0 bg-pulse px-2.5 text-xs font-bold text-primary-foreground shadow-sm hover:bg-pulse/90 active:scale-95"
-        >
-          <Check className="mr-1 size-3.5" />
-          It&apos;s {earlySelectTarget.genre.name}!
-        </Button>
-      )}
-    </div>
-  );
-}
-
 const STANDARD_BTN_ORDER = [
   "order-1 md:order-1",
   "order-2 md:order-2",
@@ -1459,10 +1478,10 @@ const STANDARD_BTN_ORDER = [
 ];
 
 function QuestionView({
-  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo, onSelectGenre, onFlipAnswer,
+  engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, onRespond, onUndo, onSelectGenre, onFlipAnswer,
 }: {
   engine: AkinatorEngine; q: (typeof ATTRIBUTES)[number]; isAlternative?: boolean; isConfirming?: boolean; suspectName?: string | undefined; drill: string | null; baseCount: number;
-  hintOpen: boolean; setHintOpen: (b: boolean) => void; onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
+  onRespond: (v: number, isAlt?: boolean) => void; onUndo: () => void;
   onSelectGenre?: (genreId: string) => void;
   onFlipAnswer?: ((attrId: string, newValue: number) => void) | undefined;
 }) {
@@ -1472,11 +1491,8 @@ function QuestionView({
   }, [q.id]);
 
   const isShowingAlternative = isAlternative || rephrased;
-  const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category];
   const meta = CATEGORY_META[q.category];
-  const n = engine.questionCount + 1;
-  const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
 
   const isMicroMode = Boolean(drill) || engine.candidates.some((c) => c.parent !== null);
   const parentCandidates = isMicroMode
@@ -1500,12 +1516,6 @@ function QuestionView({
     : parentCandidates.length > 0
     ? parentCandidates
     : subCandidates;
-  const topLeader = engine.questionCount >= 1 ? primaryList[0] : undefined;
-  const earlySelectTarget = canEarlySelectSub
-    ? subCandidates[0]
-    : canEarlySelectParent
-    ? parentCandidates[0]
-    : null;
 
   const gainingYes = useMemo(
     () => engine.getGainingGenres(q.id, 1.0, 6),
@@ -1518,42 +1528,6 @@ function QuestionView({
 
   return (
     <section>
-      <div className="mb-3 flex items-center gap-3 sm:mb-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onUndo}
-          disabled={!engine.canUndo && !drill}
-          className="h-8 px-2.5 text-xs active:scale-95"
-        >
-          <ChevronLeft className="size-4" />
-          <span className="hidden sm:inline">Previous</span>
-          <span className="sm:hidden">Back</span>
-        </Button>
-        <div className="flex-1">
-          <div className="mb-1 flex justify-between font-mono text-[11px] text-muted-foreground">
-            <span>CERTAINTY</span>
-            <span>{certainty}%</span>
-          </div>
-          <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500"
-              style={{ width: `${certainty}%` }}
-            />
-          </div>
-        </div>
-        <span className="rounded-full border border-border bg-card px-2.5 py-1 font-mono text-xs">
-          Q{n}
-        </span>
-      </div>
-
-      <LiveLeaderStrip
-        topCandidate={topLeader}
-        drillName={drillName}
-        earlySelectTarget={earlySelectTarget}
-        onSelectGenre={onSelectGenre}
-      />
-
       {/* Question Card First — Above the Fold, Zero Layout Shift */}
       <div className={`glass-panel animate-slide-in rounded-3xl border ${cat.border} p-4 sm:p-6 md:p-9`}>
         <div className="flex items-center justify-between gap-2">
@@ -1598,51 +1572,14 @@ function QuestionView({
             <span>Zeroing in: Confirming signature {suspectName ? `"${suspectName}"` : "genre"} sound</span>
           </div>
         )}
-        <h2 className="mt-4 text-balance text-xl font-extrabold leading-snug sm:mt-5 sm:text-2xl md:text-3xl">
+        <h2 className="mt-3.5 text-balance text-xl font-extrabold leading-snug sm:mt-5 sm:text-2xl md:text-3xl">
           {isShowingAlternative ? q.alternativePrompt : q.question}
         </h2>
-        {hintOpen ? (
-          <div className="mt-4 rounded-2xl border border-border/70 bg-background/50 p-3.5 text-xs sm:text-sm">
-            <div className="flex items-center justify-between border-b border-border/40 pb-2">
-              <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                <span>🎧 Clues & Context</span>
-              </span>
-              <button
-                type="button"
-                onClick={() => setHintOpen(false)}
-                className="font-mono text-[11px] text-muted-foreground transition hover:text-foreground active:scale-95"
-              >
-                Hide
-              </button>
-            </div>
-            <div className="mt-2.5 space-y-2">
-              {q.hint && (
-                <div className="flex items-start gap-2">
-                  <span className="shrink-0 rounded-md bg-pulse/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
-                    💡 Hint
-                  </span>
-                  <span className="text-pretty leading-relaxed text-foreground/90">{q.hint}</span>
-                </div>
-              )}
-              {q.polarOpposite && (
-                <div className="flex items-start gap-2 border-t border-border/40 pt-2">
-                  <span className="shrink-0 rounded-md bg-voice/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-voice">
-                    ⚖️ Opposite
-                  </span>
-                  <span className="text-pretty leading-relaxed text-muted-foreground">{q.polarOpposite}</span>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setHintOpen(true)}
-            className="mt-3.5 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/50 px-3 py-1 font-mono text-xs text-muted-foreground transition hover:border-border hover:text-foreground active:scale-95"
-          >
-            <ChevronDown className="size-3.5" />
-            <span>Show hint & opposite</span>
-          </button>
+        {(q.hint || q.polarOpposite) && (
+          <p className="mt-1.5 text-pretty text-xs leading-relaxed text-muted-foreground sm:mt-2 sm:text-sm">
+            {q.hint}
+            {q.polarOpposite ? ` (Opposite: ${q.polarOpposite.charAt(0).toLowerCase()}${q.polarOpposite.slice(1)})` : ""}
+          </p>
         )}
 
         {/* Thumb-friendly 2-column grid on mobile, 5-column spectrum on desktop */}
@@ -1764,10 +1701,8 @@ function DescriptorQuestionView({
   onSelectGenre?: ((genreId: string) => void) | undefined;
   onChangeDescriptorAnswer?: ((questionId: string, newOptionId: string) => void) | undefined;
 }) {
-  const certainty = Math.round(engine.certainty() * 100);
   const cat = CAT_CLASS[q.category] ?? CAT_CLASS.sound;
   const meta = CATEGORY_META[q.category] ?? CATEGORY_META.sound;
-  const n = engine.questionCount + 1;
   const drillName = drill ? GENRES.find((g) => g.id === drill)?.name : null;
 
   const isMicroMode = Boolean(drill);
@@ -1788,12 +1723,6 @@ function DescriptorQuestionView({
     : parentCandidates.length > 0
     ? parentCandidates
     : subCandidates;
-  const topLeader = engine.questionCount >= 1 ? primaryList[0] : undefined;
-  const earlySelectTarget = canEarlySelectSub
-    ? subCandidates[0]
-    : canEarlySelectParent
-    ? parentCandidates[0]
-    : null;
 
   const visibleOptions = useMemo(() => q.options.slice(0, 4), [q.options]);
 
@@ -1804,50 +1733,11 @@ function DescriptorQuestionView({
 
   return (
     <section>
-      <div className="mb-3 flex items-center gap-3 sm:mb-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onUndo}
-          disabled={!engine.canUndo && !drill}
-          className="h-8 px-2.5 text-xs active:scale-95"
-        >
-          <ChevronLeft className="size-4" />
-          <span className="hidden sm:inline">Previous</span>
-          <span className="sm:hidden">Back</span>
-        </Button>
-        <div className="flex-1">
-          <div className="mb-1 flex justify-between font-mono text-[11px] text-muted-foreground">
-            <span>CERTAINTY</span>
-            <span>{certainty}%</span>
-          </div>
-          <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500"
-              style={{ width: `${certainty}%` }}
-            />
-          </div>
-        </div>
-        <span className="rounded-full border border-border bg-card px-2.5 py-1 font-mono text-xs">
-          {n <= 8 ? `Q${n} / ~8` : `Q${n}`}
-        </span>
-      </div>
-
-      <LiveLeaderStrip
-        topCandidate={topLeader}
-        drillName={drillName}
-        earlySelectTarget={earlySelectTarget}
-        onSelectGenre={onSelectGenre}
-      />
-
       {/* Question & Options First — Above the Fold, Zero Vertical Shift */}
       <div className={`glass-panel animate-slide-in rounded-3xl border ${cat.border} p-4 sm:p-6 md:p-9`}>
         <div className="flex items-center justify-between gap-2">
           <span className={`inline-flex items-center gap-1.5 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-widest sm:text-xs`}>
             {meta.emoji} {meta.label}
-          </span>
-          <span className="rounded-full bg-pulse/10 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-pulse sm:text-[11px]">
-            🎧 Pick closest match
           </span>
         </div>
 
@@ -1855,21 +1745,12 @@ function DescriptorQuestionView({
           {q.question}
         </h2>
         {q.subtitle && (
-          <p className="mt-1.5 text-pretty text-xs leading-relaxed text-muted-foreground sm:text-sm">
+          <p className="mt-1 text-pretty text-xs leading-relaxed text-muted-foreground sm:mt-1.5 sm:text-sm">
             {q.subtitle}
           </p>
         )}
 
-        {q.hint && (
-          <div className="mt-3 flex items-start gap-2 rounded-xl border border-border/60 bg-background/45 px-3 py-2 text-xs text-muted-foreground">
-            <span className="shrink-0 rounded-md bg-pulse/15 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
-              💡 Tip
-            </span>
-            <span className="text-pretty leading-relaxed text-foreground/85">{q.hint}</span>
-          </div>
-        )}
-
-        <div className="mt-5 grid grid-cols-1 gap-2.5 sm:mt-7 sm:grid-cols-2 sm:gap-3">
+        <div className="mt-5 grid grid-cols-1 gap-2.5 sm:mt-6 sm:grid-cols-2 sm:gap-3">
           {visibleOptions.map((opt, i) => {
             const isFallbackOption = i === 3 || Object.keys(opt.effects).length === 0;
             return (
@@ -1878,46 +1759,43 @@ function DescriptorQuestionView({
                 onClick={() => onRespond(opt.id)}
                 className={
                   isFallbackOption
-                    ? "group relative flex items-center gap-3 rounded-2xl border border-dashed border-border/80 bg-muted/20 p-3.5 text-left transition hover:border-muted-foreground/60 hover:bg-muted/35 active:scale-[0.985] sm:flex-col sm:items-start sm:justify-between sm:p-5"
-                    : "group relative flex items-start gap-3.5 rounded-2xl border border-border/85 bg-card/75 p-3.5 text-left shadow-sm transition hover:border-pulse hover:bg-card hover:shadow-[0_0_25px_-6px_var(--pulse)] active:scale-[0.985] sm:flex-col sm:gap-0 sm:p-5"
+                    ? "group relative flex w-full flex-col justify-between rounded-2xl border border-dashed border-border/75 bg-muted/20 p-3.5 text-left transition hover:border-muted-foreground/60 hover:bg-muted/30 active:scale-[0.985] sm:p-4"
+                    : "group relative flex w-full flex-col justify-between rounded-2xl border border-border/80 bg-card/75 p-3.5 text-left shadow-sm transition hover:border-pulse hover:bg-card hover:shadow-[0_0_20px_-6px_var(--pulse)] active:scale-[0.985] sm:p-4"
                 }
               >
-                <div
-                  className={
-                    isFallbackOption
-                      ? "flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background/40 text-xl transition group-hover:scale-105 sm:size-11 sm:text-2xl"
-                      : "flex size-11 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-background/60 text-2xl transition group-hover:scale-105 group-hover:border-pulse/40"
-                  }
-                >
-                  <span>{opt.emoji}</span>
-                </div>
-                <div className="min-w-0 flex-1 sm:mt-3 sm:w-full">
-                  <h3
-                    className={
-                      isFallbackOption
-                        ? "text-sm font-semibold text-foreground/85 transition-colors group-hover:text-foreground sm:text-base"
-                        : "text-sm font-bold text-foreground transition-colors group-hover:text-pulse sm:text-base"
-                    }
-                  >
-                    {opt.label}
-                  </h3>
-                  <p className="mt-0.5 text-pretty text-xs leading-relaxed text-muted-foreground sm:mt-1">
+                <div className="w-full">
+                  <div className="flex w-full items-start justify-between gap-2.5">
+                    <h3
+                      className={
+                        isFallbackOption
+                          ? "text-sm font-semibold text-foreground/85 transition-colors group-hover:text-foreground sm:text-base"
+                          : "text-sm font-bold text-foreground transition-colors group-hover:text-pulse sm:text-base"
+                      }
+                    >
+                      {opt.label}
+                    </h3>
+                    <span className="shrink-0 text-xl transition-transform group-hover:scale-110 sm:text-2xl">
+                      {opt.emoji}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-pretty text-xs leading-relaxed text-muted-foreground sm:mt-1.5">
                     {opt.description}
                   </p>
-                  {!isFallbackOption && gainingMap[i] && gainingMap[i].length > 0 && (
-                    <div className="mt-2.5 flex flex-wrap items-center gap-1 border-t border-border/40 pt-2 w-full sm:mt-3.5 sm:gap-1.5 sm:pt-2.5">
-                      {gainingMap[i].map((name) => (
-                        <span
-                          key={name}
-                          className="inline-flex items-center rounded-full border border-border/80 bg-background/40 px-2 py-0.5 font-sans text-[10px] text-muted-foreground transition group-hover:border-pulse/50 group-hover:text-foreground"
-                          title={`Boosts confidence for ${name}`}
-                        >
-                          <span>{name}</span>
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </div>
+
+                {!isFallbackOption && gainingMap[i] && gainingMap[i].length > 0 && (
+                  <div className="mt-2.5 flex flex-wrap items-center gap-1 w-full border-t border-border/40 pt-2 sm:mt-3">
+                    {gainingMap[i].map((name) => (
+                      <span
+                        key={name}
+                        className="inline-flex items-center rounded-md border border-border/70 bg-background/50 px-2 py-0.5 font-sans text-[10px] text-muted-foreground transition group-hover:border-pulse/50 group-hover:text-foreground"
+                        title={`Boosts confidence for ${name}`}
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </button>
             );
           })}

@@ -15,7 +15,7 @@ export interface DescriptorQuestion {
   category: Category;
   question: string;
   subtitle: string;
-  hint: string;
+  hint?: string;
   options: DescriptorOption[];
 }
 

@@ -3,8 +3,7 @@
     "id": "core_instrumentation",
     "category": "sound",
     "question": "What instruments mainly drive the sound?",
-    "subtitle": "Listen to the dominant sound sources across the track.",
-    "hint": "Look for synthesizers vs real amplified guitars or wooden acoustic instruments.",
+    "subtitle": "Look for synthesizers vs. real amplified guitars or acoustic wooden instruments.",
     "options": [
       {
         "id": "electronic_synths",
@@ -52,8 +51,7 @@
     "id": "rhythm_pattern",
     "category": "pulse",
     "question": "How is the drumbeat or rhythm structured?",
-    "subtitle": "Listen to the kick drum and overall beat pattern.",
-    "hint": "Notice whether the drum hits steadily on every beat, skips/rolls, or has a slow bounce.",
+    "subtitle": "Notice whether the drum hits steadily on every beat, skips and rolls, or has a slow bounce.",
     "options": [
       {
         "id": "four_on_floor",
@@ -102,8 +100,7 @@
     "id": "tempo_pace",
     "category": "pulse",
     "question": "How does the speed or tempo of the music feel?",
-    "subtitle": "Focus on the overall speed of the beat or pulse.",
-    "hint": "Compare it to daily activities like walking, jogging, or sprinting.",
+    "subtitle": "Compare the speed to daily paces: walking (<100 BPM), brisk jogging (100–125), or sprinting (125+).",
     "options": [
       {
         "id": "slow_meditative",
@@ -150,8 +147,7 @@
     "id": "fast_pulse_drive",
     "category": "pulse",
     "question": "How intense or rapid is the fast rhythm?",
-    "subtitle": "Listen to whether the beat is a standard dance pace or an extreme sprint.",
-    "hint": "Notice if it sprints past 150 BPM, gallops like a motor, or slices drum rolls.",
+    "subtitle": "Notice if it sprints past 150 BPM, gallops like a motor, or slices rapid drum rolls.",
     "options": [
       {
         "id": "hyper_fast_sprint",
@@ -197,8 +193,7 @@
     "id": "vocal_delivery",
     "category": "voice",
     "question": "What do the vocals or voices sound like?",
-    "subtitle": "Focus on how the human voice is delivered.",
-    "hint": "Notice whether there is singing, rapping/spoken words, or if it is instrumental.",
+    "subtitle": "Notice whether there is melodic singing, rapping/spoken words, or no vocals at all.",
     "options": [
       {
         "id": "purely_instrumental",
@@ -249,8 +244,7 @@
     "id": "vocal_style",
     "category": "voice",
     "question": "How are the vocals processed or performed?",
-    "subtitle": "Listen to the special character or effect on the voices.",
-    "hint": "Notice if the voice is screaming, robotic/Auto-Tuned, or soft whispers.",
+    "subtitle": "Listen for extreme processing: screaming, robotic Auto-Tune, or soft ethereal whispers.",
     "options": [
       {
         "id": "screaming_growls",
@@ -298,8 +292,7 @@
     "id": "atmosphere_mood",
     "category": "atmosphere",
     "question": "What emotional mood or atmosphere dominates the music?",
-    "subtitle": "Focus on the overall feeling the music creates.",
-    "hint": "Consider whether the vibe is bright and feel-good, dark and sinister, or chaotic rage.",
+    "subtitle": "Consider whether the vibe is bright and feel-good, dark and sinister, or furious rage.",
     "options": [
       {
         "id": "sunny_uplifting",
@@ -345,8 +338,7 @@
     "id": "emotional_scale",
     "category": "atmosphere",
     "question": "Does the track have a nostalgic, cozy, or grand choral feel?",
-    "subtitle": "Listen to the emotional space and intimacy of the recording.",
-    "hint": "Notice if it feels like a nostalgic memory, a quiet bedroom, or a grand choir.",
+    "subtitle": "Notice if it feels like a nostalgic memory, a quiet intimate bedroom, or a grand choir.",
     "options": [
       {
         "id": "nostalgic_melancholy",
@@ -389,8 +381,7 @@
     "id": "groove_feel",
     "category": "pulse",
     "question": "How does the groove or motion make your body move?",
-    "subtitle": "Notice the physical sensation of the rhythm.",
-    "hint": "Notice whether it has a playful bounce, a rigid machine march, or crushing breakdowns.",
+    "subtitle": "Notice whether it has a playful bounce, a rigid machine march, or crushing breakdowns.",
     "options": [
       {
         "id": "swung_shuffle",
@@ -432,8 +423,7 @@
     "id": "sound_clarity",
     "category": "sound",
     "question": "How clean, distorted, or dusty does the audio feel?",
-    "subtitle": "Listen to the overall studio finish and surface texture.",
-    "hint": "Notice if it feels sparkling crisp, raw and overdriven, or dusty with vinyl crackle.",
+    "subtitle": "Notice if it feels sparkling crisp, raw and overdriven, or dusty with vinyl crackle.",
     "options": [
       {
         "id": "bright_glossy",
@@ -477,8 +467,7 @@
     "id": "bass_character",
     "category": "sound",
     "question": "Does the bassline have one of these signature styles?",
-    "subtitle": "Listen closely to how the bass moves and growls.",
-    "hint": "Notice if the bass slides in pitch, growls like a robot/chainsaw, or slaps funkily.",
+    "subtitle": "Notice if the bass slides in pitch, growls like a robot/chainsaw, or slaps funkily.",
     "options": [
       {
         "id": "sliding_808_glides",
@@ -522,8 +511,7 @@
     "id": "synth_character",
     "category": "sound",
     "question": "If synthesizers or studio effects stand out, how do they sound?",
-    "subtitle": "Listen to the dominant electronic melodies, chords, or space echoes.",
-    "hint": "Notice whether synths soar like a festival anthem, squelch like acid, or echo in deep space.",
+    "subtitle": "Notice whether synths soar like a festival anthem, squelch like acid, or echo in deep space.",
     "options": [
       {
         "id": "supersaws_anthem",
@@ -565,8 +553,7 @@
     "id": "drum_kick_character",
     "category": "sound",
     "question": "How does the low end or drum foundation feel?",
-    "subtitle": "Focus on the weight of the kick drum and bass warmth.",
-    "hint": "Is it a distorted rave kick, a chest-shaking sub-bass rumble, or warm vintage analog?",
+    "subtitle": "Listen for a distorted rave kick, a chest-shaking sub-bass rumble, or warm vintage analog.",
     "options": [
       {
         "id": "hardstyle_kick",
@@ -609,8 +596,7 @@
     "id": "guitar_style",
     "category": "sound",
     "question": "If guitars are playing, what do they sound like?",
-    "subtitle": "Focus on the sound and style of the guitars.",
-    "hint": "Are they bright and chiming, loud and roaring, or gentle nylon acoustic?",
+    "subtitle": "Listen for bright chiming guitars, roaring distorted riffs, or gentle nylon acoustic.",
     "options": [
       {
         "id": "jangly_guitars",
@@ -655,8 +641,7 @@
     "id": "organic_instruments",
     "category": "sound",
     "question": "Do any of these traditional or acoustic instruments stand out?",
-    "subtitle": "Listen for signature horns, hand percussion, or country twang.",
-    "hint": "Notice if brass horns, Afro/Latin hand drums, or country steel guitar are prominent.",
+    "subtitle": "Notice if brass horns, Afro/Latin hand drums, or country steel guitar stand out.",
     "options": [
       {
         "id": "brass_horns",
@@ -699,8 +684,7 @@
     "id": "specialty_rhythm",
     "category": "pulse",
     "question": "Does the rhythm match one of these signature regional or freeform styles?",
-    "subtitle": "Notice if the beat is Latin, Jamaican, Country, or completely drumless.",
-    "hint": "Think of Reggaeton, island Reggae, Country train beats, or drumless ambient/classical.",
+    "subtitle": "Notice if the rhythm is Latin dembow, island reggae, a country train beat, or drumless.",
     "options": [
       {
         "id": "latin_dembow",
@@ -745,8 +729,7 @@
     "id": "meter_breathing",
     "category": "pulse",
     "question": "Does the music float freely without a steady beat or drum kit?",
-    "subtitle": "Listen for whether you can tap your foot to a steady clockwork pulse.",
-    "hint": "Classical orchestras, solo piano, and ambient soundscapes often breathe freely without drums.",
+    "subtitle": "Listen for classical or ambient music that drifts freely without a steady drum pulse.",
     "options": [
       {
         "id": "free_rubato",
