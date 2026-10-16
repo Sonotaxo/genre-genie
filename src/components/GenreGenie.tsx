@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import confetti from "canvas-confetti";
 import { toast } from "sonner";
-import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check, Bug, Copy } from "lucide-react";
+import { ChevronLeft, RotateCcw, Microscope, X, ChevronDown, Music2, Youtube, ExternalLink, Github, Search, HelpCircle, Check, Bug, Copy, Sparkles, CheckCircle2, Split, Scale } from "lucide-react";
 import { AkinatorEngine, RESPONSES, hasSubgenres, type Answer } from "@/engine/engine";
 import { DescriptorEngine, type DescriptorQuestion } from "@/engine/descriptor-engine";
 import { ATTRIBUTES, CATEGORY_META, FAMILIES, GENRES, type Category, type Family, type Genre } from "@/engine/data";
@@ -825,7 +825,7 @@ function Landing({
       <h1 className="mx-auto max-w-3xl text-balance text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
         Think of a song or listen to the music playing.{" "}
         <span className="bg-gradient-to-r from-pulse via-voice to-sound bg-clip-text text-transparent">
-          Genre Genie will guess its genre.
+          Genre Genie will help you find out its genre.
         </span>
       </h1>
       <p className="mx-auto mt-3.5 max-w-xl text-pretty text-sm text-muted-foreground sm:mt-5 sm:text-base">
@@ -838,7 +838,7 @@ function Landing({
           disabled={!ready}
           className="h-14 w-full rounded-2xl px-10 text-base font-extrabold shadow-[0_0_40px_-6px_var(--pulse)] transition-transform duration-100 active:scale-95 sm:h-16 sm:w-auto sm:min-w-[260px] sm:text-lg"
         >
-          <Wave /> {ready ? "Start Guessing" : "Loading…"}
+          <Wave /> {ready ? "Find Genre" : "Starting…"}
         </Button>
       </div>
       <div className="mt-9 sm:mt-12">
@@ -1852,31 +1852,123 @@ function DescriptorQuestionView({
   );
 }
 
-function Gauge({ value }: { value: number }) {
-  const r = 52, c = 2 * Math.PI * r;
+type VerdictType = "strong" | "likely" | "split" | "alternative";
+
+interface VerdictInfo {
+  type: VerdictType;
+  label: string;
+  sublabel: string;
+  colorClass: string;
+  borderClass: string;
+  bgClass: string;
+  glowClass: string;
+  barColor: string;
+}
+
+function getVerdictInfo(
+  isTop: boolean,
+  isSplit: boolean,
+  isStrong: boolean
+): VerdictInfo {
+  if (!isTop) {
+    return {
+      type: "alternative",
+      label: "Alternative",
+      sublabel: "Contender",
+      colorClass: "text-sound",
+      borderClass: "border-sound/40",
+      bgClass: "bg-sound/10",
+      glowClass: "bg-sound/20",
+      barColor: "bg-sound",
+    };
+  }
+
+  if (isSplit) {
+    return {
+      type: "split",
+      label: "Closest Fit",
+      sublabel: "Split Verdict",
+      colorClass: "text-amber-500",
+      borderClass: "border-amber-500/40",
+      bgClass: "bg-amber-500/10",
+      glowClass: "bg-amber-500/25",
+      barColor: "bg-amber-500",
+    };
+  }
+
+  if (isStrong) {
+    return {
+      type: "strong",
+      label: "Strong Match",
+      sublabel: "Verified Fit",
+      colorClass: "text-pulse",
+      borderClass: "border-pulse/45",
+      bgClass: "bg-pulse/10",
+      glowClass: "bg-pulse/25",
+      barColor: "bg-pulse",
+    };
+  }
+
+  return {
+    type: "likely",
+    label: "Likely Match",
+    sublabel: "Solid Alignment",
+    colorClass: "text-voice",
+    borderClass: "border-voice/45",
+    bgClass: "bg-voice/10",
+    glowClass: "bg-voice/25",
+    barColor: "bg-voice",
+  };
+}
+
+function VerdictEmblem({ verdict }: { verdict: VerdictInfo }) {
   return (
-    <div className="relative size-32 shrink-0 sm:size-36">
-      <svg viewBox="0 0 120 120" className="size-full -rotate-90">
-        <circle cx="60" cy="60" r={r} fill="none" stroke="var(--muted)" strokeWidth="10" />
-        <circle
-          cx="60"
-          cy="60"
-          r={r}
-          fill="none"
-          stroke="var(--pulse)"
-          strokeWidth="10"
-          strokeLinecap="round"
-          strokeDasharray={c}
-          strokeDashoffset={c * (1 - value)}
-          className="transition-all duration-700"
-        />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-mono text-2xl font-bold sm:text-3xl">{Math.round(value * 100)}%</span>
-        <span className="text-[11px] text-muted-foreground sm:text-xs">match</span>
+    <div
+      className={`relative flex size-32 shrink-0 flex-col items-center justify-center rounded-3xl border ${verdict.borderClass} ${verdict.bgClass} p-3 text-center shadow-lg backdrop-blur transition-all duration-300 sm:size-36`}
+    >
+      <div
+        className={`absolute -inset-1 -z-10 rounded-3xl ${verdict.glowClass} opacity-40 blur-xl transition-all`}
+      />
+      <div className="flex items-center justify-center">
+        {verdict.type === "strong" && <CheckCircle2 className="size-8 text-pulse sm:size-9" />}
+        {verdict.type === "likely" && <Sparkles className="size-8 text-voice sm:size-9" />}
+        {verdict.type === "split" && <Split className="size-8 text-amber-500 sm:size-9" />}
+        {verdict.type === "alternative" && <Scale className="size-8 text-sound sm:size-9" />}
       </div>
+      <div className="mt-1.5 flex items-end justify-center gap-1">
+        <span className={`h-2 w-1 rounded-full ${verdict.barColor} opacity-75 animate-pulse`} />
+        <span className={`h-3.5 w-1 rounded-full ${verdict.barColor}`} />
+        <span className={`h-2 w-1 rounded-full ${verdict.barColor} opacity-75 animate-pulse`} />
+      </div>
+      <span className={`mt-2 font-mono text-xs font-extrabold uppercase tracking-wider ${verdict.colorClass}`}>
+        {verdict.label}
+      </span>
+      <span className="text-[10px] font-medium text-muted-foreground">
+        {verdict.sublabel}
+      </span>
     </div>
   );
+}
+
+function getRunnerUpFit(prob: number, topProb: number): { label: string; textClass: string } {
+  const margin = topProb - prob;
+  if (margin < 0.22 || prob >= 0.32) {
+    return { label: "Close Contender", textClass: "text-amber-500 font-semibold" };
+  }
+  if (prob >= 0.18) {
+    return { label: "Strong Alternative", textClass: "text-sound font-medium" };
+  }
+  if (prob >= 0.08) {
+    return { label: "Secondary Fit", textClass: "text-muted-foreground" };
+  }
+  return { label: "Distant Match", textClass: "text-muted-foreground/75" };
+}
+
+function getSubgenreFitLabel(prob: number): string {
+  if (prob >= 0.40) return "Strong Match";
+  if (prob >= 0.20) return "Likely Fit";
+  if (prob >= 0.10) return "Moderate Fit";
+  return "Secondary";
 }
 
 function Diagnosis({
@@ -1897,6 +1989,27 @@ function Diagnosis({
   const g = activeEntry.genre;
   const tension = useMemo(() => engine.computeTension(g), [engine, g]);
   const drillGenreName = drill ? GENRES.find((x) => x.id === drill)?.name ?? drill : null;
+
+  const topCandidate = ranked[0];
+  const runnerUp = ranked[1];
+  const isTop = !selectedGenreId || selectedGenreId === topCandidate?.genre.id;
+
+  const isSplit = useMemo(() => {
+    if (!topCandidate || !runnerUp) return false;
+    const margin = topCandidate.prob - runnerUp.prob;
+    return margin < 0.22 || runnerUp.prob >= 0.32;
+  }, [topCandidate, runnerUp]);
+
+  const isStrong = useMemo(() => {
+    if (!topCandidate) return false;
+    const margin = runnerUp ? topCandidate.prob - runnerUp.prob : 1.0;
+    return topCandidate.prob >= 0.78 || (topCandidate.prob >= 0.60 && margin >= 0.30);
+  }, [topCandidate, runnerUp]);
+
+  const verdict = useMemo(
+    () => getVerdictInfo(isTop, isSplit, isStrong),
+    [isTop, isSplit, isStrong]
+  );
 
   useEffect(() => {
     setSelectedGenreId(null);
@@ -1930,11 +2043,11 @@ function Diagnosis({
       <div className="glass-panel rounded-3xl border border-pulse/40 p-5 sm:p-7 md:p-10">
         <div className="flex flex-wrap items-center justify-center gap-2 md:justify-between">
           <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground sm:text-xs">
-            {selectedGenreId && selectedGenreId !== ranked[0]?.genre.id
-              ? `Inspecting runner-up • Top match: ${ranked[0]?.genre.name}`
-              : `Diagnosis complete • ${engine.questionCount} questions`}
+            {!isTop
+              ? `Inspecting alternative • Top match: ${ranked[0]?.genre.name}`
+              : `Genre Identified • ${engine.questionCount} questions answered`}
           </p>
-          {selectedGenreId && selectedGenreId !== ranked[0]?.genre.id && (
+          {!isTop && (
             <button
               type="button"
               onClick={() => setSelectedGenreId(null)}
@@ -1946,7 +2059,7 @@ function Diagnosis({
         </div>
 
         <div className="mt-4 flex flex-col items-center gap-5 text-center md:flex-row md:items-center md:gap-7 md:text-left">
-          <Gauge value={activeEntry.prob} />
+          <VerdictEmblem verdict={verdict} />
           <div className="min-w-0 flex-1">
             {g.parent && (
               <p className="font-mono text-xs uppercase tracking-widest text-sound">
@@ -1956,8 +2069,54 @@ function Diagnosis({
             <h2 className="mt-0.5 bg-gradient-to-r from-pulse via-voice to-sound bg-clip-text text-balance text-3xl font-extrabold tracking-tight text-transparent sm:text-5xl md:text-6xl">
               {g.name}
             </h2>
+
+            {/* Decisive vs Split Verdict Badge / Banner */}
+            {isTop ? (
+              <div className="mt-2.5 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+                {isSplit && runnerUp ? (
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-500">
+                    <Split className="size-3.5 shrink-0" />
+                    <span>
+                      <strong>Close Call:</strong> Strong sonic overlap with{" "}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedGenreId(runnerUp.genre.id)}
+                        className="font-bold underline decoration-amber-500/60 underline-offset-2 hover:text-amber-400"
+                      >
+                        {runnerUp.genre.name}
+                      </button>
+                    </span>
+                  </div>
+                ) : isStrong ? (
+                  <div className="inline-flex items-center gap-1.5 rounded-xl border border-pulse/40 bg-pulse/10 px-3 py-1 text-xs font-semibold text-pulse">
+                    <CheckCircle2 className="size-3.5 shrink-0" />
+                    <span>Definite Match • Dominant sound characteristics confirmed</span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-1.5 rounded-xl border border-voice/40 bg-voice/10 px-3 py-1 text-xs font-semibold text-voice">
+                    <Sparkles className="size-3.5 shrink-0" />
+                    <span>Likely Match • Strong acoustic alignment across answers</span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="mt-2.5 inline-flex items-center gap-2 rounded-xl border border-sound/40 bg-sound/10 px-3 py-1.5 text-xs text-sound">
+                <Scale className="size-3.5 shrink-0" />
+                <span>
+                  Viewing alternative contender to #1{" "}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedGenreId(null)}
+                    className="font-bold underline decoration-sound/60 underline-offset-2 hover:text-foreground"
+                  >
+                    {ranked[0]?.genre.name}
+                  </button>
+                </span>
+              </div>
+            )}
+
             {g.aliases && g.aliases.length > 0 && (
-              <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5 md:justify-start">
+              <div className="mt-2.5 flex flex-wrap items-center justify-center gap-1.5 md:justify-start">
                 <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                   Also known as:
                 </span>
@@ -2056,7 +2215,7 @@ function Diagnosis({
                 {crossSubgenreParent ? (
                   <> (a subgenre of <span className="font-semibold text-foreground">{crossSubgenreParent.name}</span>)</>
                 ) : null}
-                {" "}with a <span className="font-mono font-bold text-foreground">{Math.round(topCrossSubgenre.prob * 100)}%</span> match.
+                {" "}with <span className="font-semibold text-foreground">strong acoustic alignment</span>.
               </p>
             </div>
             {topCrossSubgenre.genre.parent && topCrossSubgenre.genre.parent !== drill && (
@@ -2214,6 +2373,11 @@ function Diagnosis({
         <div className="mt-3 space-y-2">
           {ranked.slice(1, 4).map((r) => {
             const isSelected = selectedGenreId === r.genre.id;
+            const fit = getRunnerUpFit(r.prob, ranked[0]?.prob ?? 1);
+            const relativeWidth = Math.min(
+              100,
+              Math.max(12, Math.round((r.prob / Math.max(ranked[0]?.prob ?? 1, 0.01)) * 100))
+            );
             return (
               <button
                 key={r.genre.id}
@@ -2227,13 +2391,18 @@ function Diagnosis({
                     : "border-border/50 bg-background/35 hover:border-border hover:bg-background/60"
                 }`}
               >
-                <span className="w-32 truncate font-semibold text-foreground sm:w-44">
+                <span className="w-28 truncate font-semibold text-foreground sm:w-44">
                   {r.genre.name}
                 </span>
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                  <div className="h-full bg-sound transition-all duration-500" style={{ width: `${r.prob * 100}%` }} />
+                  <div
+                    className="h-full bg-sound transition-all duration-500"
+                    style={{ width: `${relativeWidth}%` }}
+                  />
                 </div>
-                <span className="w-12 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+                <span className={`shrink-0 font-mono text-[11px] sm:text-xs ${fit.textClass}`}>
+                  {fit.label}
+                </span>
                 <span
                   className={`hidden rounded-full px-2 py-0.5 font-mono text-[10px] sm:inline-block ${
                     isSelected
@@ -2271,8 +2440,8 @@ function Diagnosis({
                         </button>
                       )}
                     </div>
-                    <span className="font-mono font-bold text-muted-foreground">
-                      {(r.prob * 100).toFixed(1)}%
+                    <span className="font-mono font-medium text-muted-foreground">
+                      {getSubgenreFitLabel(r.prob)}
                     </span>
                   </div>
                 );

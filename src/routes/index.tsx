@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { GenreGenie } from "@/components/GenreGenie";
 
-const title = "Genre Genie — Guess Any Music Genre";
+const title = "Genre Genie — Identify Any Music Genre";
 const description = "Answer simple questions about what you hear and Genre Genie identifies the music genre in about 10 taps.";
 
 export const Route = createFileRoute("/")({
