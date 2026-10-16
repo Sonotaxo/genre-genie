@@ -555,14 +555,42 @@ export function GenreGenie() {
     return () => window.removeEventListener("keydown", onKey);
   }, [screen, respond, respondDescriptor, question, engineMode, undoDescriptor]);
 
+  const activeCategory: Category =
+    screen === "PLAYING"
+      ? engineMode === "descriptor"
+        ? (descriptorQuestion?.category ?? "sound")
+        : (question?.attribute.category ?? "sound")
+      : "pulse";
+
+  const auraColorVar =
+    activeCategory === "pulse"
+      ? "var(--pulse)"
+      : activeCategory === "sound"
+      ? "var(--sound)"
+      : activeCategory === "voice"
+      ? "var(--voice)"
+      : "var(--atmos)";
+
   return (
-    <main className="mx-auto max-w-4xl px-4 py-8 md:py-14">
-      <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <button onClick={() => setScreen("IDLE")} className="flex items-center gap-2 font-extrabold tracking-tight">
-          <Wave className="text-pulse" /> Genre Genie
+    <main className="relative mx-auto max-w-4xl px-3.5 py-4 sm:px-6 sm:py-8 md:py-12">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-[440px] transition-all duration-700"
+        style={{
+          background: `radial-gradient(ellipse 75% 55% at 50% -10%, color-mix(in oklch, ${auraColorVar} 22%, transparent), transparent 70%)`,
+        }}
+      />
+
+      <header className="mb-4 flex items-center justify-between gap-2 sm:mb-8">
+        <button
+          onClick={() => setScreen("IDLE")}
+          className="flex items-center gap-2 text-base font-extrabold tracking-tight transition hover:opacity-90 active:scale-95 sm:text-lg"
+        >
+          <Wave className="text-pulse" />
+          <span>Genre Genie</span>
         </button>
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-1 rounded-full border border-border bg-card/80 p-0.5 font-mono text-xs">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-0.5 rounded-full border border-border/80 bg-card/80 p-0.5 font-mono text-[11px] backdrop-blur sm:text-xs">
             <button
               type="button"
               onClick={() => {
@@ -571,11 +599,12 @@ export function GenreGenie() {
               }}
               className={`rounded-full px-2.5 py-1 transition ${
                 engineMode === "descriptor"
-                  ? "bg-pulse text-background font-bold shadow-sm"
+                  ? "bg-pulse font-bold text-background shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              🧪 Descriptors (Spike)
+              🧪 <span className="hidden sm:inline">Descriptors</span>
+              <span className="sm:hidden">Sensory</span>
             </button>
             <button
               type="button"
@@ -585,32 +614,34 @@ export function GenreGenie() {
               }}
               className={`rounded-full px-2.5 py-1 transition ${
                 engineMode === "standard"
-                  ? "bg-muted text-foreground font-bold shadow-sm"
+                  ? "bg-muted font-bold text-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Standard (Yes/No)
+              <span className="hidden sm:inline">Standard (Yes/No)</span>
+              <span className="sm:hidden">Yes/No</span>
             </button>
           </div>
           {isLocalDev && (
             <button
               type="button"
               onClick={copyDevSnapshot}
-              className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 px-3 py-1 font-mono text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20 active:scale-95"
+              className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 px-2.5 py-1 font-mono text-xs font-semibold text-amber-500 transition hover:bg-amber-500/20 active:scale-95"
               title="Copy full diagnostic session snapshot to clipboard for AI debugging"
             >
               <Bug className="size-3.5" />
-              <span>Dev Copy State</span>
+              <span className="hidden md:inline">Dev Copy State</span>
             </button>
           )}
           <a
             href="https://github.com/Sonotaxo/genre-genie"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1 font-mono text-xs text-muted-foreground transition hover:border-primary/50 hover:text-foreground active:scale-95"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border/80 bg-card/80 px-2.5 py-1 font-mono text-xs text-muted-foreground backdrop-blur transition hover:border-primary/50 hover:text-foreground active:scale-95 sm:px-3"
+            title="View on GitHub"
           >
             <Github className="size-3.5" />
-            <span>GitHub</span>
+            <span className="hidden sm:inline">GitHub</span>
           </a>
         </div>
       </header>
@@ -682,47 +713,48 @@ function Landing({
   onStart: (f?: Family) => void;
   engineMode: "descriptor" | "standard";
 }) {
-  // Buttons only work once the page's scripts have loaded; until then show a loading state
-  // instead of silently ignoring clicks.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   return (
-    <section className="animate-slide-in text-center">
-      {engineMode === "descriptor" && (
-        <div className="mx-auto mb-6 inline-flex items-center gap-2 rounded-full border border-pulse/40 bg-pulse/10 px-4 py-1.5 text-xs font-semibold text-pulse">
-          <span>🧪 Experiment Active</span>
-          <span>•</span>
-          <span>Sensory Descriptors Mode (Multi-choice sound profiles)</span>
-        </div>
-      )}
-      <h1 className="mx-auto max-w-3xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
+    <section className="animate-slide-in pt-2 text-center sm:pt-4">
+      <div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-pulse/35 bg-pulse/10 px-3.5 py-1 text-[11px] font-semibold text-pulse sm:mb-6 sm:text-xs">
+        <span>{engineMode === "descriptor" ? "🎧 Sensory Sound Profiles" : "🎛️ Classic Yes / No Mode"}</span>
+        <span className="opacity-50">•</span>
+        <span>{GENRES.length} Genres & Subgenres</span>
+      </div>
+      <h1 className="mx-auto max-w-3xl text-balance text-3xl font-extrabold leading-[1.15] tracking-tight sm:text-5xl md:text-6xl">
         Think of a song or listen to the music playing.{" "}
         <span className="bg-gradient-to-r from-pulse via-voice to-sound bg-clip-text text-transparent">
           Genre Genie will guess its genre.
         </span>
       </h1>
-      <p className="mx-auto mt-5 max-w-xl text-muted-foreground">
+      <p className="mx-auto mt-3.5 max-w-xl text-pretty text-sm text-muted-foreground sm:mt-5 sm:text-base">
         No music theory needed. Just answer simple questions about what you hear and feel.
       </p>
-      <Button
-        size="lg"
-        onClick={() => onStart()}
-        disabled={!ready}
-        className="mt-10 h-16 rounded-2xl px-10 text-lg font-extrabold shadow-[0_0_40px_-6px_var(--pulse)] transition-transform duration-100 active:scale-95"
-      >
-        <Wave /> {ready ? "Start Guessing" : "Loading…"}
-      </Button>
-      <div className="mt-10">
-        <p className="mb-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">or fast-track a family</p>
-        <div className="flex flex-wrap justify-center gap-2">
+      <div className="mt-7 sm:mt-9">
+        <Button
+          size="lg"
+          onClick={() => onStart()}
+          disabled={!ready}
+          className="h-14 w-full rounded-2xl px-10 text-base font-extrabold shadow-[0_0_40px_-6px_var(--pulse)] transition-transform duration-100 active:scale-95 sm:h-16 sm:w-auto sm:min-w-[260px] sm:text-lg"
+        >
+          <Wave /> {ready ? "Start Guessing" : "Loading…"}
+        </Button>
+      </div>
+      <div className="mt-9 sm:mt-12">
+        <p className="mb-3 font-mono text-[11px] uppercase tracking-widest text-muted-foreground sm:text-xs">
+          or fast-track a musical family
+        </p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
           {FAMILIES.map((f) => (
             <button
               key={f.id}
               onClick={() => onStart(f.id)}
               disabled={!ready}
-              className="rounded-full border border-border bg-card/70 px-4 py-2 text-sm font-semibold backdrop-blur transition hover:border-primary active:scale-95 disabled:opacity-50"
+              className="flex items-center gap-2.5 rounded-xl border border-border/80 bg-card/65 px-3.5 py-2.5 text-left text-xs font-semibold backdrop-blur transition hover:border-pulse/60 hover:bg-card active:scale-[0.98] disabled:opacity-50 sm:text-sm"
             >
-              {f.emoji} {f.label}
+              <span className="text-base sm:text-lg">{f.emoji}</span>
+              <span className="truncate">{f.label}</span>
             </button>
           ))}
         </div>
@@ -730,7 +762,7 @@ function Landing({
 
       <SupportedGenresCatalog onStartFamily={(f) => onStart(f)} />
 
-      <div className="mt-16 flex flex-col items-center gap-4 border-t border-border/50 pt-8 text-center">
+      <div className="mt-14 flex flex-col items-center gap-3 border-t border-border/50 pt-8 text-center sm:mt-16">
         <a
           href="https://github.com/Sonotaxo/genre-genie"
           target="_blank"
@@ -740,7 +772,7 @@ function Landing({
           <Github className="size-4" />
           <span>Open Source on GitHub</span>
         </a>
-        <p className="font-mono text-xs text-muted-foreground">
+        <p className="font-mono text-[11px] text-muted-foreground sm:text-xs">
           {GENRES.length} Genres Cataloged • {ATTRIBUTES.length} Sensory Attributes • 100% In-Browser Engine
         </p>
       </div>
@@ -767,9 +799,9 @@ function GenreProfileDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] max-w-xl overflow-y-auto">
-        <DialogHeader>
-          <div className="flex flex-wrap items-center gap-1.5 text-xs font-mono text-muted-foreground">
+      <DialogContent className="max-h-[85dvh] max-w-xl overflow-y-auto p-5 sm:p-6">
+        <DialogHeader className="text-left">
+          <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs text-muted-foreground">
             {familyMeta && (
               <span className="rounded-full border border-border bg-muted/60 px-2.5 py-0.5">
                 {familyMeta.emoji} {familyMeta.label}
@@ -781,7 +813,7 @@ function GenreProfileDialog({
               </span>
             )}
           </div>
-          <DialogTitle className="mt-1 text-2xl font-extrabold tracking-tight">
+          <DialogTitle className="mt-1 text-balance text-2xl font-extrabold tracking-tight">
             {genre.name}
           </DialogTitle>
           {genre.aliases && genre.aliases.length > 0 && (
@@ -790,7 +822,7 @@ function GenreProfileDialog({
               <span className="font-medium text-foreground/90">{genre.aliases.join(" • ")}</span>
             </p>
           )}
-          <DialogDescription className="pt-1 text-sm leading-relaxed text-foreground/90">
+          <DialogDescription className="pt-1 text-pretty text-sm leading-relaxed text-foreground/90">
             {genre.summary}
           </DialogDescription>
         </DialogHeader>
@@ -834,6 +866,9 @@ function GenreProfileDialog({
                     className="flex flex-col justify-between gap-2 rounded-lg border border-border/60 bg-background/40 p-2.5 text-xs sm:flex-row sm:items-center"
                   >
                     <div className="font-semibold text-foreground">
+                      <span className="mr-2 font-mono text-[10px] text-muted-foreground">
+                        0{idx + 1}
+                      </span>
                       {t.artist} — <span className="italic font-normal text-muted-foreground">{t.title}</span>
                     </div>
                     <div className="flex items-center gap-1.5 shrink-0">
@@ -841,7 +876,7 @@ function GenreProfileDialog({
                         href={`https://open.spotify.com/search/${q}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] hover:border-pulse hover:text-pulse transition"
+                        className="rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[10px] transition hover:border-pulse hover:text-pulse"
                       >
                         Spotify
                       </a>
@@ -849,7 +884,7 @@ function GenreProfileDialog({
                         href={`https://music.apple.com/search?term=${q}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] hover:border-pulse hover:text-pulse transition"
+                        className="rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[10px] transition hover:border-pulse hover:text-pulse"
                       >
                         Apple
                       </a>
@@ -857,7 +892,7 @@ function GenreProfileDialog({
                         href={`https://www.youtube.com/results?search_query=${q}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="rounded-md border border-border bg-card px-2 py-1 font-mono text-[10px] hover:border-pulse hover:text-pulse transition"
+                        className="rounded-md border border-border bg-card px-2.5 py-1 font-mono text-[10px] transition hover:border-pulse hover:text-pulse"
                       >
                         YouTube
                       </a>
@@ -875,6 +910,7 @@ function GenreProfileDialog({
 
 function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) => void }) {
   const [search, setSearch] = useState("");
+  const [activeFamily, setActiveFamily] = useState<Family | "all">("all");
   const [inspectedGenre, setInspectedGenre] = useState<Genre | null>(null);
 
   const familyGroups = useMemo(() => {
@@ -882,59 +918,61 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
     const macroGenres = GENRES.filter((g) => g.tier === "macro" || !g.parent);
     const subgenres = GENRES.filter((g) => g.tier === "micro" || g.parent);
 
-    return FAMILIES.map((fam) => {
-      const famMacros = macroGenres.filter((g) => g.family === fam.id);
+    return FAMILIES.filter((fam) => activeFamily === "all" || fam.id === activeFamily)
+      .map((fam) => {
+        const famMacros = macroGenres.filter((g) => g.family === fam.id);
 
-      const parentGroups = famMacros.map((parent) => {
-        const subs = subgenres.filter((s) => s.parent === parent.id);
-        return { parent, subgenres: subs };
-      });
+        const parentGroups = famMacros.map((parent) => {
+          const subs = subgenres.filter((s) => s.parent === parent.id);
+          return { parent, subgenres: subs };
+        });
 
-      if (!q) {
+        if (!q) {
+          return {
+            family: fam,
+            groups: parentGroups,
+            totalCount: parentGroups.reduce((acc, g) => acc + 1 + g.subgenres.length, 0),
+          };
+        }
+
+        const matchingGroups = parentGroups
+          .map(({ parent, subgenres }) => {
+            const parentMatches =
+              parent.name.toLowerCase().includes(q) ||
+              parent.aliases?.some((a) => a.toLowerCase().includes(q));
+            const matchingSubs = subgenres.filter(
+              (s) =>
+                s.name.toLowerCase().includes(q) ||
+                s.aliases?.some((a) => a.toLowerCase().includes(q))
+            );
+            if (parentMatches) {
+              return { parent, subgenres };
+            }
+            if (matchingSubs.length > 0) {
+              return { parent, subgenres: matchingSubs };
+            }
+            return null;
+          })
+          .filter((g): g is NonNullable<typeof g> => g !== null);
+
         return {
           family: fam,
-          groups: parentGroups,
-          totalCount: parentGroups.reduce((acc, g) => acc + 1 + g.subgenres.length, 0),
+          groups: matchingGroups,
+          totalCount: matchingGroups.reduce((acc, g) => acc + 1 + g.subgenres.length, 0),
         };
-      }
-
-      const matchingGroups = parentGroups
-        .map(({ parent, subgenres }) => {
-          const parentMatches =
-            parent.name.toLowerCase().includes(q) ||
-            parent.aliases?.some((a) => a.toLowerCase().includes(q));
-          const matchingSubs = subgenres.filter(
-            (s) =>
-              s.name.toLowerCase().includes(q) ||
-              s.aliases?.some((a) => a.toLowerCase().includes(q))
-          );
-          if (parentMatches) {
-            return { parent, subgenres };
-          }
-          if (matchingSubs.length > 0) {
-            return { parent, subgenres: matchingSubs };
-          }
-          return null;
-        })
-        .filter((g): g is NonNullable<typeof g> => g !== null);
-
-      return {
-        family: fam,
-        groups: matchingGroups,
-        totalCount: matchingGroups.reduce((acc, g) => acc + 1 + g.subgenres.length, 0),
-      };
-    }).filter((f) => f.groups.length > 0);
-  }, [search]);
+      })
+      .filter((f) => f.groups.length > 0);
+  }, [search, activeFamily]);
 
   return (
-    <div className="mt-20 border-t border-border/50 pt-12 text-left">
-      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+    <div className="mt-14 border-t border-border/50 pt-10 text-left sm:mt-20 sm:pt-12">
+      <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-foreground">
+          <h2 className="text-xl font-extrabold tracking-tight text-foreground sm:text-2xl">
             Supported Genres & Subgenres
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {GENRES.length} total genres cataloged across {FAMILIES.length} musical families. Click any genre to explore its sound profile & benchmark tracks.
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+            Tap any genre to inspect its sound profile, hallmarks & benchmark tracks.
           </p>
         </div>
         <div className="relative w-full sm:w-64">
@@ -943,24 +981,64 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
             placeholder="Search genres, subgenres, aliases…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="bg-card/60 pl-9 pr-8 text-xs"
+            className="h-10 rounded-xl bg-card/70 pl-9 pr-8 text-base sm:h-9 sm:text-xs"
           />
           {search && (
             <button
               onClick={() => setSearch("")}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
             >
-              <X className="size-3.5" />
+              <X className="size-4" />
             </button>
           )}
         </div>
       </div>
 
+      {/* Horizontal Family Filter Bar for fast mobile browsing */}
+      <div className="no-scrollbar -mx-1 mb-5 flex items-center gap-1.5 overflow-x-auto px-1 pb-1">
+        <button
+          type="button"
+          onClick={() => setActiveFamily("all")}
+          className={`shrink-0 rounded-full border px-3 py-1.5 font-mono text-xs font-semibold transition active:scale-95 ${
+            activeFamily === "all"
+              ? "border-pulse bg-pulse/15 text-pulse"
+              : "border-border/70 bg-card/50 text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          All ({GENRES.length})
+        </button>
+        {FAMILIES.map((fam) => {
+          const isSelected = activeFamily === fam.id;
+          return (
+            <button
+              key={fam.id}
+              type="button"
+              onClick={() => setActiveFamily(isSelected ? "all" : fam.id)}
+              className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition active:scale-95 ${
+                isSelected
+                  ? "border-pulse bg-pulse/15 font-semibold text-pulse"
+                  : "border-border/70 bg-card/50 text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {fam.emoji} {fam.label}
+            </button>
+          );
+        })}
+      </div>
+
       {familyGroups.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-border py-12 text-center text-muted-foreground">
           <p className="text-sm">No genres found matching &ldquo;{search}&rdquo;</p>
-          <Button variant="ghost" size="sm" onClick={() => setSearch("")} className="mt-2 text-xs">
-            Clear search
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              setSearch("");
+              setActiveFamily("all");
+            }}
+            className="mt-2 text-xs"
+          >
+            Reset filters
           </Button>
         </div>
       ) : (
@@ -968,11 +1046,11 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
           {familyGroups.map(({ family, groups, totalCount }) => (
             <div
               key={family.id}
-              className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card/50 p-5 backdrop-blur transition-all duration-200 hover:border-border"
+              className="glass-panel flex flex-col justify-between rounded-2xl border border-border/80 p-4 transition-all duration-200 hover:border-border sm:p-5"
             >
               <div>
                 <div className="mb-3 flex items-center justify-between border-b border-border/40 pb-3">
-                  <div className="flex items-center gap-2 font-bold text-sm tracking-tight text-foreground">
+                  <div className="flex items-center gap-2 text-sm font-bold tracking-tight text-foreground">
                     <span className="text-base">{family.emoji}</span>
                     <span>{family.label}</span>
                     <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] text-muted-foreground">
@@ -981,7 +1059,7 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
                   </div>
                   <button
                     onClick={() => onStartFamily(family.id)}
-                    className="flex items-center gap-1 font-mono text-[11px] text-muted-foreground transition-colors hover:text-primary active:scale-95"
+                    className="flex items-center gap-1 rounded-full border border-border/60 bg-background/50 px-2.5 py-1 font-mono text-[11px] text-muted-foreground transition-colors hover:border-pulse/50 hover:text-pulse active:scale-95"
                     title={`Fast-track ${family.label}`}
                   >
                     <span>Fast-track</span>
@@ -992,11 +1070,11 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
                 <div className="space-y-3">
                   {groups.map(({ parent, subgenres }) => (
                     <div key={parent.id} className="space-y-1.5">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         <button
                           type="button"
                           onClick={() => setInspectedGenre(parent)}
-                          className="text-left text-xs font-semibold text-foreground/90 underline-offset-4 hover:text-pulse hover:underline active:scale-95 transition"
+                          className="rounded-lg border border-transparent px-1.5 py-0.5 -ml-1.5 text-left text-xs font-semibold text-foreground/95 transition hover:border-pulse/40 hover:bg-pulse/10 hover:text-pulse active:scale-95"
                           title={`Explore ${parent.name} sound profile`}
                         >
                           {parent.name}
@@ -1009,13 +1087,13 @@ function SupportedGenresCatalog({ onStartFamily }: { onStartFamily: (f: Family) 
                       </div>
 
                       {subgenres.length > 0 ? (
-                        <div className="flex flex-wrap gap-1.5 border-l-2 border-border/60 pl-2">
+                        <div className="flex flex-wrap gap-1.5 border-l-2 border-border/60 pl-2.5">
                           {subgenres.map((sub) => (
                             <button
                               key={sub.id}
                               type="button"
                               onClick={() => setInspectedGenre(sub)}
-                              className="rounded-md border border-border/60 bg-background/50 px-2 py-0.5 text-[11px] text-muted-foreground transition-colors hover:border-pulse/60 hover:text-foreground active:scale-95"
+                              className="rounded-lg border border-border/70 bg-background/60 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-pulse/60 hover:text-foreground active:scale-95"
                               title={`Explore ${sub.name} sound profile`}
                             >
                               {sub.name}
@@ -1059,20 +1137,20 @@ function CandidateCard({
   const top = candidates[0];
 
   return (
-    <div className="flex flex-col justify-between rounded-2xl border border-border bg-card/60 p-4">
+    <div className="glass-panel flex flex-col justify-between rounded-2xl border border-border/80 p-3.5 sm:p-4">
       <div>
         {canEarlySelect && top && onSelectGenre && (
-          <div className="mb-3.5 flex flex-col gap-2 rounded-xl border border-pulse/40 bg-pulse/10 p-2.5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-sm">🎯</span>
-              <span className="text-muted-foreground">
-                Spot your genre? Is it <strong className="text-foreground">{top.genre.name}</strong>?
+          <div className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-pulse/40 bg-pulse/10 px-3 py-2">
+            <div className="flex items-center gap-2 text-xs min-w-0">
+              <span className="text-sm shrink-0">🎯</span>
+              <span className="truncate text-muted-foreground">
+                Is it <strong className="text-foreground">{top.genre.name}</strong>?
               </span>
             </div>
             <Button
               size="sm"
               onClick={() => onSelectGenre(top.genre.id)}
-              className="h-7 shrink-0 bg-pulse text-xs font-semibold text-primary-foreground hover:bg-pulse/90 active:scale-95"
+              className="h-7 shrink-0 bg-pulse px-2.5 text-xs font-semibold text-primary-foreground hover:bg-pulse/90 active:scale-95"
             >
               <Check className="mr-1 size-3.5" />
               Yes, that&apos;s it!
@@ -1081,7 +1159,7 @@ function CandidateCard({
         )}
 
         <div className="mb-2 flex items-center justify-between">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{title}</p>
+          <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{title}</p>
           {canEarlySelect && (
             <span className="font-mono text-[10px] uppercase tracking-wider text-pulse">Leading match</span>
           )}
@@ -1094,11 +1172,11 @@ function CandidateCard({
                 ? GENRES.find((g) => g.id === r.genre.parent)?.name
                 : null;
             return (
-              <div key={r.genre.id} className="flex items-center gap-3 text-sm">
-                <div className="w-44 truncate font-semibold" title={r.genre.name}>
+              <div key={r.genre.id} className="flex items-center gap-2.5 text-xs sm:text-sm">
+                <div className="w-36 sm:w-44 truncate font-semibold" title={r.genre.name}>
                   <span>{r.genre.name}</span>
                   {parentName && (
-                    <span className="ml-1 text-[11px] font-normal text-muted-foreground">
+                    <span className="ml-1 text-[10px] font-normal text-muted-foreground">
                       ({parentName})
                     </span>
                   )}
@@ -1109,7 +1187,9 @@ function CandidateCard({
                     style={{ width: `${Math.min(r.prob * 100, 100)}%` }}
                   />
                 </div>
-                <span className="w-12 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+                <span className="w-11 text-right font-mono text-[11px] text-muted-foreground">
+                  {(r.prob * 100).toFixed(1)}%
+                </span>
               </div>
             );
           })}
@@ -1150,10 +1230,10 @@ function AnswerTrail({
       : null;
 
     return (
-      <div className="mt-4 rounded-2xl border border-border/70 bg-card/50 p-3.5">
+      <div className="glass-panel mt-3.5 rounded-2xl border border-border/70 p-3 sm:p-3.5">
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-            Your Answers So Far ({items.length}) — click any to change
+            Your Answers ({items.length}) — tap any to change
           </span>
           {editingKey && (
             <button
@@ -1165,7 +1245,7 @@ function AnswerTrail({
             </button>
           )}
         </div>
-        <div className="mt-2 flex flex-wrap gap-1.5">
+        <div className="no-scrollbar -mx-1 mt-2 flex items-center gap-1.5 overflow-x-auto px-1 pb-0.5 sm:flex-wrap sm:overflow-visible">
           {items.map((ans, idx) => {
             const qObj = engine.questions.find((q) => q.id === ans.questionId);
             const optObj = qObj?.options.find((o) => o.id === ans.optionId);
@@ -1177,9 +1257,9 @@ function AnswerTrail({
                 onClick={() =>
                   setEditingKey(isSelected ? null : ans.questionId)
                 }
-                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
+                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
                   isSelected
-                    ? "border-pulse bg-pulse/15 text-pulse font-semibold"
+                    ? "border-pulse bg-pulse/15 font-semibold text-pulse"
                     : "border-border/80 bg-background/60 text-foreground/90 hover:border-pulse/50"
                 }`}
                 title={`${idx + 1}. ${qObj?.question ?? ans.questionId}: ${optObj?.label ?? ans.optionId} (click to change)`}
@@ -1188,14 +1268,14 @@ function AnswerTrail({
                   {idx + 1}.
                 </span>
                 <span>{optObj?.emoji ?? "🎵"}</span>
-                <span className="max-w-[180px] truncate">{optObj?.label ?? ans.optionId}</span>
+                <span className="max-w-[160px] truncate">{optObj?.label ?? ans.optionId}</span>
               </button>
             );
           })}
         </div>
 
         {editingQ && onChangeDescriptorAnswer && (
-          <div className="mt-3 rounded-xl border border-pulse/40 bg-background/80 p-3">
+          <div className="mt-3 rounded-xl border border-pulse/40 bg-background/85 p-3">
             <p className="text-xs font-semibold text-foreground">
               Change answer for: <span className="text-pulse">{editingQ.question}</span>
             </p>
@@ -1211,7 +1291,7 @@ function AnswerTrail({
                       onChangeDescriptorAnswer(editingQ.id, opt.id);
                       setEditingKey(null);
                     }}
-                    className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left text-xs transition active:scale-95 ${
+                    className={`flex items-center gap-2 rounded-lg border px-2.5 py-2 text-left text-xs transition active:scale-95 ${
                       isCurrent
                         ? "border-pulse bg-pulse/15 font-bold text-pulse"
                         : "border-border/70 bg-card/60 hover:border-pulse/50"
@@ -1236,10 +1316,10 @@ function AnswerTrail({
     : null;
 
   return (
-    <div className="mt-4 rounded-2xl border border-border/70 bg-card/50 p-3.5">
+    <div className="glass-panel mt-3.5 rounded-2xl border border-border/70 p-3 sm:p-3.5">
       <div className="flex items-center justify-between gap-2">
         <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          Your Answers So Far ({stdAnswers.length}) — click any to change
+          Your Answers ({stdAnswers.length}) — tap any to change
         </span>
         {editingKey && (
           <button
@@ -1251,7 +1331,7 @@ function AnswerTrail({
           </button>
         )}
       </div>
-      <div className="mt-2 flex flex-wrap gap-1.5">
+      <div className="no-scrollbar -mx-1 mt-2 flex items-center gap-1.5 overflow-x-auto px-1 pb-0.5 sm:flex-wrap sm:overflow-visible">
         {stdAnswers.map((ans, idx) => {
           const attr = ATTRIBUTES.find((a) => a.id === ans.attributeId);
           const resp = RESPONSES.find((r) => r.value === ans.value);
@@ -1263,9 +1343,9 @@ function AnswerTrail({
               onClick={() =>
                 setEditingKey(isSelected ? null : ans.attributeId)
               }
-              className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
+              className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
                 isSelected
-                  ? "border-pulse bg-pulse/15 text-pulse font-semibold"
+                  ? "border-pulse bg-pulse/15 font-semibold text-pulse"
                   : "border-border/80 bg-background/60 text-foreground/90 hover:border-pulse/50"
               }`}
               title={`${idx + 1}. ${attr?.question ?? ans.attributeId}: ${resp?.label ?? ans.value}`}
@@ -1273,7 +1353,7 @@ function AnswerTrail({
               <span className="font-mono text-[10px] text-muted-foreground">
                 {idx + 1}.
               </span>
-              <span className="max-w-[150px] truncate">
+              <span className="max-w-[140px] truncate">
                 {attr?.question ?? ans.attributeId}
               </span>
               <span className="font-bold text-pulse">
@@ -1285,7 +1365,7 @@ function AnswerTrail({
       </div>
 
       {editingAttr && onFlipAnswer && (
-        <div className="mt-3 rounded-xl border border-pulse/40 bg-background/80 p-3">
+        <div className="mt-3 rounded-xl border border-pulse/40 bg-background/85 p-3">
           <p className="text-xs font-semibold text-foreground">
             Change answer for: <span className="text-pulse">{editingAttr.question}</span>
           </p>
@@ -1303,7 +1383,7 @@ function AnswerTrail({
                     onFlipAnswer(editingAttr.id, r.value);
                     setEditingKey(null);
                   }}
-                  className={`rounded-lg border px-2.5 py-1 text-xs font-semibold transition active:scale-95 ${
+                  className={`rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition active:scale-95 ${
                     isCurrent
                       ? "border-pulse bg-pulse/15 text-pulse"
                       : "border-border/70 bg-card/60 hover:border-pulse/50"
@@ -1319,6 +1399,64 @@ function AnswerTrail({
     </div>
   );
 }
+
+function LiveLeaderStrip({
+  topCandidate,
+  drillName,
+  earlySelectTarget,
+  onSelectGenre,
+}: {
+  topCandidate?: { genre: Genre; prob: number } | undefined;
+  drillName?: string | null | undefined;
+  earlySelectTarget?: { genre: Genre; prob: number } | null | undefined;
+  onSelectGenre?: ((genreId: string) => void) | undefined;
+}) {
+  if (!topCandidate && !drillName) return null;
+
+  return (
+    <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border/70 bg-card/60 px-3 py-2 text-xs backdrop-blur">
+      <div className="flex flex-wrap items-center gap-2 min-w-0">
+        {drillName && (
+          <span className="inline-flex items-center gap-1 rounded-full border border-sound/40 bg-sound/15 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-sound">
+            🔬 {drillName}
+          </span>
+        )}
+        {topCandidate && (
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+              Leading:
+            </span>
+            <span className="truncate font-bold text-foreground">
+              {topCandidate.genre.name}
+            </span>
+            <span className="font-mono text-[11px] font-semibold text-pulse">
+              {Math.round(topCandidate.prob * 100)}%
+            </span>
+          </div>
+        )}
+      </div>
+
+      {earlySelectTarget && onSelectGenre && (
+        <Button
+          size="sm"
+          onClick={() => onSelectGenre(earlySelectTarget.genre.id)}
+          className="h-7 shrink-0 bg-pulse px-2.5 text-xs font-bold text-primary-foreground shadow-sm hover:bg-pulse/90 active:scale-95"
+        >
+          <Check className="mr-1 size-3.5" />
+          It&apos;s {earlySelectTarget.genre.name}!
+        </Button>
+      )}
+    </div>
+  );
+}
+
+const STANDARD_BTN_ORDER = [
+  "order-1 md:order-1",
+  "order-2 md:order-2",
+  "col-span-2 md:col-span-1 order-5 md:order-3",
+  "order-3 md:order-4",
+  "order-4 md:order-5",
+];
 
 function QuestionView({
   engine, q, isAlternative = false, isConfirming = false, suspectName, drill, baseCount, hintOpen, setHintOpen, onRespond, onUndo, onSelectGenre, onFlipAnswer,
@@ -1357,6 +1495,18 @@ function QuestionView({
   const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
   const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
 
+  const primaryList = isMicroMode
+    ? subCandidates
+    : parentCandidates.length > 0
+    ? parentCandidates
+    : subCandidates;
+  const topLeader = engine.questionCount >= 1 ? primaryList[0] : undefined;
+  const earlySelectTarget = canEarlySelectSub
+    ? subCandidates[0]
+    : canEarlySelectParent
+    ? parentCandidates[0]
+    : null;
+
   const gainingYes = useMemo(
     () => engine.getGainingGenres(q.id, 1.0, 6),
     [engine, q.id]
@@ -1368,63 +1518,46 @@ function QuestionView({
 
   return (
     <section>
-      <div className="mb-6 flex items-center gap-4">
-        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo && !drill} className="active:scale-95">
-          <ChevronLeft /> Previous
+      <div className="mb-3 flex items-center gap-3 sm:mb-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onUndo}
+          disabled={!engine.canUndo && !drill}
+          className="h-8 px-2.5 text-xs active:scale-95"
+        >
+          <ChevronLeft className="size-4" />
+          <span className="hidden sm:inline">Previous</span>
+          <span className="sm:hidden">Back</span>
         </Button>
         <div className="flex-1">
-          <div className="mb-1 flex justify-between font-mono text-xs text-muted-foreground">
-            <span>CERTAINTY</span><span>{certainty}%</span>
+          <div className="mb-1 flex justify-between font-mono text-[11px] text-muted-foreground">
+            <span>CERTAINTY</span>
+            <span>{certainty}%</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-muted">
-            <div className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500" style={{ width: `${certainty}%` }} />
+            <div
+              className="h-full bg-gradient-to-r from-pulse to-voice transition-all duration-500"
+              style={{ width: `${certainty}%` }}
+            />
           </div>
         </div>
-        <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
+        <span className="rounded-full border border-border bg-card px-2.5 py-1 font-mono text-xs">
           Q{n}
         </span>
       </div>
 
-      {showTwoCards ? (
-        <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-          <CandidateCard
-            title="Parent genres"
-            candidates={parentCandidates}
-            canEarlySelect={canEarlySelectParent}
-            onSelectGenre={onSelectGenre}
-          />
-          <CandidateCard
-            title="Sub-genres"
-            candidates={subCandidates}
-            canEarlySelect={canEarlySelectSub}
-            onSelectGenre={onSelectGenre}
-            showParentTag={true}
-          />
-        </div>
-      ) : (
-        <div className="mb-4">
-          <CandidateCard
-            title={isMicroMode ? "Candidate sub-genres" : "Top candidates"}
-            candidates={
-              isMicroMode
-                ? subCandidates
-                : parentCandidates.length > 0
-                ? parentCandidates
-                : subCandidates
-            }
-            canEarlySelect={isMicroMode ? canEarlySelectSub : canEarlySelectParent}
-            onSelectGenre={onSelectGenre}
-            showParentTag={isMicroMode}
-          />
-        </div>
-      )}
+      <LiveLeaderStrip
+        topCandidate={topLeader}
+        drillName={drillName}
+        earlySelectTarget={earlySelectTarget}
+        onSelectGenre={onSelectGenre}
+      />
 
-      {drillName && (
-        <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
-      )}
-      <div className={`animate-slide-in rounded-3xl border ${cat.border} bg-card/80 p-6 backdrop-blur md:p-10`}>
+      {/* Question Card First — Above the Fold, Zero Layout Shift */}
+      <div className={`glass-panel animate-slide-in rounded-3xl border ${cat.border} p-4 sm:p-6 md:p-9`}>
         <div className="flex items-center justify-between gap-2">
-          <span className={`inline-flex items-center gap-2 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest`}>
+          <span className={`inline-flex items-center gap-1.5 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-widest sm:text-xs`}>
             {meta.emoji} {meta.label}
           </span>
           {q.alternativePrompt && (
@@ -1437,7 +1570,7 @@ function QuestionView({
                     onClick={() => setRephrased(false)}
                     className="font-mono text-xs text-muted-foreground underline hover:text-foreground active:scale-95"
                   >
-                    (Show original)
+                    (Original)
                   </button>
                 )}
               </div>
@@ -1445,58 +1578,58 @@ function QuestionView({
               <button
                 type="button"
                 onClick={() => setRephrased(true)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/70 px-2.5 py-1 font-mono text-xs text-muted-foreground transition hover:border-pulse/50 hover:text-foreground active:scale-95"
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/70 px-2.5 py-1 font-mono text-[11px] text-muted-foreground transition hover:border-pulse/50 hover:text-foreground active:scale-95 sm:text-xs"
               >
                 <HelpCircle className="size-3.5 text-muted-foreground" />
-                <span>Unclear question?</span>
+                <span>Rephrase</span>
               </button>
             )
           )}
         </div>
         {isAlternative && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-pulse/40 bg-pulse/10 px-3 py-2 text-xs font-semibold text-pulse">
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-pulse/40 bg-pulse/10 px-3 py-2 text-xs font-semibold text-pulse">
             <span>🔄</span>
-            <span>You were unsure about this sound earlier — here is another angle on it:</span>
+            <span>You were unsure earlier — here is another angle on this sound:</span>
           </div>
         )}
         {isConfirming && (
-          <div className="mt-4 flex items-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-500">
+          <div className="mt-3 flex items-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-500">
             <span>🎯</span>
             <span>Zeroing in: Confirming signature {suspectName ? `"${suspectName}"` : "genre"} sound</span>
           </div>
         )}
-        <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
+        <h2 className="mt-4 text-balance text-xl font-extrabold leading-snug sm:mt-5 sm:text-2xl md:text-3xl">
           {isShowingAlternative ? q.alternativePrompt : q.question}
         </h2>
         {hintOpen ? (
-          <div className="mt-5 rounded-2xl border border-border/70 bg-card/60 p-4 text-xs md:text-sm">
+          <div className="mt-4 rounded-2xl border border-border/70 bg-background/50 p-3.5 text-xs sm:text-sm">
             <div className="flex items-center justify-between border-b border-border/40 pb-2">
-              <span className="flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 <span>🎧 Clues & Context</span>
               </span>
               <button
                 type="button"
                 onClick={() => setHintOpen(false)}
-                className="font-mono text-[11px] text-muted-foreground hover:text-foreground transition active:scale-95"
+                className="font-mono text-[11px] text-muted-foreground transition hover:text-foreground active:scale-95"
               >
                 Hide
               </button>
             </div>
-            <div className="mt-3 space-y-2.5">
+            <div className="mt-2.5 space-y-2">
               {q.hint && (
-                <div className="flex items-start gap-2.5">
-                  <span className="shrink-0 rounded-md bg-pulse/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
+                <div className="flex items-start gap-2">
+                  <span className="shrink-0 rounded-md bg-pulse/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
                     💡 Hint
                   </span>
-                  <span className="leading-relaxed text-foreground/90">{q.hint}</span>
+                  <span className="text-pretty leading-relaxed text-foreground/90">{q.hint}</span>
                 </div>
               )}
               {q.polarOpposite && (
-                <div className="flex items-start gap-2.5 border-t border-border/40 pt-2.5">
-                  <span className="shrink-0 rounded-md bg-voice/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-voice">
-                    ⚖️ Polar Opposite
+                <div className="flex items-start gap-2 border-t border-border/40 pt-2">
+                  <span className="shrink-0 rounded-md bg-voice/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-voice">
+                    ⚖️ Opposite
                   </span>
-                  <span className="leading-relaxed text-muted-foreground">{q.polarOpposite}</span>
+                  <span className="text-pretty leading-relaxed text-muted-foreground">{q.polarOpposite}</span>
                 </div>
               )}
             </div>
@@ -1505,18 +1638,20 @@ function QuestionView({
           <button
             type="button"
             onClick={() => setHintOpen(true)}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/50 px-3 py-1 font-mono text-xs text-muted-foreground hover:border-border hover:text-foreground active:scale-95 transition"
+            className="mt-3.5 inline-flex items-center gap-1.5 rounded-full border border-border/70 bg-card/50 px-3 py-1 font-mono text-xs text-muted-foreground transition hover:border-border hover:text-foreground active:scale-95"
           >
             <ChevronDown className="size-3.5" />
-            <span>Show hint & polar opposite</span>
+            <span>Show hint & opposite</span>
           </button>
         )}
-        <div className="mt-8 grid grid-cols-1 gap-2 md:grid-cols-5">
+
+        {/* Thumb-friendly 2-column grid on mobile, 5-column spectrum on desktop */}
+        <div className="mt-6 grid grid-cols-2 gap-2 md:mt-7 md:grid-cols-5">
           {RESPONSES.map((r, i) => (
             <button
               key={r.label}
               onClick={() => onRespond(r.value, isShowingAlternative)}
-              className={`flex items-center justify-center rounded-xl border p-3.5 text-center font-bold text-sm md:text-base transition-transform duration-100 active:scale-95 md:min-h-[58px] ${RESP_CLASS[i]}`}
+              className={`flex min-h-[50px] items-center justify-center rounded-xl border p-3 text-center text-sm font-bold transition-transform duration-100 active:scale-95 md:min-h-[56px] md:text-base ${RESP_CLASS[i]} ${STANDARD_BTN_ORDER[i]}`}
             >
               <span>{r.label}</span>
             </button>
@@ -1524,62 +1659,86 @@ function QuestionView({
         </div>
 
         {(gainingYes.length > 0 || gainingNo.length > 0) && (
-          <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-5">
-            {/* Affirmative Section (below Yes & Probably) */}
-            <div className="flex flex-col justify-between rounded-2xl border border-pulse/30 bg-pulse/[0.04] p-4 text-left md:col-span-2">
+          <div className="mt-3.5 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-5">
+            <div className="flex flex-col justify-between rounded-2xl border border-pulse/30 bg-pulse/[0.04] p-3 text-left md:col-span-2">
               <div>
-                <div className="flex items-center gap-2 font-mono text-xs font-semibold text-pulse">
+                <div className="flex items-center gap-2 font-mono text-[11px] font-semibold text-pulse">
                   <span className="size-2 rounded-full bg-pulse shadow-[0_0_8px_var(--pulse)]" />
                   <span>Boosts if Yes / Probably</span>
                 </div>
                 {gainingYes.length > 0 ? (
-                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {gainingYes.map((name) => (
                       <span
                         key={name}
-                        className="inline-flex items-center rounded-full border border-pulse/35 bg-pulse/10 px-2.5 py-1 font-sans text-xs font-medium text-pulse shadow-sm"
-                        title={`Boosts confidence for ${name}`}
+                        className="inline-flex items-center rounded-full border border-pulse/35 bg-pulse/10 px-2 py-0.5 font-sans text-[11px] font-medium text-pulse"
                       >
                         {name}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-2 text-xs text-muted-foreground/60 italic">No genres strongly boosted</p>
+                  <p className="mt-1.5 text-xs text-muted-foreground/60 italic">No genres strongly boosted</p>
                 )}
               </div>
             </div>
 
-            {/* Center Spacer (below Don't know) */}
-            <div className="hidden md:flex md:col-span-1 md:items-center md:justify-center">
+            <div className="hidden md:col-span-1 md:flex md:items-center md:justify-center">
               <span className="font-mono text-xs text-muted-foreground/30">───</span>
             </div>
 
-            {/* Negative Section (below Probably Not & No) */}
-            <div className="flex flex-col justify-between rounded-2xl border border-destructive/30 bg-destructive/[0.04] p-4 text-left md:col-span-2">
+            <div className="flex flex-col justify-between rounded-2xl border border-destructive/30 bg-destructive/[0.04] p-3 text-left md:col-span-2">
               <div>
-                <div className="flex items-center gap-2 font-mono text-xs font-semibold text-destructive">
+                <div className="flex items-center gap-2 font-mono text-[11px] font-semibold text-destructive">
                   <span className="size-2 rounded-full bg-destructive shadow-[0_0_8px_var(--destructive)]" />
                   <span>Boosts if No / Probably Not</span>
                 </div>
                 {gainingNo.length > 0 ? (
-                  <div className="mt-2.5 flex flex-wrap gap-1.5">
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {gainingNo.map((name) => (
                       <span
                         key={name}
-                        className="inline-flex items-center rounded-full border border-destructive/35 bg-destructive/10 px-2.5 py-1 font-sans text-xs font-medium text-destructive shadow-sm"
-                        title={`Boosts confidence for ${name}`}
+                        className="inline-flex items-center rounded-full border border-destructive/35 bg-destructive/10 px-2 py-0.5 font-sans text-[11px] font-medium text-destructive"
                       >
                         {name}
                       </span>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-2 text-xs text-muted-foreground/60 italic">No genres strongly boosted</p>
+                  <p className="mt-1.5 text-xs text-muted-foreground/60 italic">No genres strongly boosted</p>
                 )}
               </div>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Live Candidate Probability Bars Below Question — Zero Layout Shift */}
+      <div className="mt-4">
+        {showTwoCards ? (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <CandidateCard
+              title="Parent genres"
+              candidates={parentCandidates}
+              canEarlySelect={canEarlySelectParent}
+              onSelectGenre={onSelectGenre}
+            />
+            <CandidateCard
+              title="Sub-genres"
+              candidates={subCandidates}
+              canEarlySelect={canEarlySelectSub}
+              onSelectGenre={onSelectGenre}
+              showParentTag={true}
+            />
+          </div>
+        ) : (
+          <CandidateCard
+            title={isMicroMode ? "Candidate sub-genres" : "Top candidates"}
+            candidates={primaryList}
+            canEarlySelect={isMicroMode ? canEarlySelectSub : canEarlySelectParent}
+            onSelectGenre={onSelectGenre}
+            showParentTag={isMicroMode}
+          />
         )}
       </div>
 
@@ -1624,6 +1783,18 @@ function DescriptorQuestionView({
   const canEarlySelectParent = checkEarlySelect(parentCandidates, engine.questionCount);
   const canEarlySelectSub = checkEarlySelect(subCandidates, engine.questionCount);
 
+  const primaryList = isMicroMode
+    ? subCandidates
+    : parentCandidates.length > 0
+    ? parentCandidates
+    : subCandidates;
+  const topLeader = engine.questionCount >= 1 ? primaryList[0] : undefined;
+  const earlySelectTarget = canEarlySelectSub
+    ? subCandidates[0]
+    : canEarlySelectParent
+    ? parentCandidates[0]
+    : null;
+
   const visibleOptions = useMemo(() => q.options.slice(0, 4), [q.options]);
 
   const gainingMap = useMemo(
@@ -1633,12 +1804,20 @@ function DescriptorQuestionView({
 
   return (
     <section>
-      <div className="mb-6 flex items-center gap-4">
-        <Button variant="ghost" size="sm" onClick={onUndo} disabled={!engine.canUndo && !drill} className="active:scale-95">
-          <ChevronLeft /> Previous
+      <div className="mb-3 flex items-center gap-3 sm:mb-4">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onUndo}
+          disabled={!engine.canUndo && !drill}
+          className="h-8 px-2.5 text-xs active:scale-95"
+        >
+          <ChevronLeft className="size-4" />
+          <span className="hidden sm:inline">Previous</span>
+          <span className="sm:hidden">Back</span>
         </Button>
         <div className="flex-1">
-          <div className="mb-1 flex justify-between font-mono text-xs text-muted-foreground">
+          <div className="mb-1 flex justify-between font-mono text-[11px] text-muted-foreground">
             <span>CERTAINTY</span>
             <span>{certainty}%</span>
           </div>
@@ -1649,103 +1828,129 @@ function DescriptorQuestionView({
             />
           </div>
         </div>
-        <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-xs">
-          {n <= 8 ? `Q${n} of ~8` : `Q${n} • Deep Dive`}
+        <span className="rounded-full border border-border bg-card px-2.5 py-1 font-mono text-xs">
+          {n <= 8 ? `Q${n} / ~8` : `Q${n}`}
         </span>
       </div>
 
-      {showTwoCards ? (
-        <div className="mb-4 grid grid-cols-1 gap-3 md:grid-cols-2">
-          <CandidateCard
-            title="Parent genres"
-            candidates={parentCandidates}
-            canEarlySelect={canEarlySelectParent}
-            onSelectGenre={onSelectGenre}
-          />
-          <CandidateCard
-            title="Sub-genres"
-            candidates={subCandidates}
-            canEarlySelect={canEarlySelectSub}
-            onSelectGenre={onSelectGenre}
-            showParentTag={true}
-          />
-        </div>
-      ) : (
-        <div className="mb-4">
-          <CandidateCard
-            title={isMicroMode ? `Subgenres of ${drillName ?? "Family"}` : "Top candidates"}
-            candidates={isMicroMode ? subCandidates : parentCandidates.length > 0 ? parentCandidates : subCandidates}
-            canEarlySelect={isMicroMode ? canEarlySelectSub : canEarlySelectParent}
-            onSelectGenre={onSelectGenre}
-            showParentTag={isMicroMode}
-          />
-        </div>
-      )}
+      <LiveLeaderStrip
+        topCandidate={topLeader}
+        drillName={drillName}
+        earlySelectTarget={earlySelectTarget}
+        onSelectGenre={onSelectGenre}
+      />
 
-      {drillName && (
-        <p className="mb-3 font-mono text-xs uppercase tracking-widest text-sound">🔬 Pinpointing {drillName} subgenre</p>
-      )}
-
-      <div className={`animate-slide-in rounded-3xl border ${cat.border} bg-card/80 p-6 backdrop-blur md:p-10`}>
+      {/* Question & Options First — Above the Fold, Zero Vertical Shift */}
+      <div className={`glass-panel animate-slide-in rounded-3xl border ${cat.border} p-4 sm:p-6 md:p-9`}>
         <div className="flex items-center justify-between gap-2">
-          <span className={`inline-flex items-center gap-2 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-xs font-bold uppercase tracking-widest`}>
+          <span className={`inline-flex items-center gap-1.5 rounded-full ${cat.bg} ${cat.text} px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-widest sm:text-xs`}>
             {meta.emoji} {meta.label}
           </span>
-          <span className="rounded-full bg-pulse/10 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-pulse">
-            🧪 Sensory Choice
+          <span className="rounded-full bg-pulse/10 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-pulse sm:text-[11px]">
+            🎧 Pick closest match
           </span>
         </div>
 
-        <h2 className="mt-5 text-2xl font-extrabold leading-snug md:text-3xl">
+        <h2 className="mt-3.5 text-balance text-xl font-extrabold leading-snug sm:mt-5 sm:text-2xl md:text-3xl">
           {q.question}
         </h2>
         {q.subtitle && (
-          <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+          <p className="mt-1.5 text-pretty text-xs leading-relaxed text-muted-foreground sm:text-sm">
             {q.subtitle}
           </p>
         )}
 
         {q.hint && (
-          <div className="mt-4 flex items-start gap-2.5 rounded-2xl border border-border/70 bg-card/60 p-3 text-xs text-muted-foreground">
-            <span className="shrink-0 rounded-md bg-pulse/10 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
+          <div className="mt-3 flex items-start gap-2 rounded-xl border border-border/60 bg-background/45 px-3 py-2 text-xs text-muted-foreground">
+            <span className="shrink-0 rounded-md bg-pulse/15 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-pulse">
               💡 Tip
             </span>
-            <span className="leading-relaxed text-foreground/80">{q.hint}</span>
+            <span className="text-pretty leading-relaxed text-foreground/85">{q.hint}</span>
           </div>
         )}
 
-        <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {visibleOptions.map((opt, i) => (
-            <button
-              key={opt.id}
-              onClick={() => onRespond(opt.id)}
-              className="group relative flex flex-col items-start rounded-2xl border border-border/80 bg-card/60 p-5 text-left transition hover:border-pulse hover:bg-card hover:shadow-[0_0_25px_-5px_var(--pulse)] active:scale-[0.98]"
-            >
-              <div className="flex w-full items-center">
-                <span className="text-2xl transition group-hover:scale-110">{opt.emoji}</span>
-              </div>
-              <h3 className="mt-3 font-bold text-base text-foreground group-hover:text-pulse transition-colors">
-                {opt.label}
-              </h3>
-              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                {opt.description}
-              </p>
-              {gainingMap[i] && gainingMap[i].length > 0 && (
-                <div className="mt-3.5 flex flex-wrap items-center gap-1.5 border-t border-border/40 pt-2.5 w-full">
-                  {gainingMap[i].map((name) => (
-                    <span
-                      key={name}
-                      className="inline-flex items-center rounded-full border border-border/80 bg-background/30 px-2 py-0.5 font-sans text-[10px] text-muted-foreground transition group-hover:border-pulse/50 group-hover:text-foreground"
-                      title={`Boosts confidence for ${name}`}
-                    >
-                      <span>{name}</span>
-                    </span>
-                  ))}
+        <div className="mt-5 grid grid-cols-1 gap-2.5 sm:mt-7 sm:grid-cols-2 sm:gap-3">
+          {visibleOptions.map((opt, i) => {
+            const isFallbackOption = i === 3 || Object.keys(opt.effects).length === 0;
+            return (
+              <button
+                key={opt.id}
+                onClick={() => onRespond(opt.id)}
+                className={
+                  isFallbackOption
+                    ? "group relative flex items-center gap-3 rounded-2xl border border-dashed border-border/80 bg-muted/20 p-3.5 text-left transition hover:border-muted-foreground/60 hover:bg-muted/35 active:scale-[0.985] sm:flex-col sm:items-start sm:justify-between sm:p-5"
+                    : "group relative flex items-start gap-3.5 rounded-2xl border border-border/85 bg-card/75 p-3.5 text-left shadow-sm transition hover:border-pulse hover:bg-card hover:shadow-[0_0_25px_-6px_var(--pulse)] active:scale-[0.985] sm:flex-col sm:gap-0 sm:p-5"
+                }
+              >
+                <div
+                  className={
+                    isFallbackOption
+                      ? "flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/60 bg-background/40 text-xl transition group-hover:scale-105 sm:size-11 sm:text-2xl"
+                      : "flex size-11 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-background/60 text-2xl transition group-hover:scale-105 group-hover:border-pulse/40"
+                  }
+                >
+                  <span>{opt.emoji}</span>
                 </div>
-              )}
-            </button>
-          ))}
+                <div className="min-w-0 flex-1 sm:mt-3 sm:w-full">
+                  <h3
+                    className={
+                      isFallbackOption
+                        ? "text-sm font-semibold text-foreground/85 transition-colors group-hover:text-foreground sm:text-base"
+                        : "text-sm font-bold text-foreground transition-colors group-hover:text-pulse sm:text-base"
+                    }
+                  >
+                    {opt.label}
+                  </h3>
+                  <p className="mt-0.5 text-pretty text-xs leading-relaxed text-muted-foreground sm:mt-1">
+                    {opt.description}
+                  </p>
+                  {!isFallbackOption && gainingMap[i] && gainingMap[i].length > 0 && (
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1 border-t border-border/40 pt-2 w-full sm:mt-3.5 sm:gap-1.5 sm:pt-2.5">
+                      {gainingMap[i].map((name) => (
+                        <span
+                          key={name}
+                          className="inline-flex items-center rounded-full border border-border/80 bg-background/40 px-2 py-0.5 font-sans text-[10px] text-muted-foreground transition group-hover:border-pulse/50 group-hover:text-foreground"
+                          title={`Boosts confidence for ${name}`}
+                        >
+                          <span>{name}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </button>
+            );
+          })}
         </div>
+      </div>
+
+      {/* Live Candidate Probability Bars Below Question — Zero Layout Shift */}
+      <div className="mt-4">
+        {showTwoCards ? (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <CandidateCard
+              title="Parent genres"
+              candidates={parentCandidates}
+              canEarlySelect={canEarlySelectParent}
+              onSelectGenre={onSelectGenre}
+            />
+            <CandidateCard
+              title="Sub-genres"
+              candidates={subCandidates}
+              canEarlySelect={canEarlySelectSub}
+              onSelectGenre={onSelectGenre}
+              showParentTag={true}
+            />
+          </div>
+        ) : (
+          <CandidateCard
+            title={isMicroMode ? `Subgenres of ${drillName ?? "Family"}` : "Top candidates"}
+            candidates={primaryList}
+            canEarlySelect={isMicroMode ? canEarlySelectSub : canEarlySelectParent}
+            onSelectGenre={onSelectGenre}
+            showParentTag={isMicroMode}
+          />
+        )}
       </div>
 
       <AnswerTrail engine={engine} onChangeDescriptorAnswer={onChangeDescriptorAnswer} />
@@ -1756,15 +1961,25 @@ function DescriptorQuestionView({
 function Gauge({ value }: { value: number }) {
   const r = 52, c = 2 * Math.PI * r;
   return (
-    <div className="relative size-36 shrink-0">
+    <div className="relative size-32 shrink-0 sm:size-36">
       <svg viewBox="0 0 120 120" className="size-full -rotate-90">
         <circle cx="60" cy="60" r={r} fill="none" stroke="var(--muted)" strokeWidth="10" />
-        <circle cx="60" cy="60" r={r} fill="none" stroke="var(--pulse)" strokeWidth="10" strokeLinecap="round"
-          strokeDasharray={c} strokeDashoffset={c * (1 - value)} className="transition-all duration-700" />
+        <circle
+          cx="60"
+          cy="60"
+          r={r}
+          fill="none"
+          stroke="var(--pulse)"
+          strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={c}
+          strokeDashoffset={c * (1 - value)}
+          className="transition-all duration-700"
+        />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="font-mono text-3xl font-bold">{Math.round(value * 100)}%</span>
-        <span className="text-xs text-muted-foreground">match</span>
+        <span className="font-mono text-2xl font-bold sm:text-3xl">{Math.round(value * 100)}%</span>
+        <span className="text-[11px] text-muted-foreground sm:text-xs">match</span>
       </div>
     </div>
   );
@@ -1815,10 +2030,11 @@ function Diagnosis({
   const canDrill = !drill && hasSubgenres(g.id);
 
   return (
-    <section className="animate-slide-in space-y-5">
-      <div className="rounded-3xl border border-pulse/40 bg-card/80 p-6 backdrop-blur md:p-10">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+    <section className="animate-slide-in space-y-4 sm:space-y-5">
+      {/* Hero Result Card */}
+      <div className="glass-panel rounded-3xl border border-pulse/40 p-5 sm:p-7 md:p-10">
+        <div className="flex flex-wrap items-center justify-center gap-2 md:justify-between">
+          <p className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground sm:text-xs">
             {selectedGenreId && selectedGenreId !== ranked[0]?.genre.id
               ? `Inspecting runner-up • Top match: ${ranked[0]?.genre.name}`
               : `Diagnosis complete • ${engine.questionCount} questions`}
@@ -1833,13 +2049,20 @@ function Diagnosis({
             </button>
           )}
         </div>
-        <div className="mt-4 flex flex-col items-start gap-6 md:flex-row md:items-center">
+
+        <div className="mt-4 flex flex-col items-center gap-5 text-center md:flex-row md:items-center md:gap-7 md:text-left">
           <Gauge value={activeEntry.prob} />
-          <div>
-            {g.parent && <p className="font-mono text-xs uppercase tracking-widest text-sound">Subgenre of {GENRES.find((x) => x.id === g.parent)?.name ?? g.parent}</p>}
-            <h2 className="bg-gradient-to-r from-pulse to-voice bg-clip-text text-5xl font-extrabold tracking-tight text-transparent md:text-6xl">{g.name}</h2>
+          <div className="min-w-0 flex-1">
+            {g.parent && (
+              <p className="font-mono text-xs uppercase tracking-widest text-sound">
+                Subgenre of {GENRES.find((x) => x.id === g.parent)?.name ?? g.parent}
+              </p>
+            )}
+            <h2 className="mt-0.5 bg-gradient-to-r from-pulse via-voice to-sound bg-clip-text text-balance text-3xl font-extrabold tracking-tight text-transparent sm:text-5xl md:text-6xl">
+              {g.name}
+            </h2>
             {g.aliases && g.aliases.length > 0 && (
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <div className="mt-2 flex flex-wrap items-center justify-center gap-1.5 md:justify-start">
                 <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                   Also known as:
                 </span>
@@ -1853,43 +2076,92 @@ function Diagnosis({
                 ))}
               </div>
             )}
-            <p className="mt-3 max-w-xl text-muted-foreground">{g.summary}</p>
+            <p className="mt-3 max-w-xl text-pretty text-sm text-muted-foreground sm:text-base">
+              {g.summary}
+            </p>
           </div>
         </div>
+
         {hallmarks.length > 0 && (
-          <ul className="mt-6 grid gap-2 md:grid-cols-2">
+          <ul className="mt-6 grid gap-2.5 text-left sm:grid-cols-2">
             {hallmarks.map(([cat, text]) => (
-              <li key={cat} className={`rounded-xl border ${CAT_CLASS[cat].border} ${CAT_CLASS[cat].bg} p-3 text-sm`}>
-                <span className={`font-mono text-xs font-bold uppercase ${CAT_CLASS[cat].text}`}>{CATEGORY_META[cat].emoji} {CATEGORY_META[cat].label}</span>
-                <p className="mt-1">{text}</p>
+              <li key={cat} className={`rounded-2xl border ${CAT_CLASS[cat].border} ${CAT_CLASS[cat].bg} p-3.5 text-xs sm:text-sm`}>
+                <span className={`font-mono text-[11px] font-bold uppercase ${CAT_CLASS[cat].text}`}>
+                  {CATEGORY_META[cat].emoji} {CATEGORY_META[cat].label}
+                </span>
+                <p className="mt-1 text-pretty leading-relaxed text-foreground/95">{text}</p>
               </li>
             ))}
           </ul>
         )}
+
         {g.distinctionNotes && (
-          <div className="mt-4 rounded-2xl border border-sound/30 bg-sound/5 p-4 text-xs leading-relaxed text-muted-foreground">
+          <div className="mt-4 rounded-2xl border border-sound/30 bg-sound/5 p-3.5 text-left text-xs leading-relaxed text-muted-foreground">
             <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-sound">
               🧭 How to Tell It Apart:{" "}
             </span>
-            <span className="text-foreground/90">{g.distinctionNotes}</span>
+            <span className="text-pretty text-foreground/90">{g.distinctionNotes}</span>
           </div>
         )}
       </div>
 
+      {/* Primary Next-Step Action Strip — Immediately Accessible Above the Fold on Mobile */}
+      <div className="flex flex-wrap items-center gap-2">
+        {canDrill && (
+          <Button
+            onClick={() => onDrill(g.id)}
+            className="h-10 flex-1 bg-sound font-bold text-foreground shadow-sm hover:bg-sound/85 active:scale-95 sm:flex-none"
+          >
+            <Microscope className="size-4" /> Pinpoint Exact Subgenre
+          </Button>
+        )}
+        {drill && onExitDrill && (
+          <Button
+            variant="outline"
+            onClick={onExitDrill}
+            className="h-10 border-sound/50 text-sound hover:bg-sound/15 active:scale-95"
+          >
+            <ChevronLeft className="size-4" /> Back to All Genres
+          </Button>
+        )}
+        <Button
+          variant={canDrill ? "secondary" : "default"}
+          onClick={onAgain}
+          className="h-10 flex-1 font-bold active:scale-95 sm:flex-none"
+        >
+          <RotateCcw className="size-4" /> Play Again
+        </Button>
+        <Button variant="outline" onClick={onUndo} className="h-10 active:scale-95">
+          <ChevronLeft className="size-4" /> Change Last Answer
+        </Button>
+        <Button variant="outline" onClick={onWrong} className="h-10 active:scale-95">
+          <X className="size-4" /> Wrong Genre?
+        </Button>
+        {isLocalDev && onCopyDevSnapshot && (
+          <Button
+            variant="outline"
+            onClick={onCopyDevSnapshot}
+            className="h-10 border-amber-500/50 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 active:scale-95"
+          >
+            <Bug className="mr-1.5 size-4" /> Dev Copy State
+          </Button>
+        )}
+      </div>
+
       {topCrossSubgenre && (!drill || topCrossSubgenre.genre.parent !== drill) && topCrossSubgenre.prob >= 0.25 && (
-        <div className="rounded-3xl border border-sound/40 bg-sound/10 p-5 text-sm">
+        <div className="rounded-3xl border border-sound/40 bg-sound/10 p-4 text-sm sm:p-5">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
               <p className="flex items-center gap-2 font-semibold text-sound">
                 <span>🎯</span> Top Subgenre Match: {topCrossSubgenre.genre.name}
               </p>
-              <p className="text-xs text-muted-foreground leading-relaxed">
+              <p className="text-xs leading-relaxed text-muted-foreground">
                 Across all subgenres, this track strongly matches{" "}
                 <span className="font-bold text-foreground">{topCrossSubgenre.genre.name}</span>
                 {crossSubgenreParent ? (
                   <> (a subgenre of <span className="font-semibold text-foreground">{crossSubgenreParent.name}</span>)</>
                 ) : null}
-                {" "}with a <span className="font-bold font-mono text-foreground">{Math.round(topCrossSubgenre.prob * 100)}%</span> match.
+                {" "}with a <span className="font-mono font-bold text-foreground">{Math.round(topCrossSubgenre.prob * 100)}%</span> match.
               </p>
             </div>
             {topCrossSubgenre.genre.parent && topCrossSubgenre.genre.parent !== drill && (
@@ -1898,7 +2170,7 @@ function Diagnosis({
                 onClick={() => onDrill(topCrossSubgenre.genre.parent!)}
                 className="shrink-0 bg-sound text-foreground hover:bg-sound/80 active:scale-95"
               >
-                <Microscope className="size-4 mr-1.5" />
+                <Microscope className="mr-1.5 size-4" />
                 Explore {crossSubgenreParent?.name ?? "Family"}
               </Button>
             )}
@@ -1907,35 +2179,35 @@ function Diagnosis({
       )}
 
       {tension.outlier && (
-        <div className="rounded-3xl border border-amber-500/40 bg-amber-500/10 p-5 text-sm">
+        <div className="rounded-3xl border border-amber-500/40 bg-amber-500/10 p-4 text-sm sm:p-5">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="space-y-1">
               <p className="flex items-center gap-2 font-semibold text-amber-500">
                 <span>⚠️</span> Unusual answer noticed
               </p>
               {"descriptorQuestionId" in tension.outlier && tension.outlier.descriptorQuestionId ? (
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs leading-relaxed text-muted-foreground">
                   You selected{" "}
                   <span className="font-bold text-foreground">
                     &ldquo;{tension.outlier.chosenOptionLabel}&rdquo;
                   </span>{" "}
                   for{" "}
-                  <span className="italic font-medium text-foreground">
+                  <span className="font-medium italic text-foreground">
                     &ldquo;{tension.outlier.descriptorQuestionText}&rdquo;
                   </span>
                   , which conflicts with typical <span className="font-semibold text-foreground">{g.name}</span> tracks.
                 </p>
               ) : (
-                <p className="text-xs text-muted-foreground leading-relaxed">
+                <p className="text-xs leading-relaxed text-muted-foreground">
                   You answered{" "}
                   <span className="font-bold text-foreground">
                     &ldquo;{RESPONSES.find((r) => r.value === tension.outlier!.actual)?.label ?? tension.outlier.actual}&rdquo;
                   </span>{" "}
                   for{" "}
-                  <span className="italic font-medium text-foreground">
+                  <span className="font-medium italic text-foreground">
                     &ldquo;{tension.outlier.attribute.question}&rdquo;
                   </span>
-                  . If this track was actually {tension.outlier.expected > 0 ? "YES" : "NO"}, click to recalculate:
+                  . If this track was actually {tension.outlier.expected > 0 ? "YES" : "NO"}, tap to recalculate:
                 </p>
               )}
             </div>
@@ -1988,35 +2260,41 @@ function Diagnosis({
         </div>
       )}
 
-      <div className="rounded-3xl border border-border bg-card/80 p-6">
+      {/* Studio Tracklist Card */}
+      <div className="glass-panel rounded-3xl border border-border/80 p-5 sm:p-6">
         <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-          Benchmark {tracks.length > 1 ? `Tracks (${tracks.length})` : "Track"}
+          🎧 Benchmark {tracks.length > 1 ? `Tracks (${tracks.length})` : "Track"}
         </p>
-        <div className="mt-3 space-y-2.5">
+        <div className="mt-3 space-y-2">
           {tracks.map((t, idx) => {
             const qStr = encodeURIComponent(`${t.artist} ${t.title}`);
             return (
               <div
                 key={`${t.artist}-${t.title}-${idx}`}
-                className="flex flex-col justify-between gap-2 rounded-2xl border border-border/70 bg-background/50 p-3.5 sm:flex-row sm:items-center"
+                className="flex flex-col justify-between gap-2.5 rounded-2xl border border-border/70 bg-background/50 p-3 sm:flex-row sm:items-center sm:p-3.5"
               >
-                <div>
-                  <span className="font-bold text-foreground">{t.artist}</span>
-                  <span className="text-muted-foreground"> — </span>
-                  <span className="italic text-foreground/90">{t.title}</span>
+                <div className="flex items-baseline gap-2.5 min-w-0">
+                  <span className="font-mono text-xs font-bold text-pulse shrink-0">
+                    0{idx + 1}
+                  </span>
+                  <div className="truncate text-sm">
+                    <span className="font-bold text-foreground">{t.artist}</span>
+                    <span className="text-muted-foreground"> — </span>
+                    <span className="italic text-foreground/90">{t.title}</span>
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-1.5">
-                  <Button size="sm" variant="secondary" asChild>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <Button size="sm" variant="secondary" className="h-8 px-2.5 text-xs" asChild>
                     <a href={`https://open.spotify.com/search/${qStr}`} target="_blank" rel="noreferrer">
                       <Music2 className="size-3.5" /> Spotify
                     </a>
                   </Button>
-                  <Button size="sm" variant="secondary" asChild>
+                  <Button size="sm" variant="secondary" className="h-8 px-2.5 text-xs" asChild>
                     <a href={`https://music.apple.com/search?term=${qStr}`} target="_blank" rel="noreferrer">
-                      <Music2 className="size-3.5" /> Apple Music
+                      <Music2 className="size-3.5" /> Apple
                     </a>
                   </Button>
-                  <Button size="sm" variant="secondary" asChild>
+                  <Button size="sm" variant="secondary" className="h-8 px-2.5 text-xs" asChild>
                     <a href={`https://www.youtube.com/results?search_query=${qStr}`} target="_blank" rel="noreferrer">
                       <Youtube className="size-3.5" /> YouTube
                     </a>
@@ -2028,11 +2306,15 @@ function Diagnosis({
         </div>
       </div>
 
-      <div className="rounded-3xl border border-border bg-card/80 p-6">
-        <div className="flex items-center justify-between">
+      {/* Interactive Runner-ups Comparison Card */}
+      <div className="glass-panel rounded-3xl border border-border/80 p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-2">
           <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            {drill ? "Subgenre Runner-ups" : "Runner-ups"} (click any to compare)
+            {drill ? "Subgenre Runner-ups" : "Runner-ups"}
           </p>
+          <span className="font-mono text-[10px] text-muted-foreground">
+            Tap any row to compare
+          </span>
         </div>
         <div className="mt-3 space-y-2">
           {ranked.slice(1, 4).map((r) => {
@@ -2044,19 +2326,28 @@ function Diagnosis({
                 onClick={() =>
                   setSelectedGenreId(isSelected ? null : r.genre.id)
                 }
-                className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm transition active:scale-[0.99] ${
+                className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left text-xs transition active:scale-[0.99] sm:text-sm ${
                   isSelected
-                    ? "border-pulse bg-pulse/10"
-                    : "border-transparent hover:border-border hover:bg-background/50"
+                    ? "border-pulse bg-pulse/10 shadow-sm"
+                    : "border-border/50 bg-background/35 hover:border-border hover:bg-background/60"
                 }`}
               >
-                <span className="w-40 truncate font-semibold text-foreground">
+                <span className="w-32 truncate font-semibold text-foreground sm:w-44">
                   {r.genre.name}
                 </span>
                 <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
-                  <div className="h-full bg-sound" style={{ width: `${r.prob * 100}%` }} />
+                  <div className="h-full bg-sound transition-all duration-500" style={{ width: `${r.prob * 100}%` }} />
                 </div>
-                <span className="w-14 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+                <span className="w-12 text-right font-mono text-xs">{(r.prob * 100).toFixed(1)}%</span>
+                <span
+                  className={`hidden rounded-full px-2 py-0.5 font-mono text-[10px] sm:inline-block ${
+                    isSelected
+                      ? "bg-pulse text-background font-bold"
+                      : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {isSelected ? "Viewing" : "Compare"}
+                </span>
               </button>
             );
           })}
@@ -2064,7 +2355,7 @@ function Diagnosis({
 
         {!drill && allSubgenres.length > 0 && (allSubgenres[0]?.prob ?? 0) >= 0.08 && (
           <div className="mt-5 border-t border-border pt-4">
-            <p className="font-mono text-xs uppercase tracking-widest text-muted-foreground mb-3">
+            <p className="mb-3 font-mono text-xs uppercase tracking-widest text-muted-foreground">
               Leading Subgenres Across All Families
             </p>
             <div className="space-y-2">
@@ -2072,13 +2363,13 @@ function Diagnosis({
                 const parentG = GENRES.find((x) => x.id === r.genre.parent);
                 return (
                   <div key={r.genre.id} className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-foreground">{r.genre.name}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="truncate font-medium text-foreground">{r.genre.name}</span>
                       {parentG && (
                         <button
                           type="button"
                           onClick={() => onDrill(parentG.id)}
-                          className="rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground hover:bg-sound/20 hover:text-sound transition"
+                          className="shrink-0 rounded-full bg-muted px-2 py-0.5 text-[10px] text-muted-foreground transition hover:bg-sound/20 hover:text-sound"
                           title={`Explore ${parentG.name} subgenres`}
                         >
                           {parentG.name} ↗
@@ -2101,29 +2392,6 @@ function Diagnosis({
         onFlipAnswer={onFlipAnswer}
         onChangeDescriptorAnswer={onChangeDescriptorAnswer}
       />
-
-      <div className="flex flex-wrap gap-2">
-        {canDrill && (
-          <Button onClick={() => onDrill(g.id)} className="bg-sound text-foreground hover:bg-sound/80 active:scale-95"><Microscope /> Pinpoint Exact Subgenre</Button>
-        )}
-        {drill && onExitDrill && (
-          <Button variant="outline" onClick={onExitDrill} className="border-sound/50 text-sound hover:bg-sound/15 active:scale-95">
-            <ChevronLeft /> Back to All Genres
-          </Button>
-        )}
-        {isLocalDev && onCopyDevSnapshot && (
-          <Button
-            variant="outline"
-            onClick={onCopyDevSnapshot}
-            className="border-amber-500/50 bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 active:scale-95"
-          >
-            <Bug className="mr-1.5 size-4" /> Dev Copy State
-          </Button>
-        )}
-        <Button variant="outline" onClick={onWrong} className="active:scale-95"><X /> Wrong Genre? Teach Me</Button>
-        <Button variant="ghost" onClick={onUndo} className="active:scale-95"><ChevronLeft /> Change last answer</Button>
-        <Button variant="ghost" onClick={onAgain} className="active:scale-95"><RotateCcw /> Play Again</Button>
-      </div>
     </section>
   );
 }
@@ -2237,8 +2505,8 @@ ${answerRows}
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
+      <DialogContent className="max-h-[88dvh] max-w-md overflow-y-auto p-5 sm:p-6">
+        <DialogHeader className="text-left">
           <DialogTitle>What was the real genre?</DialogTitle>
           <DialogDescription>
             Help calibrate Genre Genie by opening a GitHub issue with your song and perceptual trace.
@@ -2246,7 +2514,7 @@ ${answerRows}
         </DialogHeader>
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block font-mono text-xs text-muted-foreground uppercase tracking-wider">
+            <label className="mb-1 block font-mono text-xs uppercase tracking-wider text-muted-foreground">
               Real Genre <span className="text-destructive">*</span>
             </label>
             <Input
@@ -2261,7 +2529,7 @@ ${answerRows}
                 key={g.id}
                 onClick={() => { setActual(g.id); setSearch(g.name); }}
                 className={`rounded-full border px-2.5 py-1 text-xs transition active:scale-95 ${
-                  actual === g.id ? "border-primary bg-primary/20 text-primary font-bold" : "border-border hover:border-primary/50"
+                  actual === g.id ? "border-primary bg-primary/20 font-bold text-primary" : "border-border hover:border-primary/50"
                 }`}
               >
                 {g.name}
@@ -2269,7 +2537,7 @@ ${answerRows}
             ))}
           </div>
           <div>
-            <label className="mb-1 block font-mono text-xs text-muted-foreground uppercase tracking-wider">
+            <label className="mb-1 block font-mono text-xs uppercase tracking-wider text-muted-foreground">
               Audio Sample (optional)
             </label>
             <Input
@@ -2279,7 +2547,7 @@ ${answerRows}
             />
           </div>
           <div>
-            <label className="mb-1 block font-mono text-xs text-muted-foreground uppercase tracking-wider">
+            <label className="mb-1 block font-mono text-xs uppercase tracking-wider text-muted-foreground">
               What sound gave it away? (optional)
             </label>
             <Textarea
@@ -2289,7 +2557,7 @@ ${answerRows}
               rows={3}
             />
           </div>
-          <Button onClick={submit} disabled={!search.trim()} className="w-full gap-2">
+          <Button onClick={submit} disabled={!search.trim()} className="h-11 w-full gap-2 font-bold">
             <ExternalLink className="size-4" /> Open GitHub Issue
           </Button>
         </div>
@@ -2297,4 +2565,5 @@ ${answerRows}
     </Dialog>
   );
 }
+
 
