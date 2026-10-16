@@ -30,17 +30,24 @@ When adding a sub-genre, you will touch or consult these files:
 
 ## 3. Step-by-Step Implementation Recipe
 
-### Step 1: Extract Data from GitHub Issue
-Read the GitHub issue created from `.github/ISSUE_TEMPLATE/new_subgenre.yml`:
-- **Name**: Official display name (e.g. `Future Bass`)
-- **ID**: `snake_case` identifier (e.g. `future_bass`)
-- **Parent Genre ID**: Target macro genre ID (e.g. `dubstep`, `techno`, `house`)
-- **Family ID**: Target family (e.g. `electronic`, `rock`, etc.)
-- **Aliases**: Common alternative scene names or abbreviations
-- **Summary**: 2–3 sentences explaining the sonic identity
-- **3 Benchmark Tracks**: Exactly 3 tracks (`artist` and `title`)
-- **Sensory Hallmarks**: 4 descriptors (`pulse`, `sound`, `voice`, `atmosphere`)
-- **Distinction Notes**: Clear explanation contrasting it with its parent and sibling genres
+### Step 1: Ingest Issue & Conduct Research
+
+GitHub issues submitted via `.github/ISSUE_TEMPLATE/new_subgenre.yml` are designed to be low-friction for users. An issue might contain full details, or it might simply be a hint (e.g. just a genre name like `Future Bass` and a track link).
+
+**If the issue only provides minimal info, the AI agent must conduct the research first**:
+1. **Identify Parent Macro Genre & Family**: Determine which macro genre this belongs to (e.g. *Future Bass* belongs under *Dubstep & Bass* or *Electronic*; *Hardgroove* belongs under *Techno*).
+2. **Research Sonic Identity & BPM**:
+   - Query RateYourMusic, Wikipedia, or web search for key attributes: tempo range (BPM), beat type (four-on-the-floor, breakbeat, half-time), sound design (synths, bass character, distortion), vocal presence, and mood.
+3. **Select Exactly 3 Benchmark Tracks**:
+   - Choose 3 quintessential tracks (`artist` and `title`) by defining producers of the genre.
+   - **Check for collisions**: Verify none of the 3 tracks already exist in `data/genres.json`.
+4. **Draft the 4 Sensory Hallmarks**:
+   - **The Pulse**: Tempo range in BPM, kick drum structure, and groove feel.
+   - **The Sound**: Defining synths, bass style (sub-bass, reese, 808), acoustic elements, and audio textures.
+   - **The Voice**: Typical vocal delivery (or note if it is purely instrumental).
+   - **The Atmosphere**: Mood, spatial resonance, and energy level.
+5. **Formulate Distinction Notes**:
+   - State clearly how a listener tells this genre apart from its parent macro genre and closest sibling subgenres.
 
 ---
 
