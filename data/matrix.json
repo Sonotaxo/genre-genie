@@ -550,7 +550,7 @@
     "sound_analog_warmth": 0,
     "sound_brass_horns": -0.95,
     "sound_lofi_crackles": -0.8,
-    "sound_bright_glossy_clean": 0.95,
+    "sound_bright_glossy_clean": -0.6,
     "sound_acid_303_squelch": -0.95,
     "sound_slap_bass_groove": -0.85,
     "sound_snarling_neuro_bass": -0.9,
